@@ -1,0 +1,3 @@
+[submodule "lib/realfolk/elm-lib"]
+	path = lib/realfolk/elm-lib
+	url = https://github.com/realfolk/elm-lib.git
