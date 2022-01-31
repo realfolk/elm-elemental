@@ -165,7 +165,7 @@ targetToElementAndAttributes target =
             ( H.a, [ HA.href url_ ] )
 
         ClickTarget msg ->
-            ( H.a, [ HE.onClick msg ] )
+            ( H.div, [ HE.onClick msg ] )
 
         NewTab t ->
             targetToElementAndAttributes t
