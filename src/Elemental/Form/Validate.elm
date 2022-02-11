@@ -6,6 +6,7 @@ module Elemental.Form.Validate exposing
     , ifGreaterThan
     , ifInvalidEmail
     , ifLessThan
+    , new
     , validate
     )
 
@@ -32,6 +33,11 @@ validate (Validator getErrors) input =
 
 
 -- CONSTRUCTING VALIDATORS
+
+
+new : (input -> List error) -> Validator error input
+new f =
+    Validator f
 
 
 ifBlank : (input -> String) -> error -> Validator error input
