@@ -58,7 +58,7 @@ type alias Options msg options =
         | fieldTheme : Field.Theme
         , layout : L.Layout msg
         , label : String
-        , support : String
+        , support : Field.Support msg
         , required : Bool
         , disabled : Bool
     }

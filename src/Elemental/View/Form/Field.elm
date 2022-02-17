@@ -1,4 +1,9 @@
-module Elemental.View.Form.Field exposing (Options, Theme, view)
+module Elemental.View.Form.Field exposing
+    ( Options
+    , Support(..)
+    , Theme
+    , view
+    )
 
 import Css
 import Elemental.Layout as L
@@ -11,7 +16,7 @@ type alias Options msg =
     { theme : Theme
     , layout : L.Layout msg
     , label : String
-    , support : String
+    , support : Support msg
     , required : Bool
     , disabled : Bool
     , errors : List String
@@ -29,6 +34,11 @@ type alias Theme =
         , support : Typography
         }
     }
+
+
+type Support msg
+    = Text String
+    | Custom (H.Html msg)
 
 
 view : Options msg -> H.Html msg -> H.Html msg
@@ -107,25 +117,32 @@ viewStar theme layout isRequired =
         H.text ""
 
 
-viewSupport : Theme -> L.Layout msg -> String -> H.Html msg
-viewSupport theme layout text =
+viewSupport : Theme -> L.Layout msg -> Support msg -> H.Html msg
+viewSupport theme layout support =
     let
         supportStyle =
             Css.batch
                 [ Typography.toStyle theme.typography.support
                 , Css.color theme.colors.support
                 ]
-    in
-    if String.isEmpty text then
-        H.text ""
 
-    else
-        L.viewColumn
-            L.Normal
-            []
-            [ layout.spacerY 2
-            , H.span [ HA.css [ supportStyle ] ] [ H.text text ]
-            ]
+        viewLayout content =
+            L.viewColumn
+                L.Normal
+                []
+                [ layout.spacerY 2
+                , H.div [ HA.css [ supportStyle ] ] [ content ]
+                ]
+    in
+    case support of
+        Text "" ->
+            H.text ""
+
+        Text text ->
+            viewLayout <| H.text text
+
+        Custom viewCustom ->
+            viewLayout <| viewCustom
 
 
 viewErrorMessages : Theme -> L.Layout msg -> List String -> H.Html msg
