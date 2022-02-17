@@ -3,6 +3,7 @@ module Elemental.Form.Field.ShortText exposing
     , Icon
     , Model
     , Msg
+    , Msg_
     , Options
     , field
     )
