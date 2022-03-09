@@ -10,6 +10,7 @@ module Elemental.View.Button exposing
 
 import Css
 import Elemental.Css as LibCss
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Layout as L
 import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
@@ -32,7 +33,7 @@ type alias Style =
     { typography : Typography
     , colors : Colors
     , spacers : Spacers
-    , borderRadius : Float
+    , borderRadius : BorderRadius.Style
     }
 
 
@@ -120,7 +121,7 @@ viewCustom options =
         outerCss =
             HA.css
                 [ Typography.toStyle options.style.typography
-                , Css.borderRadius <| Css.px options.style.borderRadius
+                , BorderRadius.toCssStyle options.style.borderRadius
                 , Css.displayFlex
                 , Css.flexFlow2 Css.noWrap Css.row
                 , Css.alignItems Css.center

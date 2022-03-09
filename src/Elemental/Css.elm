@@ -2,11 +2,6 @@ module Elemental.Css exposing
     ( borderAll
     , borderBottom
     , borderLeft
-    , borderRadiusAll
-    , borderRadiusBottom
-    , borderRadiusLeft
-    , borderRadiusRight
-    , borderRadiusTop
     , borderRight
     , borderTop
     , buttonReset
@@ -33,7 +28,7 @@ module Elemental.Css exposing
     , userSelect
     )
 
-import Css exposing (px)
+import Css
 
 
 borderAll : Css.Color -> Css.Style
@@ -63,40 +58,7 @@ borderLeft =
 
 border : (Css.Px -> Css.BorderStyle (Css.TextDecorationStyle {}) -> Css.Color -> Css.Style) -> Css.Color -> Css.Style
 border f color =
-    f (px 1) Css.solid color
-
-
-borderRadiusAll =
-    makeBorderRadiusSizes [ Css.borderRadius ]
-
-
-borderRadiusTop =
-    makeBorderRadiusSizes [ Css.borderTopLeftRadius, Css.borderTopRightRadius ]
-
-
-borderRadiusRight =
-    makeBorderRadiusSizes [ Css.borderTopRightRadius, Css.borderBottomRightRadius ]
-
-
-borderRadiusBottom =
-    makeBorderRadiusSizes [ Css.borderBottomLeftRadius, Css.borderBottomRightRadius ]
-
-
-borderRadiusLeft =
-    makeBorderRadiusSizes [ Css.borderTopLeftRadius, Css.borderBottomLeftRadius ]
-
-
-makeBorderRadiusSizes f =
-    { small = borderRadius f 4
-    , medium = borderRadius f 8
-    , large = borderRadius f 16
-    }
-
-
-borderRadius : List (Css.Px -> Css.Style) -> Float -> Css.Style
-borderRadius fs size =
-    List.map (\f -> f <| px size) fs
-        |> Css.batch
+    f (Css.px 1) Css.solid color
 
 
 buttonReset : Css.Style
@@ -123,7 +85,7 @@ fillAvailable =
 
 focusHighlight : Css.Color -> Css.Style
 focusHighlight color =
-    Css.boxShadow5 (px 0) (px 0) (px 0) (px 3) color
+    Css.boxShadow5 Css.zero Css.zero Css.zero (Css.px 3) color
 
 
 fullContainer : Css.Style
@@ -230,9 +192,13 @@ scroll =
         ]
 
 
+
+-- FIXME: Should the shadowNavigation function be defined in this module?
+
+
 shadowNavigation : Css.Color -> Css.Style
 shadowNavigation color =
-    Css.boxShadow5 Css.zero (px 6) (px 8) (px -3) color
+    Css.boxShadow5 Css.zero (Css.px 6) (Css.px 8) (Css.px -3) color
 
 
 shrink : Css.Style

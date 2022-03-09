@@ -9,6 +9,7 @@ module Elemental.View.Form.Field.Select exposing
 import Css
 import Dict exposing (Dict)
 import Elemental.Css as LibCss
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Layout as Layout exposing (Layout)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attrs
@@ -63,6 +64,7 @@ type alias Theme =
         , x : Float
         , caret : Float
         }
+    , borderRadius : BorderRadius.Style
     }
 
 
@@ -159,9 +161,7 @@ view options value =
             [ Css.width <| Css.pct 100
             , Css.position Css.relative
             , Css.padding2 topBottomPadding (options.layout.computeSpacerPx options.theme.spacerMultiples.x)
-
-            -- TODO make this border radius configurable
-            , LibCss.borderRadiusAll.small
+            , BorderRadius.toCssStyle options.theme.borderRadius
             , interactionStyle
             ]
     in

@@ -1,7 +1,7 @@
 module Elemental.View.Badge exposing (Options, view)
 
 import Css
-import Elemental.Css as LibCss
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Layout as L
 import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
@@ -12,6 +12,7 @@ type alias Options color msg =
     , color : color
     , colorToCssColors : color -> { background : Css.Color, foreground : Css.Color }
     , typography : Typography
+    , borderRadius : BorderRadius.Style
     }
 
 
@@ -26,8 +27,9 @@ view options text =
             , Css.flexShrink <| Css.zero
             , Css.backgroundColor background
             , Css.color foreground
-            , LibCss.borderRadiusAll.small
+            , BorderRadius.toCssStyle options.borderRadius
             , Typography.toStyle options.typography
             ]
     in
+    -- FIXME: Should we abstract these numbers: 1 2 1 2?
     options.layout.box 1 2 1 2 [] styles <| [ H.text text ]

@@ -9,6 +9,7 @@ module Elemental.View.Form.Field.Input exposing
 
 import Css
 import Elemental.Css as LibCss
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Layout as L
 import Html.Styled as H
 import Html.Styled.Attributes as HA
@@ -51,6 +52,7 @@ type alias Theme =
             , value : Css.Color
             }
         }
+    , borderRadius : BorderRadius.Style
     }
 
 
@@ -205,7 +207,7 @@ view options value =
             HA.css
                 [ Css.width <| Css.pct 100
                 , Css.padding2 topBottomPadding (options.layout.computeSpacerPx leftRightMultiple)
-                , LibCss.borderRadiusAll.small
+                , BorderRadius.toCssStyle options.theme.borderRadius
                 , style
                 ]
 
@@ -242,7 +244,7 @@ view options value =
                 L.Normal
                 [ Css.width <| Css.pct 100
                 , Css.padding2 topBottomPadding (options.layout.computeSpacerPx leftRightMultiple)
-                , LibCss.borderRadiusAll.small
+                , BorderRadius.toCssStyle options.theme.borderRadius
                 , wrapperStyle
                 ]
                 [ L.viewRow

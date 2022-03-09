@@ -2,6 +2,7 @@ module Elemental.View.Form.Field.Textarea exposing (Options, Theme, view)
 
 import Css
 import Elemental.Css as LibCss
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Layout as L
 import Html.Styled as H
 import Html.Styled.Attributes as HA
@@ -40,6 +41,7 @@ type alias Theme =
             , value : Css.Color
             }
         }
+    , borderRadius : BorderRadius.Style
     }
 
 
@@ -106,7 +108,7 @@ view options value =
                 , Css.height <| Css.px options.height
                 , Css.resize Css.vertical
                 , Css.padding2 (options.layout.computeSpacerPx 3) (options.layout.computeSpacerPx 4)
-                , LibCss.borderRadiusAll.small
+                , BorderRadius.toCssStyle options.theme.borderRadius
                 , style
                 ]
 

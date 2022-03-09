@@ -94,6 +94,7 @@ view options model =
                 , focusHighlight = fieldColors.focusHighlight
                 , foreground = fieldColors.foreground
                 }
+            , borderRadius = options.widgetTheme.borderRadius
             }
         , layout = options.layout
         , disabled = options.disabled
