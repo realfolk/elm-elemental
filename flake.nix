@@ -4,43 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flakeUtils.url = "github:numtide/flake-utils";
-
-    neovim = {
-      url = "github:realfolk/nix?dir=lib/packages/neovim";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flakeUtils.follows = "flakeUtils";
-      };
-    };
-
-    ranger = {
-      url = "github:realfolk/nix?dir=lib/packages/ranger";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flakeUtils.follows = "flakeUtils";
-      };
-    };
-
-    rnixLsp = {
-      url = "github:nix-community/rnix-lsp";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    elmPackages = {
-      url = "github:realfolk/nix?dir=lib/projects/elm/packages";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flakeUtils.follows = "flakeUtils";
-      };
-    };
-
-    nodeInterpreter = {
-      url = "github:realfolk/nix?dir=lib/projects/node/interpreter/node-17";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flakeUtils.follows = "flakeUtils";
-      };
-    };
+    neovim.url = "github:realfolk/nix?dir=lib/packages/neovim";
+    ranger.url = "github:realfolk/nix?dir=lib/packages/ranger";
+    rnixLsp.url = "github:nix-community/rnix-lsp";
+    elmPackages.url = "github:realfolk/nix?dir=lib/projects/elm/packages/elm-0.19";
+    nodeInterpreter.url = "github:realfolk/nix?dir=lib/projects/node/interpreter/node-17";
   };
 
   outputs = {
