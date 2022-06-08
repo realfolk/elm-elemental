@@ -2,6 +2,7 @@ module Elemental.Form.Field.Select exposing
     ( Flags
     , Model
     , Msg
+    , Msg_
     , Options
     , field
     )
