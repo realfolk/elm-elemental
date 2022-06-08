@@ -17,6 +17,10 @@ type alias Options msg =
     , placeholder : String
     , height : Float
     , onInput : String -> msg
+    , spacerMultiples :
+        { x : Float
+        , y : Float
+        }
     }
 
 
@@ -107,7 +111,9 @@ view options value =
                 [ Css.width <| Css.pct 100
                 , Css.height <| Css.px options.height
                 , Css.resize Css.vertical
-                , Css.padding2 (options.layout.computeSpacerPx 3) (options.layout.computeSpacerPx 4)
+                , Css.padding2
+                    (options.layout.computeSpacerPx options.spacerMultiples.y)
+                    (options.layout.computeSpacerPx options.spacerMultiples.x)
                 , BorderRadius.toCssStyle options.theme.borderRadius
                 , style
                 ]

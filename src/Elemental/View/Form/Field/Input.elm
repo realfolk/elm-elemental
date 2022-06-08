@@ -28,6 +28,10 @@ type alias Options msg =
     , placeholder : String
     , onInput : String -> msg
     , customAttrs : List (H.Attribute msg)
+    , spacerMultiples :
+        { x : Size -> Float
+        , y : Size -> Float
+        }
     }
 
 
@@ -186,14 +190,9 @@ view options value =
             else
                 normalInputStyle
 
-        ( topBottomMultiple, leftRightMultiple ) =
-            ( case options.size of
-                Small ->
-                    2
-
-                Medium ->
-                    3
-            , 4
+        ( leftRightMultiple, topBottomMultiple ) =
+            ( options.spacerMultiples.x options.size
+            , options.spacerMultiples.y options.size
             )
 
         topBottomPadding =
