@@ -195,6 +195,7 @@ viewHtmlSelect options value choiceTextToValue =
                 , Css.right Css.zero
                 , Css.bottom Css.zero
                 , Css.opacity Css.zero
+                , Css.width <| Css.pct 100
                 , LibCss.noAppearance
                 ]
 
