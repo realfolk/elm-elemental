@@ -1,0 +1,1 @@
+elm make --debug --output="public/js/elm.js" "src/Main.elm"
