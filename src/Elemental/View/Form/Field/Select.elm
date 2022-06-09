@@ -177,13 +177,19 @@ view options value =
             [ LibCss.grow
             , Css.overflow Css.hidden
             , Css.textOverflow Css.ellipsis
-            , if hasSelectedText then
+            , if hasSelectedText && (not <| String.isEmpty <| selectedText) then
                 Css.whiteSpace Css.noWrap
 
               else
                 Css.whiteSpace Css.pre
             ]
-            [ Html.text selectedText ]
+            [ Html.text <|
+                if String.isEmpty selectedText then
+                    " "
+
+                else
+                    selectedText
+            ]
         , options.layout.spacerX options.theme.spacerMultiples.caret
         , options.viewCaret
         , viewHtmlSelect options value choiceTextToValue
