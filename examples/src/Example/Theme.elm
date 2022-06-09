@@ -1,0 +1,56 @@
+module Example.Theme exposing (..)
+
+import Css
+import Elemental.Css.BorderRadius exposing (BorderRadius)
+import Example.Colors exposing (Colors)
+import Example.Typography as ExampleTypography exposing (ThemeTypography)
+
+
+type alias Theme =
+    { colors : Colors
+    , typography : ThemeTypography
+
+    -- , effects : Effects
+    -- , borderRadius :
+    --     { button :
+    --         { small : BorderRadius
+    --         , medium : BorderRadius
+    --         }
+    --     , global :
+    --         { small : BorderRadius
+    --         , medium : BorderRadius
+    --         , large : BorderRadius
+    --         }
+    --     }
+    }
+
+
+
+-- type alias Colors =
+--     { background :
+--         { normal : Css.Color
+--         , alternate : Css.Color
+--         , hover : Css.Color
+--         }
+--     , foreground :
+--         { regular : Css.Color
+--         , soft : Css.Color
+--         }
+--     }
+
+
+type alias Effects =
+    { boxShadow : Shadows
+    }
+
+
+type alias Shadows =
+    { none : Css.Style
+    , light : Css.Style
+    , medium : Css.Style
+    , heavy : Css.Style
+    }
+
+
+
+-- TYPOGRAPHY

@@ -1,0 +1,51 @@
+module Example.Layout exposing (..)
+
+import Elemental.Layout as L exposing (DeviceSize(..), DeviceType(..))
+
+
+layout : L.Layout msg
+layout =
+    L.makeLayout
+        { breakpoints =
+            { compactLarge = 784
+            , fullSmall = 1024
+            , fullLarge = 1248
+            }
+        , baseSize = 4
+        , pageSpacerMultipleY =
+            \device ->
+                case device of
+                    ( Compact, Small ) ->
+                        16
+
+                    ( Compact, Large ) ->
+                        20
+
+                    ( Full, Small ) ->
+                        24
+
+                    ( Full, Large ) ->
+                        28
+        , gutterMultiple =
+            \device ->
+                case device of
+                    ( Compact, Small ) ->
+                        4
+
+                    ( Compact, Large ) ->
+                        8
+
+                    ( Full, Small ) ->
+                        8
+
+                    ( Full, Large ) ->
+                        8
+        , contentWidth =
+            \device ->
+                case device of
+                    ( Full, Large ) ->
+                        672
+
+                    _ ->
+                        640
+        }
