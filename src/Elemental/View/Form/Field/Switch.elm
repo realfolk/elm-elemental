@@ -21,7 +21,9 @@ type alias Options msg =
     , text : String
     , disabled : Bool
     , size : Size
-    , verticalPadding : Size -> Float
+    , spacerMultiples :
+        { y : Size -> Float
+        }
     , onToggle : Bool -> msg
     }
 
@@ -93,7 +95,7 @@ view options isSelected =
         L.Normal
         []
         [ options.layout.spacerY <|
-            options.verticalPadding options.size
+            options.spacerMultiples.y options.size
         , L.viewRow
             L.Normal
             []
@@ -104,7 +106,7 @@ view options isSelected =
             , viewLabel options isSelected
             ]
         , options.layout.spacerY <|
-            options.verticalPadding options.size
+            options.spacerMultiples.y options.size
         ]
 
 
