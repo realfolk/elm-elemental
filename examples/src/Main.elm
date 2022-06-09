@@ -1,19 +1,25 @@
 module Main exposing (main)
 
+import Browser.Dom as BD
 import Css
 import Css.Global as CssG
 import Elemental.Css as ECss
 import Elemental.Layout as L
 import Elemental.Typography as Typography
 import Example.Colors as Colors
+import Example.Icons as Icons
 import Example.Layout as L
 import Example.Theme as Theme exposing (Theme)
 import Example.Typography as Typography exposing (ThemeTypography)
+import Example.View.Components.Switches as Switches
+import Example.View.ThemeControls.Colors as ColorControls
 import Example.View.ThemeControls.Typography as TypographyControls
 import Html.Styled as H
 import Html.Styled.Attributes as HA
+import Html.Styled.Events as HE
 import Lib
 import Lib.Browser as B
+import Task
 import Url
 
 
@@ -35,6 +41,7 @@ main =
 
 type alias Model =
     { theme : Theme
+    , switches : Switches.Model
     }
 
 
@@ -43,7 +50,9 @@ init _ _ _ =
     ( { theme =
             { colors = Colors.baseColors
             , typography = Typography.baseTypography
+            , borderRadius = Theme.borderRadius
             }
+      , switches = Switches.init ()
       }
     , Cmd.none
     )
@@ -56,6 +65,9 @@ init _ _ _ =
 type Msg
     = NoOp
     | UpdatedTypography ThemeTypography
+    | UpdatedColors Colors.Colors
+    | UpdatedSwitches Switches.Msg
+    | ScrollTo String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -70,6 +82,27 @@ update msg model =
                     model.theme
             in
             ( { model | theme = { theme | typography = typography } }, Cmd.none )
+
+        UpdatedColors colors ->
+            let
+                theme =
+                    model.theme
+            in
+            ( { model | theme = { theme | colors = colors } }, Cmd.none )
+
+        UpdatedSwitches switchesMsg ->
+            let
+                ( switchesModel, switchesCmd ) =
+                    Switches.update switchesMsg model.switches
+            in
+            ( { model | switches = switchesModel }, Cmd.map UpdatedSwitches switchesCmd )
+
+        ScrollTo id ->
+            ( model
+            , BD.getElement id
+                |> Task.andThen (\info -> BD.setViewportOf themeControlsId 0 info.scene.height)
+                |> Task.attempt (always (Debug.log "" NoOp))
+            )
 
 
 
@@ -94,14 +127,19 @@ view model =
         [ themeToCss model.theme
         , L.viewRow
             L.Normal
-            [ Css.width <| Css.pct 100, Css.height <| Css.pct 100 ]
+            [ Css.backgroundColor model.theme.colors.background.normal
+            , Css.width <| Css.pct 100
+            , Css.height <| Css.pct 100
+            ]
             [ L.viewColumn L.Normal
                 [ Css.width <| Css.pct 100
                 , Css.height <| Css.pct 100
                 , Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 4)
+                , Css.overflowY Css.auto
                 ]
                 [ viewTypography model.theme
-                , viewComponents
+                , L.layout.spacerY 12
+                , viewComponents model
                 ]
             , viewThemeControls model.theme
             ]
@@ -109,10 +147,17 @@ view model =
     }
 
 
+viewTypography : Theme -> H.Html msg
 viewTypography theme =
     L.viewColumn L.Normal
         []
-        [ H.h4 [] [ H.text "Typography" ]
+        [ H.div
+            [ HA.css
+                [ Typography.toStyle theme.typography.code
+                , Css.color theme.colors.foreground.regular
+                ]
+            ]
+            [ H.text (String.toUpper "Typography") ]
         , L.layout.spacerY 2
         , H.h4 [] [ H.text "H4 Heading" ]
         , L.layout.spacerY 2
@@ -130,29 +175,96 @@ viewTypography theme =
             ]
             [ H.text "Body Small" ]
         , L.layout.spacerY 2
+        , H.div
+            [ HA.css
+                [ Typography.toStyle theme.typography.code
+                , Css.backgroundColor theme.colors.background.code
+                , Css.color theme.colors.foreground.code
+                , Css.display Css.inlineBlock
+                , Css.padding <| L.layout.computeSpacerPx 1
+                ]
+            ]
+            [ H.text "Code" ]
+        , L.layout.spacerY 2
         ]
 
 
-viewComponents =
-    H.text ""
+viewComponents ({ theme } as model) =
+    L.viewColumn L.Normal
+        []
+        [ H.h4 [] [ H.text (String.toUpper "Components") ]
+        , L.layout.spacerY 2
+        , L.viewRow
+            L.Normal
+            [ Typography.toStyle theme.typography.code
+            , Css.color theme.colors.foreground.regular
+            ]
+            [ H.text (String.toUpper "Switches")
+            , L.layout.spacerX 2
+            , H.button
+                [ HE.onClick (ScrollTo ColorControls.switchSectionId)
+                , HA.css
+                    [ Css.cursor Css.pointer
+                    , Css.backgroundColor theme.colors.background.normal
+                    , Css.color theme.colors.foreground.regular
+                    , Css.displayFlex
+                    ]
+                ]
+                [ Icons.view Icons.Palette 20 ]
+            ]
+        , Switches.view theme model.switches
+            |> H.map UpdatedSwitches
+        ]
+
+
+themeControlsId =
+    "theme-controls"
 
 
 viewThemeControls theme =
-    L.viewColumn L.Normal
-        [ Css.backgroundColor Colors.elevated
-        , Css.width <| Css.pct 100
-        , Css.height <| Css.vh 100
-        , Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 4)
-        , Css.borderLeft3 (Css.px 1) Css.solid Colors.border
-        , Css.overflowY Css.scroll
+    H.div
+        [ HA.id themeControlsId
+        , HA.css
+            [ Css.minWidth <| Css.px 700
+            , Css.maxWidth <| Css.px 700
+            , Css.overflowY Css.scroll
+            , Css.height <| Css.vh 100
+            , Css.backgroundColor theme.colors.background.alternate
+            , Css.borderLeft3 (Css.px 1) Css.solid theme.colors.border
+            ]
         ]
-        [ H.h5 [] [ H.text "Customize Typography" ]
-        , --
-          TypographyControls.view
-            { theme = theme
-            , onUpdateTypography = UpdatedTypography
-            }
-            theme.typography
+        [ L.viewColumn L.Normal
+            [ Css.width <| Css.pct 100
+            , Css.height <| Css.pct 100
+            , Css.padding2 (L.layout.computeSpacerPx 6) (L.layout.computeSpacerPx 6)
+            ]
+            [ H.h5
+                [ HA.css
+                    [ Typography.toStyle theme.typography.code
+                    , Css.color theme.colors.foreground.regular
+                    ]
+                ]
+                [ H.text (String.toUpper "Customize Typography") ]
+            , L.layout.spacerY 2
+            , TypographyControls.view
+                { theme = theme
+                , onUpdateTypography = UpdatedTypography
+                }
+                theme.typography
+            , H.h5
+                [ HA.css
+                    [ Typography.toStyle theme.typography.code
+                    , Css.color theme.colors.foreground.regular
+                    ]
+                ]
+                [ H.text (String.toUpper "Customize Colors") ]
+            , L.layout.spacerY 2
+            , ColorControls.view
+                { theme = theme
+                , onUpdateColors = UpdatedColors
+                }
+                theme.colors
+            ]
         ]
 
 
@@ -165,14 +277,17 @@ themeToCss theme =
             [ CssG.html, CssG.body ]
             [ Css.padding Css.zero
             , Css.margin Css.zero
-
-            -- , Css.backgroundColor theme.colors.background.alternate
+            , Css.backgroundColor theme.colors.background.alternate
             ]
         , CssG.body
             [ ECss.fullViewportHeight
-
-            -- , Css.color theme.colors.foreground.regular
+            , Css.color theme.colors.foreground.regular
             , Css.minWidth <| Css.px 320
+            ]
+        , CssG.pre
+            [ Css.padding Css.zero
+            , Css.margin Css.zero
+            , Typography.toStyle theme.typography.code
             ]
         , CssG.each
             [ CssG.body, CssG.input, CssG.textarea, CssG.button ]

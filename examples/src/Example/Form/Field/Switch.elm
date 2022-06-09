@@ -1,26 +1,36 @@
-module Example.View.Form.Field.Switch exposing (..)
+module Example.Form.Field.Switch exposing (..)
 
-import Elemental.Css.BorderRadius as BorderRadius
-import Elemental.Layout as L
-import Elemental.View.Form.Field.Switch as Switch exposing (Options)
+import Elemental.Form.Field.Switch as Field exposing (Msg_)
+import Elemental.View.Form.Field exposing (Support)
+import Elemental.View.Form.Field.Switch as Switch
 import Example.Layout as L
 import Example.Theme as Theme exposing (Theme)
 
 
 toOptions :
-    { theme : Theme.Theme
-    , layout : L.Layout msg
-    , text : String
+    { theme : Theme
     , disabled : Bool
     , size : Switch.Size
+    , label : String
+    , switchText : String
+    , support : Support Msg_
+    , required : Bool
     , spacerMultiples :
         { y : Switch.Size -> Float
         }
-    , onToggle : Bool -> msg
     }
-    -> Options msg
+    -> Field.Options
 toOptions options =
     let
+        formColors =
+            options.theme.colors.form
+
+        fieldColors =
+            formColors.field
+
+        fieldTypography =
+            options.theme.typography.form.field
+
         switchColors =
             options.theme.colors.switch
 
@@ -59,13 +69,26 @@ toOptions options =
             , transitionDuration = 400
             }
     in
-    { theme = widgetTheme
-    , layout = options.layout
-    , text = options.text
+    { widgetTheme = widgetTheme
     , disabled = options.disabled
     , size = options.size
+    , fieldTheme =
+        { colors =
+            { error = formColors.error
+            , required = fieldColors.required
+            , support = fieldColors.supportText
+            }
+        , typography =
+            { label = fieldTypography.label
+            , support = fieldTypography.support
+            }
+        }
+    , layout = L.layout
+    , label = options.label
+    , switchText = options.switchText
+    , support = options.support
+    , required = options.required
     , spacerMultiples =
         { y = options.spacerMultiples.y
         }
-    , onToggle = options.onToggle
     }

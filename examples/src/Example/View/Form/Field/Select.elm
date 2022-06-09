@@ -41,13 +41,11 @@ toOptions options =
             , foreground = fieldColors.foreground
             }
         , spacerMultiples =
-            { y = 3
-            , x = 4
+            { y = 2
+            , x = 2
             , caret = 2
             }
-        , borderRadius =
-            BorderRadius.borderRadius 4
-                |> .all
+        , borderRadius = options.theme.borderRadius.global.small.all
         }
     , autofocus = options.autofocus
     , viewCaret =

@@ -1,11 +1,12 @@
 module Example.View.ThemeControls.Typography exposing (..)
 
 import Css
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Form.Field.Select as Select
 import Elemental.Form.Field.Switch as Switch
 import Elemental.Form.Validate as V
 import Elemental.Layout as L
-import Elemental.Typography exposing (Typography)
+import Elemental.Typography as Typography exposing (Typography)
 import Elemental.View.Form.Field as Support
 import Elemental.View.Form.Field.Input as Input
 import Elemental.View.Form.Field.Switch as Switch
@@ -13,29 +14,11 @@ import Example.Colors as Colors
 import Example.Layout as L
 import Example.Theme as Theme exposing (Theme)
 import Example.Typography as Typography exposing (ThemeTypography)
+import Example.View.Codeblock as Codeblock
 import Example.View.Form.Field.Select as Select
 import Example.View.Form.Field.Switch as Switch
 import Html.Styled as H
-
-
-type alias Model =
-    {}
-
-
-type alias TypeConfiguration =
-    {}
-
-
-
--- UPDATE
-
-
-type Msg
-    = UpdatedH4 TypeConfiguration
-
-
-update msg typography =
-    typography
+import Html.Styled.Attributes as HA
 
 
 
@@ -119,8 +102,16 @@ view { theme, onUpdateTypography } typographyTheme =
             , typography = typographyTheme.body.small
             }
         , L.layout.spacerY 8
-
-        -- , viewTypographyCode typographyTheme
+        , viewTypography
+            theme
+            { styleName = "Code"
+            , onUpdateTypography = onUpdateTypography
+            , intoTypographyTheme =
+                \typography ->
+                    { typographyTheme | code = typography }
+            , typography = typographyTheme.code
+            }
+        , L.layout.spacerY 8
         ]
 
 
@@ -146,16 +137,18 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                 |> Tuple.first
 
         selectView options model intoTypography =
-            Select.field.view options model
-                |> H.map
-                    (\selectMsg ->
-                        Select.field.update selectMsg model
-                            |> Tuple.first
-                            |> Select.field.getValue
-                            |> intoTypography
-                            |> intoTypographyTheme
-                            |> onUpdateTypography
-                    )
+            H.div [ HA.css [ Css.width <| Css.px 200 ] ]
+                [ Select.field.view options model
+                    |> H.map
+                        (\selectMsg ->
+                            Select.field.update selectMsg model
+                                |> Tuple.first
+                                |> Select.field.getValue
+                                |> intoTypography
+                                |> intoTypographyTheme
+                                |> onUpdateTypography
+                        )
+                ]
 
         --
         switchOptions { label, intoTypography } =
@@ -175,114 +168,123 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                             |> intoTypographyTheme
                             |> onUpdateTypography
                 }
-
-        switchModel initialValue =
-            Switch.field.init
-                { value = initialValue
-                , validator = V.firstError []
-                }
-                |> Tuple.first
     in
-    L.viewColumn L.Normal
-        []
-        [ H.h6 [] [ H.text styleName ]
-        , L.layout.spacerY 2
-        , selectView
-            (selectOptions
-                { label = "Family"
-                , choices = Typography.namedFontFamilies
-                , toSelectChoice =
-                    \( name, family ) ->
-                        { text = name
-                        , placeholder = False
-                        , value = family
-                        }
-                }
-            )
-            (selectModel typography.families)
-            (\value -> { typography | families = value })
-        , L.layout.spacerY 2
-        , selectView
-            (selectOptions
-                { label = "Normal Weight"
-                , choices = Typography.allWeights
-                , toSelectChoice =
-                    \weight ->
-                        { text = Typography.weightToName weight
-                        , placeholder = False
-                        , value = Typography.weightToInt weight
-                        }
-                }
-            )
-            (selectModel typography.normalWeight)
-            (\value -> { typography | normalWeight = value })
-        , L.layout.spacerY 2
-        , L.viewRow L.Normal
-            []
-            [ Switch.view
-                (switchOptions
-                    { label = "Bold"
-                    , intoTypography =
-                        \value -> { typography | bold = value }
-                    }
-                )
-                typography.bold
-            , L.layout.spacerX 4
-            , Switch.view
-                (switchOptions
-                    { label = "Underline"
-                    , intoTypography =
-                        \value -> { typography | underline = value }
-                    }
-                )
-                typography.underline
-            , L.layout.spacerX 4
-            , Switch.view
-                (switchOptions
-                    { label = "Italic"
-                    , intoTypography =
-                        \value -> { typography | italic = value }
-                    }
-                )
-                typography.italic
-            , L.layout.spacerX 4
-            , Switch.view
-                (switchOptions
-                    { label = "Uppercase"
-                    , intoTypography =
-                        \value -> { typography | uppercase = value }
-                    }
-                )
-                typography.uppercase
-            , L.layout.spacerX 4
-            , L.layout.spacerX 4
+    H.details []
+        [ H.summary
+            [ HA.css
+                [ Typography.toStyle theme.typography.code
+                , Css.cursor Css.pointer
+                ]
             ]
-
-        -- { families : FontFamilies
-        -- , size : Float
-        -- , normalWeight : Int
-        -- , boldWeight : Int
-        -- , lineHeight : Float
-        -- , letterSpacing : Float
-        -- , bold : Bool
-        -- , underline : Bool
-        -- , italic : Bool
-        -- , uppercase : Bool
-        -- }
-        , viewTypographyCode typography
+            [ H.h6
+                [ HA.css
+                    [ Css.display Css.inline ]
+                ]
+                [ H.text styleName ]
+            ]
+        , L.viewColumn L.Normal
+            []
+            [ L.layout.spacerY 2
+            , selectView
+                (selectOptions
+                    { label = "Family"
+                    , choices = Typography.namedFontFamilies
+                    , toSelectChoice =
+                        \( name, family ) ->
+                            { text = name
+                            , placeholder = False
+                            , value = family
+                            }
+                    }
+                )
+                (selectModel typography.families)
+                (\value -> { typography | families = value })
+            , L.layout.spacerY 2
+            , L.viewRow L.Normal
+                []
+                [ selectView
+                    (selectOptions
+                        { label = "Normal Weight"
+                        , choices = Typography.allWeights
+                        , toSelectChoice =
+                            \weight ->
+                                { text = Typography.weightToName weight
+                                , placeholder = False
+                                , value = Typography.weightToInt weight
+                                }
+                        }
+                    )
+                    (selectModel typography.normalWeight)
+                    (\value -> { typography | normalWeight = value })
+                , L.layout.spacerX 4
+                , selectView
+                    (selectOptions
+                        { label = "Bold Weight"
+                        , choices = Typography.allWeights
+                        , toSelectChoice =
+                            \weight ->
+                                { text = Typography.weightToName weight
+                                , placeholder = False
+                                , value = Typography.weightToInt weight
+                                }
+                        }
+                    )
+                    (selectModel typography.boldWeight)
+                    (\value -> { typography | boldWeight = value })
+                ]
+            , L.layout.spacerY 2
+            , L.viewRow L.Normal
+                []
+                [ Switch.view
+                    (switchOptions
+                        { label = "Bold"
+                        , intoTypography =
+                            \value -> { typography | bold = value }
+                        }
+                    )
+                    typography.bold
+                , L.layout.spacerX 4
+                , Switch.view
+                    (switchOptions
+                        { label = "Underline"
+                        , intoTypography =
+                            \value -> { typography | underline = value }
+                        }
+                    )
+                    typography.underline
+                , L.layout.spacerX 4
+                , Switch.view
+                    (switchOptions
+                        { label = "Italic"
+                        , intoTypography =
+                            \value -> { typography | italic = value }
+                        }
+                    )
+                    typography.italic
+                , L.layout.spacerX 4
+                , Switch.view
+                    (switchOptions
+                        { label = "Uppercase"
+                        , intoTypography =
+                            \value -> { typography | uppercase = value }
+                        }
+                    )
+                    typography.uppercase
+                , L.layout.spacerX 4
+                , L.layout.spacerX 4
+                ]
+            , viewTypographyCode theme typography
+            ]
         ]
 
 
-viewTypographyCode typography =
+viewTypographyCode : Theme -> Typography -> H.Html msg
+viewTypographyCode theme typography =
     let
         intToName =
             Typography.intToWeight >> Typography.weightToName
     in
-    L.viewColumn L.Normal
-        [ Css.width <| Css.pct 100
-        , Css.backgroundColor Colors.border
-        , Css.padding2 (Css.px 12) (Css.px 24)
-        ]
+    Codeblock.view theme
         [ H.div [] [ H.text ("{ families = " ++ Debug.toString typography.families) ]
         , H.div [] [ H.text (", size = " ++ String.fromFloat typography.size) ]
         , H.div [] [ H.text (", normalWeight = " ++ String.fromInt typography.normalWeight ++ " (" ++ intToName typography.normalWeight ++ ")") ]

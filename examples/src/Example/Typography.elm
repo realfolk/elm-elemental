@@ -8,6 +8,7 @@ type alias ThemeTypography =
         { small : Typography
         , medium : Typography
         }
+    , code : Typography
     , form :
         { field :
             { label : Typography
@@ -56,6 +57,18 @@ baseTypography =
             , uppercase = False
             }
         }
+    , code =
+        { families = ibmPlexMono
+        , size = 14
+        , normalWeight = normal
+        , boldWeight = bold
+        , lineHeight = 24
+        , letterSpacing = 0
+        , bold = False
+        , underline = False
+        , italic = False
+        , uppercase = False
+        }
     , form =
         { field =
             { label =
@@ -86,7 +99,7 @@ baseTypography =
         }
     , heading =
         { h4 =
-            { families = roboto
+            { families = dmSans
             , size = 28
             , normalWeight = medium
             , boldWeight = medium
@@ -98,7 +111,7 @@ baseTypography =
             , uppercase = False
             }
         , h5 =
-            { families = roboto
+            { families = dmSans
             , size = 24
             , normalWeight = medium
             , boldWeight = medium
@@ -110,7 +123,7 @@ baseTypography =
             , uppercase = False
             }
         , h6 =
-            { families = roboto
+            { families = dmSans
             , size = 20
             , normalWeight = medium
             , boldWeight = medium
@@ -139,6 +152,11 @@ ibmPlexSans =
     [ "IBM Plex Sans", "sans-serif" ]
 
 
+dmSans : FontFamilies
+dmSans =
+    [ "DM Sans", "sans-serif" ]
+
+
 roboto : FontFamilies
 roboto =
     [ "Roboto", "serif" ]
@@ -148,6 +166,7 @@ namedFontFamilies : List ( String, FontFamilies )
 namedFontFamilies =
     [ ( "IBM Plex Mono", ibmPlexMono )
     , ( "IBM Plex Sans", ibmPlexSans )
+    , ( "DM Sans", ibmPlexSans )
     , ( "Roboto", roboto )
     ]
 

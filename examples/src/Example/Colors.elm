@@ -1,12 +1,20 @@
-module Example.Colors exposing (..)
+module Example.Colors exposing (Colors, baseColors)
 
 import Css exposing (rgb, rgba)
 
 
 type alias Colors =
-    { background : { normal : Css.Color }
+    { background :
+        { normal : Css.Color
+        , alternate : Css.Color
+        , code : Css.Color
+        }
     , border : Css.Color
-    , foreground : { regular : Css.Color, soft : Css.Color }
+    , foreground :
+        { regular : Css.Color
+        , soft : Css.Color
+        , code : Css.Color
+        }
     , form :
         { error : Css.Color
         , field :
@@ -34,7 +42,10 @@ type alias Colors =
         }
     , switch :
         { background :
-            { disabled : Css.Color, off : Css.Color, on : Css.Color }
+            { disabled : Css.Color
+            , off : Css.Color
+            , on : Css.Color
+            }
         , border : { disabled : Css.Color, off : Css.Color, on : Css.Color }
         , handle :
             { background :
@@ -50,11 +61,14 @@ baseColors : Colors
 baseColors =
     { background =
         { normal = white
+        , alternate = elevated
+        , code = Css.hex "2e3440"
         }
     , border = border
     , foreground =
         { regular = rgb 0x00 0x00 0x00
         , soft = Css.hex "7d8493"
+        , code = white
         }
     , form =
         { error = rgb 0xEE 0x34 0x34
@@ -86,25 +100,25 @@ baseColors =
         }
     , switch =
         { background =
-            { disabled = blue
-            , off = blue
-            , on = darkBlue
+            { disabled = Css.hex "#4d91ff"
+            , off = lightGray
+            , on = blue
             }
         , border =
             { disabled = white
-            , off = blue
-            , on = darkBlue
+            , off = darkGray
+            , on = blue
             }
         , handle =
             { background =
-                { disabled = white
-                , off = white
-                , on = blue
+                { disabled = Css.hex "#8ab7ff"
+                , off = darkGray
+                , on = white
                 }
             , border =
                 { disabled = white
-                , off = white
-                , on = blue
+                , off = lightGray
+                , on = white
                 }
             }
         }
@@ -137,9 +151,17 @@ white =
     Css.hex "ffffff"
 
 
+darkGray =
+    Css.hex "74796e"
+
+
+lightGray =
+    Css.hex "dfe4d6"
+
+
 blue : Css.Color
 blue =
-    Css.hex "88c0d0"
+    Css.hex "0b57d0"
 
 
 darkBlue : Css.Color
@@ -154,9 +176,9 @@ orange =
 
 elevated : Css.Color
 elevated =
-    Css.hex "fbfcfd"
+    Css.hex "f1f1f3"
 
 
 border : Css.Color
 border =
-    Css.hex "e8ebf4"
+    Css.hex "cfd5e8"

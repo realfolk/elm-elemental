@@ -1,7 +1,7 @@
 module Example.Theme exposing (..)
 
 import Css
-import Elemental.Css.BorderRadius exposing (BorderRadius)
+import Elemental.Css.BorderRadius as BorderRadius exposing (BorderRadius)
 import Example.Colors exposing (Colors)
 import Example.Typography as ExampleTypography exposing (ThemeTypography)
 
@@ -11,17 +11,17 @@ type alias Theme =
     , typography : ThemeTypography
 
     -- , effects : Effects
-    -- , borderRadius :
-    --     { button :
-    --         { small : BorderRadius
-    --         , medium : BorderRadius
-    --         }
-    --     , global :
-    --         { small : BorderRadius
-    --         , medium : BorderRadius
-    --         , large : BorderRadius
-    --         }
-    --     }
+    , borderRadius :
+        { button :
+            { small : BorderRadius
+            , medium : BorderRadius
+            }
+        , global :
+            { small : BorderRadius
+            , medium : BorderRadius
+            , large : BorderRadius
+            }
+        }
     }
 
 
@@ -54,3 +54,16 @@ type alias Shadows =
 
 
 -- TYPOGRAPHY
+
+
+borderRadius =
+    { button =
+        { small = BorderRadius.borderRadius 20
+        , medium = BorderRadius.borderRadius 24
+        }
+    , global =
+        { small = BorderRadius.borderRadius 4
+        , medium = BorderRadius.borderRadius 8
+        , large = BorderRadius.borderRadius 16
+        }
+    }
