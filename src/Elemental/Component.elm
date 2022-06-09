@@ -14,7 +14,8 @@ module Elemental.Component exposing
     )
 
 import Html.Styled as H
-import Lib
+import Lib.Function exposing (flip)
+import Lib.List
 
 
 
@@ -46,7 +47,7 @@ indexedInitWithData mapMsg init flagsAndData =
             List.unzip flagsAndData
     in
     indexedInit mapMsg init flags
-        |> Tuple.mapFirst (Lib.flip Lib.zip data)
+        |> Tuple.mapFirst (flip Lib.List.zip data)
 
 
 type alias Update model msg =
@@ -77,7 +78,7 @@ indexedUpdateWithData mapMsg update index msg modelsAndData =
             List.unzip modelsAndData
     in
     indexedUpdate mapMsg update index msg models
-        |> Tuple.mapFirst (Lib.flip Lib.zip data)
+        |> Tuple.mapFirst (flip Lib.List.zip data)
 
 
 type alias View model msg options =

@@ -21,7 +21,6 @@ import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 import Html.Styled.Events as HE
-import Lib
 
 
 type alias Options msg =
@@ -130,7 +129,11 @@ viewCustom options =
 
         ( element, targetAttributes ) =
             targetToElementAndAttributes <|
-                Lib.iff options.disabled NoTarget options.target
+                if options.disabled then
+                    NoTarget
+
+                else
+                    options.target
     in
     element
         (css :: targetAttributes)
@@ -155,7 +158,11 @@ type Target msg
     | NewTab (Target msg)
 
 
-targetToElementAndAttributes : Target msg -> ( Lib.Element msg, List (H.Attribute msg) )
+type alias Element msg =
+    List (H.Attribute msg) -> List (H.Html msg) -> H.Html msg
+
+
+targetToElementAndAttributes : Target msg -> ( Element msg, List (H.Attribute msg) )
 targetToElementAndAttributes target =
     case target of
         NoTarget ->

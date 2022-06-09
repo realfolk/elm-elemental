@@ -10,7 +10,7 @@
     elmPackages.url = "github:realfolk/nix?dir=lib/projects/elm/packages/elm-0.19";
     nodeInterpreter.url = "github:realfolk/nix?dir=lib/projects/node/interpreter/node-17";
     elmLibSrc = {
-      url = "github:realfolk/elm-lib";
+      url = "github:realfolk/elm-lib/83a65a2b9c8cd95aa4c5ef4d9532ec44bf0b0be3";
       flake = false;
     };
   };
