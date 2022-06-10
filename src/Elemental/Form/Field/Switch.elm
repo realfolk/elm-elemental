@@ -77,9 +77,6 @@ type alias Options_ =
     { widgetTheme : Switch.Theme
     , switchText : String
     , size : Switch.Size
-    , spacerMultiples :
-        { y : Switch.Size -> Float
-        }
     }
 
 
@@ -91,7 +88,6 @@ view options model =
         , text = options.switchText
         , disabled = options.disabled
         , size = options.size
-        , spacerMultiples = options.spacerMultiples
         , onToggle = ToggledSwitch
         }
         model.value

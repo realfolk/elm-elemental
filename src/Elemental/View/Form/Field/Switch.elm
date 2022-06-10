@@ -21,9 +21,6 @@ type alias Options msg =
     , text : String
     , disabled : Bool
     , size : Size
-    , spacerMultiples :
-        { y : Size -> Float
-        }
     , onToggle : Bool -> msg
     }
 
@@ -62,10 +59,14 @@ type alias Theme =
                 }
             }
         }
+    , spacerMultiples :
+        { y : Size -> Float
+        , text : Size -> Float
+        }
+    , transitionDuration : Float
     , typography :
         { label : Typography
         }
-    , transitionDuration : Float
     }
 
 
@@ -95,7 +96,7 @@ view options isSelected =
         L.Normal
         []
         [ options.layout.spacerY <|
-            options.spacerMultiples.y options.size
+            options.theme.spacerMultiples.y options.size
         , L.viewRow
             L.Normal
             []
@@ -103,10 +104,12 @@ view options isSelected =
                 [ viewInput options dimensions isSelected
                 , viewHandle options dimensions isSelected
                 ]
+            , options.layout.spacerX <|
+                options.theme.spacerMultiples.text options.size
             , viewLabel options isSelected
             ]
         , options.layout.spacerY <|
-            options.spacerMultiples.y options.size
+            options.theme.spacerMultiples.y options.size
         ]
 
 
@@ -311,7 +314,8 @@ viewNonEmptyLabel options currentValue =
         [ L.viewRow
             L.Normal
             labelStyle
-            [ options.layout.spacerX 2
+            [ options.layout.spacerX <|
+                options.theme.spacerMultiples.text options.size
             , H.text options.text
             ]
         ]
