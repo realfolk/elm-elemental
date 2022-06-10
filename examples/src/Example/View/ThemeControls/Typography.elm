@@ -135,6 +135,7 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                 , validator = V.firstError []
                 }
                 |> Tuple.first
+                |> Debug.log ""
 
         selectView options model intoTypography =
             H.div [ HA.css [ Css.width <| Css.px 200 ] ]
@@ -160,6 +161,7 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                 , size = Switch.Small
                 , spacerMultiples =
                     { y = always 2
+                    , text = always 1
                     }
                 , onToggle =
                     \value ->

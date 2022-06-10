@@ -2,8 +2,8 @@ module Example.Theme exposing (..)
 
 import Css
 import Elemental.Css.BorderRadius as BorderRadius exposing (BorderRadius)
-import Example.Colors exposing (Colors)
-import Example.Typography as ExampleTypography exposing (ThemeTypography)
+import Example.Colors as Colors exposing (Colors)
+import Example.Typography as Typography exposing (ThemeTypography)
 
 
 type alias Theme =
@@ -11,32 +11,41 @@ type alias Theme =
     , typography : ThemeTypography
 
     -- , effects : Effects
-    , borderRadius :
-        { button :
-            { small : BorderRadius
-            , medium : BorderRadius
-            }
-        , global :
-            { small : BorderRadius
-            , medium : BorderRadius
-            , large : BorderRadius
-            }
-        }
+    , borderRadius : ThemeBorderRadius
+    , config : Config
     }
 
 
+baseTheme =
+    { colors = Colors.baseColors
+    , config = baseConfig
+    , typography = Typography.baseTypography
+    , borderRadius = baseBorderRadius
+    }
 
--- type alias Colors =
---     { background :
---         { normal : Css.Color
---         , alternate : Css.Color
---         , hover : Css.Color
---         }
---     , foreground :
---         { regular : Css.Color
---         , soft : Css.Color
---         }
---     }
+
+elegantTheme =
+    { colors = Colors.elegantColors
+    , config = baseConfig
+    , typography = Typography.elegantTypography
+    , borderRadius = baseBorderRadius
+    }
+
+
+partyTheme =
+    { colors = Colors.partyColors
+    , config = baseConfig
+    , typography = Typography.partyTypography
+    , borderRadius = baseBorderRadius
+    }
+
+
+adventureTheme =
+    { colors = Colors.adventureColors
+    , config = baseConfig
+    , typography = Typography.adventureTypography
+    , borderRadius = baseBorderRadius
+    }
 
 
 type alias Effects =
@@ -53,10 +62,23 @@ type alias Shadows =
 
 
 
--- TYPOGRAPHY
+-- Base Config
 
 
-borderRadius =
+type alias ThemeBorderRadius =
+    { button :
+        { small : BorderRadius
+        , medium : BorderRadius
+        }
+    , global :
+        { small : BorderRadius
+        , medium : BorderRadius
+        , large : BorderRadius
+        }
+    }
+
+
+baseBorderRadius =
     { button =
         { small = BorderRadius.borderRadius 20
         , medium = BorderRadius.borderRadius 24
@@ -65,5 +87,20 @@ borderRadius =
         { small = BorderRadius.borderRadius 4
         , medium = BorderRadius.borderRadius 8
         , large = BorderRadius.borderRadius 16
+        }
+    }
+
+
+type alias Config =
+    { transitionDuration :
+        { long : Float
+        }
+    }
+
+
+baseConfig : Config
+baseConfig =
+    { transitionDuration =
+        { long = 400
         }
     }

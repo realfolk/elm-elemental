@@ -6,10 +6,14 @@ import Html.Styled.Attributes as HA
 
 
 type Icons
-    = Palette
+    = CheckCircle
+    | ChevronLeft
+    | ChevronRight
+    | Palette
+    | Send
 
 
-view icon size=
+view icon size =
     H.span
         [ HA.class "material-symbols-outlined"
         , HA.css
@@ -19,5 +23,17 @@ view icon size=
     <|
         List.singleton <|
             case icon of
+                CheckCircle ->
+                    H.text "check_circle"
+
+                ChevronLeft ->
+                    H.text "chevron_left"
+
+                ChevronRight ->
+                    H.text "chevron_right"
+
                 Palette ->
                     H.text "palette"
+
+                Send ->
+                    H.text "send"

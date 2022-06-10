@@ -52,317 +52,20 @@ type alias Options msg =
 
 view : Options msg -> Colors -> H.Html msg
 view { theme, onUpdateColors } themeColors =
-    L.viewColumn L.Normal
-        []
-        [ viewColorTree theme <|
-            Node
-                { styleName = "Foreground"
-                , colorSet =
-                    [ { name = "Regular"
-                      , intoSet =
-                            \color ->
-                                let
-                                    foreground =
-                                        themeColors.foreground
-                                in
-                                { themeColors | foreground = { foreground | regular = color } }
-                                    |> onUpdateColors
-                      , color = themeColors.foreground.regular
-                      }
-                    , { name = "Soft"
-                      , intoSet =
-                            \color ->
-                                let
-                                    foreground =
-                                        themeColors.foreground
-                                in
-                                { themeColors | foreground = { foreground | soft = color } }
-                                    |> onUpdateColors
-                      , color = themeColors.foreground.soft
-                      }
-                    , { name = "Code"
-                      , intoSet =
-                            \color ->
-                                let
-                                    foreground =
-                                        themeColors.foreground
-                                in
-                                { themeColors | foreground = { foreground | code = color } }
-                                    |> onUpdateColors
-                      , color = themeColors.foreground.code
-                      }
-                    ]
-                }
-        , L.layout.spacerY 8
-        , viewColorTree theme <|
-            Node
-                { styleName = "Background"
-                , colorSet =
-                    [ { name = "Normal"
-                      , intoSet =
-                            \color ->
-                                let
-                                    background =
-                                        themeColors.background
-                                in
-                                { themeColors | background = { background | normal = color } }
-                                    |> onUpdateColors
-                      , color = themeColors.background.normal
-                      }
-                    , { name = "Alternate"
-                      , intoSet =
-                            \color ->
-                                let
-                                    background =
-                                        themeColors.background
-                                in
-                                { themeColors | background = { background | alternate = color } }
-                                    |> onUpdateColors
-                      , color = themeColors.background.alternate
-                      }
-                    , { name = "Code"
-                      , intoSet =
-                            \color ->
-                                let
-                                    background =
-                                        themeColors.background
-                                in
-                                { themeColors | background = { background | code = color } }
-                                    |> onUpdateColors
-                      , color = themeColors.background.code
-                      }
-                    ]
-                }
-        , L.layout.spacerY 8
-        , viewColorTree theme <|
-            Node
-                { styleName = "Border"
-                , colorSet =
-                    [ { name = ""
-                      , intoSet =
-                            \color ->
-                                { themeColors | border = color }
-                                    |> onUpdateColors
-                      , color = themeColors.border
-                      }
-                    ]
-                }
-        , L.layout.spacerY 8
-        , viewColorTree theme <|
-            ColorTree switchSectionId
-                "Switch"
-                [ Node
-                    { styleName = "Background"
-                    , colorSet =
-                        [ { name = "Disabled"
-                          , intoSet =
-                                \color ->
-                                    let
-                                        switch =
-                                            themeColors.switch
-
-                                        background =
-                                            switch.background
-                                    in
-                                    { themeColors | switch = { switch | background = { background | disabled = color } } }
-                                        |> onUpdateColors
-                          , color = themeColors.switch.background.disabled
-                          }
-                        , { name = "On"
-                          , intoSet =
-                                \color ->
-                                    let
-                                        switch =
-                                            themeColors.switch
-
-                                        background =
-                                            switch.background
-                                    in
-                                    { themeColors | switch = { switch | background = { background | on = color } } }
-                                        |> onUpdateColors
-                          , color = themeColors.switch.background.on
-                          }
-                        , { name = "Off"
-                          , intoSet =
-                                \color ->
-                                    let
-                                        switch =
-                                            themeColors.switch
-
-                                        background =
-                                            switch.background
-                                    in
-                                    { themeColors | switch = { switch | background = { background | off = color } } }
-                                        |> onUpdateColors
-                          , color = themeColors.switch.background.off
-                          }
-                        ]
-                    }
-                , Node
-                    { styleName = "Border"
-                    , colorSet =
-                        [ { name = "Disabled"
-                          , intoSet =
-                                \color ->
-                                    let
-                                        switch =
-                                            themeColors.switch
-
-                                        border =
-                                            switch.border
-                                    in
-                                    { themeColors | switch = { switch | border = { border | disabled = color } } }
-                                        |> onUpdateColors
-                          , color = themeColors.switch.border.disabled
-                          }
-                        , { name = "On"
-                          , intoSet =
-                                \color ->
-                                    let
-                                        switch =
-                                            themeColors.switch
-
-                                        border =
-                                            switch.border
-                                    in
-                                    { themeColors | switch = { switch | border = { border | on = color } } }
-                                        |> onUpdateColors
-                          , color = themeColors.switch.border.on
-                          }
-                        , { name = "Off"
-                          , intoSet =
-                                \color ->
-                                    let
-                                        switch =
-                                            themeColors.switch
-
-                                        border =
-                                            switch.border
-                                    in
-                                    { themeColors | switch = { switch | border = { border | off = color } } }
-                                        |> onUpdateColors
-                          , color = themeColors.switch.border.off
-                          }
-                        ]
-                    }
-                , ColorTree ""
-                    "Switch Handle"
-                    [ Node
-                        { styleName = "Background"
-                        , colorSet =
-                            [ { name = "Disabled"
-                              , intoSet =
-                                    \color ->
-                                        let
-                                            switch =
-                                                themeColors.switch
-
-                                            handle =
-                                                switch.handle
-
-                                            background =
-                                                handle.background
-                                        in
-                                        { themeColors | switch = { switch | handle = { handle | background = { background | disabled = color } } } }
-                                            |> onUpdateColors
-                              , color = themeColors.switch.handle.background.disabled
-                              }
-                            , { name = "On"
-                              , intoSet =
-                                    \color ->
-                                        let
-                                            switch =
-                                                themeColors.switch
-
-                                            handle =
-                                                switch.handle
-
-                                            background =
-                                                handle.background
-                                        in
-                                        { themeColors | switch = { switch | handle = { handle | background = { background | on = color } } } }
-                                            |> onUpdateColors
-                              , color = themeColors.switch.handle.background.on
-                              }
-                            , { name = "Off"
-                              , intoSet =
-                                    \color ->
-                                        let
-                                            switch =
-                                                themeColors.switch
-
-                                            handle =
-                                                switch.handle
-
-                                            background =
-                                                handle.background
-                                        in
-                                        { themeColors | switch = { switch | handle = { handle | background = { background | off = color } } } }
-                                            |> onUpdateColors
-                              , color = themeColors.switch.handle.background.off
-                              }
-                            ]
-                        }
-                    , Node
-                        { styleName = "Border"
-                        , colorSet =
-                            [ { name = "Disabled"
-                              , intoSet =
-                                    \color ->
-                                        let
-                                            switch =
-                                                themeColors.switch
-
-                                            handle =
-                                                switch.handle
-
-                                            border =
-                                                handle.border
-                                        in
-                                        { themeColors | switch = { switch | handle = { handle | border = { border | disabled = color } } } }
-                                            |> onUpdateColors
-                              , color = themeColors.switch.handle.border.disabled
-                              }
-                            , { name = "On"
-                              , intoSet =
-                                    \color ->
-                                        let
-                                            switch =
-                                                themeColors.switch
-
-                                            handle =
-                                                switch.handle
-
-                                            border =
-                                                handle.border
-                                        in
-                                        { themeColors | switch = { switch | handle = { handle | border = { border | on = color } } } }
-                                            |> onUpdateColors
-                              , color = themeColors.switch.handle.border.on
-                              }
-                            , { name = "Off"
-                              , intoSet =
-                                    \color ->
-                                        let
-                                            switch =
-                                                themeColors.switch
-
-                                            handle =
-                                                switch.handle
-
-                                            border =
-                                                handle.border
-                                        in
-                                        { themeColors | switch = { switch | handle = { handle | border = { border | off = color } } } }
-                                            |> onUpdateColors
-                              , color = themeColors.switch.handle.border.off
-                              }
-                            ]
-                        }
-                    ]
-                ]
-        , L.layout.spacerY 8
-        ]
+    H.map onUpdateColors <|
+        L.viewColumn L.Normal
+            []
+            [ foregroundTree theme themeColors
+            , L.layout.spacerY 8
+            , backgroundTree theme themeColors
+            , L.layout.spacerY 8
+            , borderTree theme themeColors
+            , L.layout.spacerY 8
+            , switchTree theme themeColors
+            , L.layout.spacerY 8
+            , buttonTree theme themeColors
+            , L.layout.spacerY 8
+            ]
 
 
 viewColorTree : Theme -> ColorTree msg -> H.Html msg
@@ -387,10 +90,6 @@ viewColorTree theme colorTree =
             viewColorSet theme colorSet
 
 
-switchSectionId =
-    "switch-colors-section"
-
-
 viewColorSet : Theme -> ColorSet msg -> H.Html msg
 viewColorSet theme { styleName, colorSet } =
     let
@@ -400,7 +99,7 @@ viewColorSet theme { styleName, colorSet } =
     in
     L.viewColumn L.Normal
         []
-        [ H.h6
+        [ H.div
             [ HA.css
                 [ Css.display Css.inline ]
             ]
@@ -414,6 +113,7 @@ viewColorSet theme { styleName, colorSet } =
                 ]
             ]
             children
+        , L.layout.spacerY 2
         , viewCode theme styleName colorSet
         ]
 
@@ -448,6 +148,361 @@ viewColorInput color onChangeColor =
         []
 
 
+foregroundTree theme themeColors =
+    let
+        foreground =
+            themeColors.foreground
+    in
+    H.map (\newForeground -> { themeColors | foreground = newForeground }) <|
+        viewColorTree theme <|
+            Node
+                { styleName = "Foreground"
+                , colorSet =
+                    [ { name = "Regular"
+                      , intoSet =
+                            \color -> { foreground | regular = color }
+                      , color = themeColors.foreground.regular
+                      }
+                    , { name = "Soft"
+                      , intoSet =
+                            \color -> { foreground | soft = color }
+                      , color = themeColors.foreground.soft
+                      }
+                    , { name = "Code"
+                      , intoSet =
+                            \color -> { foreground | code = color }
+                      , color = themeColors.foreground.code
+                      }
+                    ]
+                }
+
+
+backgroundTree theme themeColors =
+    let
+        background =
+            themeColors.background
+    in
+    H.map (\newBackground -> { themeColors | background = newBackground }) <|
+        viewColorTree theme <|
+            Node
+                { styleName = "Background"
+                , colorSet =
+                    [ { name = "Normal"
+                      , intoSet =
+                            \color -> { background | normal = color }
+                      , color = background.normal
+                      }
+                    , { name = "Alternate"
+                      , intoSet = \color -> { background | alternate = color }
+                      , color = background.alternate
+                      }
+                    , { name = "Code"
+                      , intoSet = \color -> { background | code = color }
+                      , color = background.code
+                      }
+                    ]
+                }
+
+
+borderTree theme themeColors =
+    viewColorTree theme <|
+        Node
+            { styleName = "Border"
+            , colorSet =
+                [ { name = ""
+                  , intoSet =
+                        \color ->
+                            { themeColors | border = color }
+                  , color = themeColors.border
+                  }
+                ]
+            }
+
+
+switchSectionId =
+    "switch-colors-section"
+
+
+switchTree theme themeColors =
+    let
+        switch =
+            themeColors.switch
+    in
+    H.map (\newSwitch -> { themeColors | switch = newSwitch }) <|
+        viewColorTree theme <|
+            ColorTree switchSectionId
+                "Switch"
+                [ Node
+                    { styleName = "Background"
+                    , colorSet =
+                        [ { name = "Disabled"
+                          , intoSet =
+                                \color ->
+                                    let
+                                        background =
+                                            switch.background
+                                    in
+                                    { switch | background = { background | disabled = color } }
+                          , color = switch.background.disabled
+                          }
+                        , { name = "On"
+                          , intoSet =
+                                \color ->
+                                    let
+                                        background =
+                                            switch.background
+                                    in
+                                    { switch | background = { background | on = color } }
+                          , color = switch.background.on
+                          }
+                        , { name = "Off"
+                          , intoSet =
+                                \color ->
+                                    let
+                                        background =
+                                            switch.background
+                                    in
+                                    { switch | background = { background | off = color } }
+                          , color = switch.background.off
+                          }
+                        ]
+                    }
+                , Node
+                    { styleName = "Border"
+                    , colorSet =
+                        [ { name = "Disabled"
+                          , intoSet =
+                                \color ->
+                                    let
+                                        border =
+                                            switch.border
+                                    in
+                                    { switch | border = { border | disabled = color } }
+                          , color = switch.border.disabled
+                          }
+                        , { name = "On"
+                          , intoSet =
+                                \color ->
+                                    let
+                                        border =
+                                            switch.border
+                                    in
+                                    { switch | border = { border | on = color } }
+                          , color = switch.border.on
+                          }
+                        , { name = "Off"
+                          , intoSet =
+                                \color ->
+                                    let
+                                        border =
+                                            switch.border
+                                    in
+                                    { switch | border = { border | off = color } }
+                          , color = switch.border.off
+                          }
+                        ]
+                    }
+                , ColorTree ""
+                    "Switch Handle"
+                    [ Node
+                        { styleName = "Background"
+                        , colorSet =
+                            [ { name = "Disabled"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            handle =
+                                                switch.handle
+
+                                            background =
+                                                handle.background
+                                        in
+                                        { switch | handle = { handle | background = { background | disabled = color } } }
+                              , color = switch.handle.background.disabled
+                              }
+                            , { name = "On"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            handle =
+                                                switch.handle
+
+                                            background =
+                                                handle.background
+                                        in
+                                        { switch | handle = { handle | background = { background | on = color } } }
+                              , color = switch.handle.background.on
+                              }
+                            , { name = "Off"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            handle =
+                                                switch.handle
+
+                                            background =
+                                                handle.background
+                                        in
+                                        { switch | handle = { handle | background = { background | off = color } } }
+                              , color = switch.handle.background.off
+                              }
+                            ]
+                        }
+                    , Node
+                        { styleName = "Border"
+                        , colorSet =
+                            [ { name = "Disabled"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            handle =
+                                                switch.handle
+
+                                            border =
+                                                handle.border
+                                        in
+                                        { switch | handle = { handle | border = { border | disabled = color } } }
+                              , color = switch.handle.border.disabled
+                              }
+                            , { name = "On"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            handle =
+                                                switch.handle
+
+                                            border =
+                                                handle.border
+                                        in
+                                        { switch | handle = { handle | border = { border | on = color } } }
+                              , color = switch.handle.border.on
+                              }
+                            , { name = "Off"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            handle =
+                                                switch.handle
+
+                                            border =
+                                                handle.border
+                                        in
+                                        { switch | handle = { handle | border = { border | off = color } } }
+                              , color = switch.handle.border.off
+                              }
+                            ]
+                        }
+                    ]
+                ]
+
+
+buttonSectionId =
+    "button-colors-section"
+
+
+buttonTree theme themeColors =
+    let
+        button =
+            themeColors.button
+    in
+    L.viewColumn L.Normal
+        []
+        [ buttonSetTree buttonSectionId theme "Primary Button" button.primary
+            |> H.map (\newColors -> { themeColors | button = { button | primary = newColors } })
+        , L.layout.spacerY 4
+        , buttonSetTree "" theme "Secondary Button" button.secondary
+            |> H.map (\newColors -> { themeColors | button = { button | secondary = newColors } })
+        ]
+
+
+buttonSetTree id theme title button =
+    viewColorTree theme <|
+        ColorTree id
+            title
+            [ Node
+                { styleName = "Background"
+                , colorSet =
+                    [ { name = "Normal"
+                      , intoSet =
+                            \color ->
+                                let
+                                    background =
+                                        button.background
+                                in
+                                { button | background = { background | normal = color } }
+                      , color = button.background.normal
+                      }
+                    , { name = "Disabled"
+                      , intoSet =
+                            \color ->
+                                let
+                                    background =
+                                        button.background
+                                in
+                                { button | background = { background | disabled = color } }
+                      , color = button.background.disabled
+                      }
+                    , { name = "Hover"
+                      , intoSet =
+                            \color ->
+                                let
+                                    background =
+                                        button.background
+                                in
+                                { button | background = { background | hover = color } }
+                      , color = button.background.hover
+                      }
+                    , { name = "Pressed"
+                      , intoSet =
+                            \color ->
+                                let
+                                    background =
+                                        button.background
+                                in
+                                { button | background = { background | pressed = color } }
+                      , color = button.background.pressed
+                      }
+                    ]
+                }
+            , Node
+                { styleName = "Border"
+                , colorSet =
+                    [ { name = "Focus"
+                      , intoSet =
+                            \color ->
+                                { button | focus = color }
+                      , color = button.focus
+                      }
+                    ]
+                }
+            , Node
+                { styleName = "Foreground"
+                , colorSet =
+                    [ { name = "Normal"
+                      , intoSet =
+                            \color ->
+                                let
+                                    foreground =
+                                        button.foreground
+                                in
+                                { button | foreground = { foreground | normal = color } }
+                      , color = button.foreground.normal
+                      }
+                    , { name = "Disabled"
+                      , intoSet =
+                            \color ->
+                                let
+                                    foreground =
+                                        button.foreground
+                                in
+                                { button | foreground = { foreground | disabled = color } }
+                      , color = button.foreground.disabled
+                      }
+                    ]
+                }
+            ]
+
+
 viewCode theme setName colorSet =
     let
         indent =
@@ -462,10 +517,10 @@ viewCode theme setName colorSet =
                     ", "
 
         viewColorCode index { color, name } =
-            H.pre [] [ H.text (leading index ++ String.toLower name ++ ": Css.hex \"" ++ colorToHexWithAlpha color ++ "\"") ]
+            H.pre [] [ H.text (leading index ++ String.toLower name ++ " = Css.hex \"" ++ colorToHexWithAlpha color ++ "\"") ]
 
         children =
-            H.pre [] [ H.text (String.toLower setName ++ " :") ]
+            H.pre [] [ H.text (String.toLower setName ++ " =") ]
                 :: (colorSet
                         |> List.indexedMap viewColorCode
                         |> Lib.flip (++) [ H.pre [] [ H.text (indent "} ") ] ]

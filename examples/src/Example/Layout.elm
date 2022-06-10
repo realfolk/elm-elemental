@@ -1,6 +1,9 @@
 module Example.Layout exposing (..)
 
+import Css
 import Elemental.Layout as L exposing (DeviceSize(..), DeviceType(..))
+import Html.Styled as H
+import Html.Styled.Attributes as HA
 
 
 layout : L.Layout msg
@@ -49,3 +52,17 @@ layout =
                     _ ->
                         640
         }
+
+
+viewWrappedRow additionalAttrs children =
+    H.div
+        [ HA.css
+            ([ Css.displayFlex
+             , Css.flexFlow2 Css.row Css.wrap
+             , Css.alignItems Css.center
+             , Css.justifyContent Css.flexStart
+             ]
+                ++ additionalAttrs
+            )
+        ]
+        children
