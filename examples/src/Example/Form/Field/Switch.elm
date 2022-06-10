@@ -17,6 +17,7 @@ toOptions :
     , required : Bool
     , spacerMultiples :
         { y : Switch.Size -> Float
+        , text : Switch.Size -> Float
         }
     }
     -> Field.Options
@@ -69,6 +70,7 @@ toOptions options =
             , transitionDuration = 400
             , spacerMultiples =
                 { y = options.spacerMultiples.y
+                , text = options.spacerMultiples.text
                 }
             }
     in

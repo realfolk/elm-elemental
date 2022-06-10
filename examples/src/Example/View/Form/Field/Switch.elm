@@ -15,6 +15,7 @@ toOptions :
     , size : Switch.Size
     , spacerMultiples :
         { y : Switch.Size -> Float
+        , text : Switch.Size -> Float
         }
     , onToggle : Bool -> msg
     }
@@ -57,6 +58,10 @@ toOptions options =
                 { label = options.theme.typography.form.field.label
                 }
             , transitionDuration = 400
+            , spacerMultiples =
+                { y = options.spacerMultiples.y
+                , text = options.spacerMultiples.y
+                }
             }
     in
     { theme = widgetTheme
@@ -64,8 +69,5 @@ toOptions options =
     , text = options.text
     , disabled = options.disabled
     , size = options.size
-    , spacerMultiples =
-        { y = options.spacerMultiples.y
-        }
     , onToggle = options.onToggle
     }

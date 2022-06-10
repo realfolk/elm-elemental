@@ -109,7 +109,10 @@ viewSwitchViews theme layout isSwitchOn =
                 , size = Switch.Small
                 , onToggle = \_ -> NoOp
                 , text = "Switch Text"
-                , spacerMultiples = { y = \_ -> 2 }
+                , spacerMultiples =
+                    { y = \_ -> 2
+                    , text = \_ -> 2
+                    }
                 }
     in
     [ L.viewRow L.Normal
@@ -194,7 +197,10 @@ viewFormSwitches theme switchFieldModel =
                 , switchText = "Disabled Switch Form Field"
                 , support = Support.Text ""
                 , required = True
-                , spacerMultiples = { y = always 1 }
+                , spacerMultiples =
+                    { y = \_ -> 2
+                    , text = \_ -> 2
+                    }
                 }
     in
     [ H.h6 [] [ H.text "Form Switches" ]
