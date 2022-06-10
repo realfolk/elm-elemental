@@ -55,7 +55,7 @@ type alias Msg =
     Field.Msg Msg_
 
 
- Msg_
+type Msg_
     = ToggledSwitch Bool
 
 
