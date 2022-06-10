@@ -59,12 +59,12 @@ type alias Theme =
             , value : Css.Color
             }
         }
+    , borderRadius : BorderRadius.Style
     , spacerMultiples :
         { y : Float
         , x : Float
         , caret : Float
         }
-    , borderRadius : BorderRadius.Style
     }
 
 

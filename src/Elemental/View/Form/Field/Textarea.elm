@@ -17,10 +17,6 @@ type alias Options msg =
     , placeholder : String
     , height : Float
     , onInput : String -> msg
-    , spacerMultiples :
-        { x : Float
-        , y : Float
-        }
     }
 
 
@@ -46,6 +42,10 @@ type alias Theme =
             }
         }
     , borderRadius : BorderRadius.Style
+    , spacerMultiples :
+        { y : Float
+        , x : Float
+        }
     }
 
 
@@ -112,8 +112,8 @@ view options value =
                 , Css.height <| Css.px options.height
                 , Css.resize Css.vertical
                 , Css.padding2
-                    (options.layout.computeSpacerPx options.spacerMultiples.y)
-                    (options.layout.computeSpacerPx options.spacerMultiples.x)
+                    (options.layout.computeSpacerPx options.theme.spacerMultiples.y)
+                    (options.layout.computeSpacerPx options.theme.spacerMultiples.x)
                 , BorderRadius.toCssStyle options.theme.borderRadius
                 , style
                 ]
