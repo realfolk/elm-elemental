@@ -2,7 +2,6 @@ module Elemental.Form.Field.Switch exposing
     ( Flags
     , Model
     , Msg
-    , Msg_
     , Options
     , field
     )
