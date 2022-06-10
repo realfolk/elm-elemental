@@ -104,8 +104,6 @@ view options isSelected =
                 [ viewInput options dimensions isSelected
                 , viewHandle options dimensions isSelected
                 ]
-            , options.layout.spacerX <|
-                options.theme.spacerMultiples.text options.size
             , viewLabel options isSelected
             ]
         , options.layout.spacerY <|
