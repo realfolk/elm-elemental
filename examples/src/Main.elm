@@ -42,7 +42,26 @@ main =
 type alias Model =
     { theme : Theme
     , switches : Switches.Model
+    , demoStep : DemoStep
     }
+
+
+type DemoStep
+    = ComponentLibrary
+    | ConsistentStyling
+    | CommunicationTool
+
+
+stepToShowHide step =
+    case step of
+        ComponentLibrary ->
+            { showStyle = False, showCommunication = False }
+
+        ConsistentStyling ->
+            { showStyle = True, showCommunication = False }
+
+        CommunicationTool ->
+            { showStyle = True, showCommunication = True }
 
 
 init : () -> Url.Url -> B.Key -> ( Model, Cmd Msg )
@@ -53,6 +72,7 @@ init _ _ _ =
             , borderRadius = Theme.borderRadius
             }
       , switches = Switches.init ()
+      , demoStep = ComponentLibrary
       }
     , Cmd.none
     )

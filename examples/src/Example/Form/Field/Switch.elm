@@ -67,6 +67,9 @@ toOptions options =
                 { label = options.theme.typography.form.field.label
                 }
             , transitionDuration = 400
+            , spacerMultiples =
+                { y = options.spacerMultiples.y
+                }
             }
     in
     { widgetTheme = widgetTheme
@@ -88,7 +91,4 @@ toOptions options =
     , switchText = options.switchText
     , support = options.support
     , required = options.required
-    , spacerMultiples =
-        { y = options.spacerMultiples.y
-        }
     }
