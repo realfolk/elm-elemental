@@ -8,7 +8,6 @@ module Elemental.View.Form.Field.Switch exposing
 import Css
 import Css.Transitions
 import Elemental.Css as LibCss
-
 import Elemental.Layout as L
 import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
