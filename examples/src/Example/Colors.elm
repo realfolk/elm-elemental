@@ -285,7 +285,7 @@ partyColors =
                 }
             , foreground =
                 { normal = Css.hex "#000000"
-                , disabled = Css.hex "#242424"
+                , disabled = Css.hex "#ffffff"
                 }
             , focus = Css.hex "#ffcd1a"
             }
@@ -325,23 +325,23 @@ partyColors =
         }
     , switch =
         { background =
-            { disabled = Css.hex "#becc34"
-            , on = Css.hex "#e1ff41"
+            { disabled = Css.hex "#4fd86b"
+            , on = Css.hex "#1adb40"
             , off = Css.hex "#dfe4d6"
             }
         , border =
-            { disabled = Css.hex "#575757"
-            , on = Css.hex "#a7b046"
+            { disabled = Css.hex "#ffffff"
+            , on = Css.hex "#1ad940"
             , off = Css.hex "#74796e"
             }
         , handle =
             { background =
-                { disabled = Css.hex "#a7b046"
+                { disabled = Css.hex "#0ca12a"
                 , on = Css.hex "#363636"
                 , off = Css.hex "#74796e"
                 }
             , border =
-                { disabled = Css.hex "#a7b046"
+                { disabled = Css.hex "#ebebeb"
                 , on = Css.hex "#ffffff"
                 , off = Css.hex "#dfe4d6"
                 }

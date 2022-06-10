@@ -61,7 +61,7 @@ init : () -> Url.Url -> B.Key -> ( Model, Cmd Msg )
 init _ _ _ =
     ( { theme = Theme.baseTheme
       , switches = Switches.init ()
-      , demoStep = ComponentLibrary
+      , demoStep = CompleteControl
       }
     , Cmd.none
     )
@@ -197,22 +197,7 @@ viewHeader theme demoStep =
     L.viewRow L.Normal
         []
         [ H.h4 []
-            [ H.text
-                ("elm-elemental: "
-                    ++ (case demoStep of
-                            ComponentLibrary ->
-                                "Component Library"
-
-                            ConsistentStyling ->
-                                "Consistent Theming Library"
-
-                            CommunicationTool ->
-                                "Communication  Tool"
-
-                            CompleteControl ->
-                                "Complete Control"
-                       )
-                )
+            [ H.text "elm-elemental"
             ]
         , L.layout.spacerY 2
         , L.viewPushRight

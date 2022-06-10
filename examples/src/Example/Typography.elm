@@ -333,9 +333,9 @@ partyTypography =
         }
     , button =
         { small =
-            { families = raleway
-            , size = 14
-            , normalWeight = semiBold
+            { families = rancho
+            , size = 16
+            , normalWeight = normal
             , boldWeight = semiBold
             , lineHeight = 20
             , letterSpacing = 0
@@ -345,9 +345,9 @@ partyTypography =
             , uppercase = False
             }
         , medium =
-            { families = raleway
-            , size = 16
-            , normalWeight = semiBold
+            { families = rancho
+            , size = 18
+            , normalWeight = normal
             , boldWeight = semiBold
             , lineHeight = 24
             , letterSpacing = 0
