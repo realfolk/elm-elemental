@@ -60,7 +60,7 @@ toOptions options =
             , transitionDuration = 400
             , spacerMultiples =
                 { y = options.spacerMultiples.y
-                , text = options.spacerMultiples.y
+                , text = options.spacerMultiples.text
                 }
             }
     in
