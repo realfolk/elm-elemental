@@ -78,10 +78,6 @@ type alias Options_ =
     { widgetTheme : Textarea.Theme
     , placeholder : String
     , height : Float
-    , spacerMultiples :
-        { x : Float
-        , y : Float
-        }
     }
 
 
@@ -100,6 +96,7 @@ view options model =
                 , foreground = fieldColors.foreground
                 }
             , borderRadius = options.widgetTheme.borderRadius
+            , spacerMultiples = options.widgetTheme.spacerMultiples
             }
         , layout = options.layout
         , disabled = options.disabled
@@ -107,6 +104,5 @@ view options model =
         , placeholder = options.placeholder
         , height = options.height
         , onInput = ChangedInput
-        , spacerMultiples = options.spacerMultiples
         }
         model.value

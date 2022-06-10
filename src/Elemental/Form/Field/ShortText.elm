@@ -86,10 +86,6 @@ type alias Options_ =
     , icon : Maybe Icon
     , placeholder : String
     , autofocus : Bool
-    , spacerMultiples :
-        { x : Input.Size -> Float
-        , y : Input.Size -> Float
-        }
     }
 
 
@@ -108,6 +104,7 @@ view options model =
                 , foreground = fieldColors.foreground
                 }
             , borderRadius = options.widgetTheme.borderRadius
+            , spacerMultiples = options.widgetTheme.spacerMultiples
             }
         , layout = options.layout
         , type_ = options.type_
@@ -119,6 +116,5 @@ view options model =
         , placeholder = options.placeholder
         , onInput = ChangedInput
         , customAttrs = []
-        , spacerMultiples = options.spacerMultiples
         }
         model.value
