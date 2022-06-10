@@ -307,7 +307,7 @@ partyTypography : ThemeTypography
 partyTypography =
     { body =
         { small =
-            { families = raleway
+            { families = roboto
             , size = 14
             , normalWeight = normal
             , boldWeight = bold
@@ -319,7 +319,7 @@ partyTypography =
             , uppercase = False
             }
         , medium =
-            { families = raleway
+            { families = roboto
             , size = 16
             , normalWeight = normal
             , boldWeight = bold
@@ -384,7 +384,7 @@ partyTypography =
                 , uppercase = True
                 }
             , support =
-                { families = raleway
+                { families = roboto
                 , size = 14
                 , normalWeight = normal
                 , boldWeight = bold
@@ -400,7 +400,7 @@ partyTypography =
     , heading =
         { h4 =
             { families = rancho
-            , size = 28
+            , size = 32
             , normalWeight = medium
             , boldWeight = medium
             , lineHeight = 37
@@ -412,7 +412,7 @@ partyTypography =
             }
         , h5 =
             { families = rancho
-            , size = 24
+            , size = 28
             , normalWeight = medium
             , boldWeight = medium
             , lineHeight = 32
@@ -424,7 +424,7 @@ partyTypography =
             }
         , h6 =
             { families = rancho
-            , size = 20
+            , size = 24
             , normalWeight = medium
             , boldWeight = medium
             , lineHeight = 26

@@ -306,7 +306,7 @@ viewComponents ({ theme } as model) =
             H.text ""
 
           else
-            H.h4 [] [ H.text (String.toUpper "Components") ]
+            H.h4 [] [ H.text "Components" ]
         , L.layout.spacerY 2
         , componentSection
             { title = "Switches"
