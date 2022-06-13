@@ -91,6 +91,11 @@ view options value =
             Maybe.map .text selectedChoice
                 |> Maybe.withDefault " "
 
+        hasSelectedText =
+            Maybe.map .text selectedChoice
+                |> Maybe.map (always True)
+                |> Maybe.withDefault False
+
         fieldColors =
             options.theme.colors
 
@@ -171,7 +176,11 @@ view options value =
             [ LibCss.grow
             , Css.overflow Css.hidden
             , Css.textOverflow Css.ellipsis
-            , Css.whiteSpace Css.noWrap
+            , if hasSelectedText then
+                Css.whiteSpace Css.noWrap
+
+              else
+                Css.whiteSpace Css.pre
             ]
             [ Html.text selectedText ]
         , options.layout.spacerX options.theme.spacerMultiples.caret
