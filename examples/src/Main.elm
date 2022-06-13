@@ -18,8 +18,8 @@ import Example.View.Components.Buttons as Buttons
 import Example.View.Components.Inputs as Inputs
 import Example.View.Components.Switches as Switches
 import Example.View.ThemeButton as ThemeButton
-import Example.View.ThemeControls.Colors as ColorControls
-import Example.View.ThemeControls.Typography as TypographyControls
+import Example.View.ThemeControls.ColorControls as ColorControls
+import Example.View.ThemeControls.TypographyControls as TypographyControls
 import Example.View.ThemeEditor as ThemeEditor
 import Html.Styled as H
 import Html.Styled.Attributes as HA

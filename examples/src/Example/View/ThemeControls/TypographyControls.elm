@@ -1,4 +1,4 @@
-module Example.View.ThemeControls.Typography exposing (..)
+module Example.View.ThemeControls.TypographyControls exposing (..)
 
 import Css
 import Elemental.Css.BorderRadius as BorderRadius

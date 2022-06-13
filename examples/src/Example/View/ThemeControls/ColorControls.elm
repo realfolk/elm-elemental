@@ -1,4 +1,4 @@
-module Example.View.ThemeControls.Colors exposing (..)
+module Example.View.ThemeControls.ColorControls exposing (..)
 
 import Css
 import Elemental.Layout as L

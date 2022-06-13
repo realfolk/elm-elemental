@@ -2,12 +2,25 @@ module Example.View.Form.Field.Select exposing (..)
 
 import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Form.Field.Select as Select
+import Elemental.Layout as L
 import Elemental.View.Form.Field as Field
 import Elemental.View.Form.Field.Select as SelectView
 import Example.Layout as L
-import Example.Theme as Theme exposing (Theme)
+import Example.Theme exposing (Theme)
+import Html.Styled as H
 
 
+toOptions :
+    { theme : Theme
+    , autofocus : Bool
+    , choices : List choice
+    , toSelectChoice : choice -> SelectView.Choice value
+    , label : String
+    , required : Bool
+    , disabled : Bool
+    , support : Field.Support (Select.Msg_ value)
+    }
+    -> Select.Options value
 toOptions options =
     let
         formColors =

@@ -3,6 +3,7 @@ module Example.View.Components.Inputs exposing (..)
 import Css
 import Elemental.Form.Field
 import Elemental.Form.Field.LongText as LongTextField
+import Elemental.Form.Field.Select as SelectField
 import Elemental.Form.Field.ShortText as ShortTextField
 import Elemental.Form.Validate as V
 import Elemental.Layout as L
@@ -13,6 +14,7 @@ import Example.Form.Field.ShortText as ShortTextField
 import Example.Icons as Icons
 import Example.Layout as L
 import Example.Theme exposing (Theme)
+import Example.View.Form.Field.Select as SelectField
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 
@@ -28,6 +30,7 @@ type alias Flags =
 type alias Model =
     { shortTextFieldModel : ShortTextField.Model
     , longTextFieldModel : LongTextField.Model
+    , selectFieldModel : SelectField.Model String
     }
 
 
@@ -53,9 +56,20 @@ init _ =
                         ]
                 }
                 |> Tuple.first
+
+        selectFieldModel =
+            SelectField.field.init
+                { value = ""
+                , validator =
+                    V.firstError
+                        [ V.ifBlank identity "Please provide an input"
+                        ]
+                }
+                |> Tuple.first
     in
     { shortTextFieldModel = shortTextFieldModel
     , longTextFieldModel = longTextFieldModel
+    , selectFieldModel = selectFieldModel
     }
 
 
@@ -67,6 +81,7 @@ type Msg
     = NoOp
     | GotShortTextFieldMsg ShortTextField.Msg
     | GotLongTextFieldMsg LongTextField.Msg
+    | GotSelectFieldMsg (SelectField.Msg String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -95,6 +110,15 @@ update msg model =
             , Cmd.map GotLongTextFieldMsg longTextFieldMsg
             )
 
+        GotSelectFieldMsg msg_ ->
+            let
+                ( selectFieldModel, selectFieldMsg ) =
+                    SelectField.field.update msg_ model.selectFieldModel
+            in
+            ( { model | selectFieldModel = selectFieldModel }
+            , Cmd.map GotSelectFieldMsg selectFieldMsg
+            )
+
 
 
 -- VIEW
@@ -109,6 +133,9 @@ view theme model =
         , L.layout.spacerY 4
         , viewLongTextGroup theme model.longTextFieldModel
             |> H.map GotLongTextFieldMsg
+        , L.layout.spacerY 4
+        , viewSelectGroup theme model.selectFieldModel
+            |> H.map GotSelectFieldMsg
         ]
 
 
@@ -258,6 +285,78 @@ viewLongTextGroup theme formModel =
                         , required = False
                     }
                     formModel
+            }
+        , L.layout.spacerY 4
+        ]
+
+
+viewSelectGroup : Theme -> SelectField.Model String -> H.Html (Elemental.Form.Field.Msg (SelectField.Msg_ String))
+viewSelectGroup theme formModel =
+    let
+        options =
+            SelectField.toOptions
+                { theme = theme
+                , choices = [ "A", "B", "C", "D" ]
+                , toSelectChoice =
+                    \name ->
+                        { text = name
+                        , placeholder = False
+                        , value = name
+                        }
+                , label = "Grade"
+                , support = Support.Text ""
+                , autofocus = False
+                , required = False
+                , disabled = False
+                }
+
+        selectView opts model =
+            H.div [ HA.css [ Css.width <| Css.px 200 ] ]
+                [ SelectField.field.view opts model
+                ]
+    in
+    L.viewColumn L.Normal
+        []
+        [ H.h6 [] [ H.text "Long Text" ]
+        , L.layout.spacerY 2
+        , viewSideBySide
+            { left = selectView options formModel
+            , right =
+                selectView
+                    { options
+                        | label = "With Error"
+                        , support = Support.Text ""
+                    }
+                    { formModel | errors = [ "Something is wrong" ] }
+            }
+        , L.layout.spacerY 4
+        , viewSideBySide
+            { left =
+                selectView
+                    { options
+                        | label = "Optional"
+                        , required = False
+                    }
+                    formModel
+            , right =
+                selectView
+                    { options
+                        | label = "With Support Text"
+                        , support = Support.Text "An important note"
+                    }
+                    formModel
+            }
+        , L.layout.spacerY 4
+        , viewSideBySide
+            { left =
+                selectView
+                    { options
+                        | label = "Disabled"
+                        , disabled = True
+                    }
+                    formModel
+            , right =
+                H.text ""
             }
         , L.layout.spacerY 4
         ]
