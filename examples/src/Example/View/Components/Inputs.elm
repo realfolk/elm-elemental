@@ -317,7 +317,7 @@ viewSelectGroup theme formModel =
     in
     L.viewColumn L.Normal
         []
-        [ H.h6 [] [ H.text "Long Text" ]
+        [ H.h6 [] [ H.text "Select" ]
         , L.layout.spacerY 2
         , viewSideBySide
             { left = selectView options formModel
