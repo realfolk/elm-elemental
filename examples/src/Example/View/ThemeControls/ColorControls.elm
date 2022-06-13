@@ -11,7 +11,6 @@ import Example.View.Codeblock as Codeblock
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 import Html.Styled.Events as HE
-import Lib
 
 
 type ColorTree msg
@@ -241,9 +240,9 @@ borderTree theme themeColors =
             , codeName = ""
             }
             [ Node
-                { styleName = "Border"
+                { styleName = ""
                 , colorSet =
-                    [ { name = ""
+                    [ { name = "Border"
                       , intoSet =
                             \color ->
                                 { themeColors | border = color }
@@ -604,7 +603,14 @@ viewCode : Theme -> Bool -> ColorSet msg -> H.Html msg
 viewCode theme firstItem { colorSet, styleName } =
     let
         indent =
-            String.padLeft 6 ' '
+            String.padLeft
+                (if includeStyleName then
+                    6
+
+                 else
+                    0
+                )
+                ' '
 
         leading index =
             indent <|
@@ -617,20 +623,36 @@ viewCode theme firstItem { colorSet, styleName } =
         viewColorCode index { color, name } =
             H.pre [] [ H.text (leading index ++ String.toLower name ++ " = Css.hex \"" ++ colorToHexWithAlpha color ++ "\"") ]
 
-        children =
-            H.pre []
-                [ if firstItem then
-                    H.text "{ "
+        includeStyleName =
+            not <| String.isEmpty styleName
 
-                  else
-                    H.text ", "
-                , H.text (String.toLower styleName ++ " =")
+        children =
+            (if includeStyleName then
+                [ H.pre []
+                    [ if firstItem then
+                        H.text "{ "
+
+                      else
+                        H.text ", "
+                    , H.text (String.toLower styleName ++ " =")
+                    ]
                 ]
-                :: (colorSet
+
+             else
+                []
+            )
+                ++ (colorSet
                         |> List.indexedMap viewColorCode
-                        |> Lib.flip (++)
-                            [ H.pre [] [ H.text (indent "} ") ]
-                            ]
+                        |> (\colorCode ->
+                                colorCode
+                                    ++ (if includeStyleName then
+                                            [ H.pre [] [ H.text (indent "} ") ]
+                                            ]
+
+                                        else
+                                            []
+                                       )
+                           )
                    )
     in
     children

@@ -1,6 +1,8 @@
 module Main exposing (main)
 
+import Browser as B
 import Browser.Dom as BD
+import Browser.Navigation as B
 import Css
 import Css.Global as CssG
 import Css.Transitions
@@ -24,8 +26,6 @@ import Example.View.ThemeEditor as ThemeEditor
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 import Html.Styled.Events as HE
-import Lib
-import Lib.Browser as B
 import Task
 import Url
 
@@ -166,39 +166,40 @@ view model =
     in
     { title = "Example"
     , body =
-        [ themeToCss model.theme
-        , L.viewRow
-            L.Normal
-            [ Css.backgroundColor model.theme.colors.background.normal
-            , Css.width <| Css.vw 100
-            , Css.overflowX Css.hidden
-            , Css.position Css.relative
-            , Css.height <| Css.pct 100
-            ]
-            [ L.viewColumn L.Normal
-                [ Css.width <| Css.pct 100
+        List.map H.toUnstyled <|
+            [ themeToCss model.theme
+            , L.viewRow
+                L.Normal
+                [ Css.backgroundColor model.theme.colors.background.normal
+                , Css.width <| Css.vw 100
+                , Css.overflowX Css.hidden
+                , Css.position Css.relative
                 , Css.height <| Css.pct 100
-                , Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 8)
-                , Css.overflowY Css.auto
                 ]
-                [ L.layout.spacerY 8
-                , viewHeader model.theme model.demoStep
-                , if model.demoStep == ComponentLibrary then
-                    H.text ""
+                [ L.viewColumn L.Normal
+                    [ Css.width <| Css.pct 100
+                    , Css.height <| Css.pct 100
+                    , Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 8)
+                    , Css.overflowY Css.auto
+                    ]
+                    [ L.layout.spacerY 8
+                    , viewHeader model.theme model.demoStep
+                    , if model.demoStep == ComponentLibrary then
+                        H.text ""
 
-                  else
-                    viewTypography model.theme
-                , if model.demoStep == ComponentLibrary then
-                    H.text ""
+                      else
+                        viewTypography model.theme
+                    , if model.demoStep == ComponentLibrary then
+                        H.text ""
 
-                  else
-                    L.layout.spacerY 12
-                , viewComponents model
+                      else
+                        L.layout.spacerY 12
+                    , viewComponents model
+                    ]
+                , viewSidebar model.theme showHide.showStyle <|
+                    viewThemeControls model.theme showHide.showControls
                 ]
-            , viewSidebar model.theme showHide.showStyle <|
-                viewThemeControls model.theme showHide.showControls
             ]
-        ]
     }
 
 
