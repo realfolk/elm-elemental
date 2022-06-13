@@ -5,6 +5,7 @@ import Css
 import Css.Global as CssG
 import Css.Transitions
 import Elemental.Css as ECss
+import Elemental.Css.BorderRadius as BorderRadius
 import Elemental.Layout as L
 import Elemental.Typography as Typography
 import Elemental.View.Button as Button
@@ -18,6 +19,7 @@ import Example.View.Components.Switches as Switches
 import Example.View.ThemeButton as ThemeButton
 import Example.View.ThemeControls.Colors as ColorControls
 import Example.View.ThemeControls.Typography as TypographyControls
+import Example.View.ThemeEditor as ThemeEditor
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 import Html.Styled.Events as HE
@@ -80,6 +82,7 @@ type Msg
     | ClickedDemoPrev
     | ClickedDemoNext
     | SelectTheme Theme
+    | UpdatedTheme Theme
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -110,6 +113,9 @@ update msg model =
             ( { model | switches = switchesModel }, Cmd.map UpdatedSwitches switchesCmd )
 
         SelectTheme theme ->
+            ( { model | theme = theme }, Cmd.none )
+
+        UpdatedTheme theme ->
             ( { model | theme = theme }, Cmd.none )
 
         ScrollTo id ->
@@ -178,7 +184,8 @@ view model =
                     L.layout.spacerY 12
                 , viewComponents model
                 ]
-            , viewThemeControls model.theme showHide.showStyle showHide.showControls
+            , viewSidebar model.theme showHide.showStyle <|
+                viewThemeControls model.theme showHide.showControls
             ]
         ]
     }
@@ -329,8 +336,12 @@ themeControlsId =
     "theme-controls"
 
 
-viewThemeControls : Theme -> Bool -> Bool -> H.Html Msg
-viewThemeControls theme show showControls =
+sidebarMaxWidth =
+    700
+
+
+viewSidebar : Theme -> Bool -> H.Html msg -> H.Html msg
+viewSidebar theme show child =
     let
         transition =
             Css.Transitions.transition
@@ -342,8 +353,8 @@ viewThemeControls theme show showControls =
         showHideStyle =
             Css.batch <|
                 if show then
-                    [ Css.maxWidth <| Css.px 700
-                    , Css.minWidth <| Css.px 700
+                    [ Css.maxWidth <| Css.px sidebarMaxWidth
+                    , Css.minWidth <| Css.px sidebarMaxWidth
                     ]
 
                 else
@@ -354,7 +365,7 @@ viewThemeControls theme show showControls =
         -- settingsShowHideStyle =
         --     Css.batch <|
         --         if show then
-        --             [ Css.width <| Css.px 700
+        --             [ Css.width <| Css.px sidebarMaxWidth
         --             ]
         --         else
         --             [ Css.width <| Css.px 0
@@ -369,78 +380,97 @@ viewThemeControls theme show showControls =
             , Css.overflowX Css.hidden
             ]
         ]
-        [ H.div
-            [ HA.id themeControlsId
-            , HA.css
-                [ Css.maxWidth <| Css.px 700
-                , Css.minWidth <| Css.px 700
-                , Css.width <| Css.px 700
-                , Css.overflowY Css.scroll
-                , Css.height <| Css.vh 100
-                , Css.backgroundColor theme.colors.background.alternate
-                , Css.borderLeft3 (Css.px 1) Css.solid theme.colors.border
-                , Css.position Css.absolute
-                , Css.top <| Css.px 0
-                , Css.left <| Css.px 0
+        [ child ]
+
+
+viewThemeControls theme showControls =
+    let
+        section title children =
+            H.details
+                [ HA.css
+                    [ Css.backgroundColor theme.colors.background.normal
+                    , BorderRadius.toCssStyle theme.borderRadius.global.small.all
+                    , Css.border3 (Css.px 1) Css.solid theme.colors.border
+                    ]
                 ]
-            ]
-            [ L.viewColumn L.Normal
-                [ Css.width <| Css.pct 100
-                , Css.height <| Css.pct 100
-                , Css.padding2 (L.layout.computeSpacerPx 6) (L.layout.computeSpacerPx 6)
-                ]
-                [ H.h5
+                [ H.summary
                     [ HA.css
-                        [ Typography.toStyle theme.typography.code
-                        , Css.color theme.colors.foreground.regular
+                        [ Css.cursor Css.pointer
+
+                        -- , Typography.toStyle theme.typography.heading.h6
+                        , Css.padding2 (Css.px 10) (Css.px 10)
                         ]
                     ]
-                    [ H.text (String.toUpper "Choose A Template") ]
-                , L.layout.spacerY 2
-                , L.viewWrappedRow []
-                    [ ThemeButton.viewChangeTheme theme Theme.baseTheme "Base" SelectTheme
-                    , L.layout.spacerX 2
-                    , ThemeButton.viewChangeTheme theme Theme.elegantTheme "Elegant" SelectTheme
-                    , L.layout.spacerX 2
-                    , ThemeButton.viewChangeTheme theme Theme.adventureTheme "Adventure" SelectTheme
-                    , L.layout.spacerX 2
-                    , ThemeButton.viewChangeTheme theme Theme.partyTheme "Party" SelectTheme
+                    [ H.text title ]
+                , L.viewColumn L.Normal
+                    [ Css.width <| Css.pct 100
+                    , Css.height <| Css.pct 100
+                    , Css.padding2 (L.layout.computeSpacerPx 6) (L.layout.computeSpacerPx 6)
+                    , Css.borderTop3 (Css.px 1) Css.solid theme.colors.border
                     ]
-                , if not showControls then
-                    H.text ""
+                    children
+                ]
+    in
+    H.div
+        [ HA.id themeControlsId
+        , HA.css
+            [ Css.maxWidth <| Css.px sidebarMaxWidth
+            , Css.minWidth <| Css.px sidebarMaxWidth
+            , Css.width <| Css.px sidebarMaxWidth
+            , Css.overflowY Css.scroll
+            , Css.height <| Css.vh 100
+            , Css.backgroundColor theme.colors.background.alternate
+            , Css.borderLeft3 (Css.px 1) Css.solid theme.colors.border
+            , Css.position Css.absolute
+            , Css.top <| Css.px 0
+            , Css.left <| Css.px 0
+            ]
+        ]
+        [ L.viewColumn L.Normal
+            [ Css.width <| Css.pct 100
+            , Css.height <| Css.pct 100
+            , Css.padding2 (L.layout.computeSpacerPx 6) (L.layout.computeSpacerPx 6)
+            ]
+            [ H.h5
+                [ HA.css
+                    [ Typography.toStyle theme.typography.code
+                    , Css.color theme.colors.foreground.regular
+                    ]
+                ]
+                [ H.text (String.toUpper "Choose A Template") ]
+            , L.layout.spacerY 2
+            , L.viewWrappedRow []
+                [ ThemeButton.viewChangeTheme theme Theme.baseTheme "Base" SelectTheme
+                , L.layout.spacerX 2
+                , ThemeButton.viewChangeTheme theme Theme.elegantTheme "Elegant" SelectTheme
+                , L.layout.spacerX 2
+                , ThemeButton.viewChangeTheme theme Theme.adventureTheme "Adventure" SelectTheme
+                , L.layout.spacerX 2
+                , ThemeButton.viewChangeTheme theme Theme.partyTheme "Party" SelectTheme
+                ]
+            , if not showControls then
+                H.text ""
 
-                  else
-                    L.viewColumn L.Normal
-                        []
-                        [ L.layout.spacerY 4
-                        , H.h5
-                            [ HA.css
-                                [ Typography.toStyle theme.typography.code
-                                , Css.color theme.colors.foreground.regular
-                                ]
-                            ]
-                            [ H.text (String.toUpper "Customize Typography") ]
-                        , L.layout.spacerY 2
-                        , TypographyControls.view
+              else
+                L.viewColumn L.Normal
+                    []
+                    [ L.layout.spacerY 6
+                    , section "Typography"
+                        [ TypographyControls.view
                             { theme = theme
                             , onUpdateTypography = UpdatedTypography
                             }
                             theme.typography
-                        , H.h5
-                            [ HA.css
-                                [ Typography.toStyle theme.typography.code
-                                , Css.color theme.colors.foreground.regular
-                                ]
-                            ]
-                            [ H.text (String.toUpper "Customize Colors") ]
-                        , L.layout.spacerY 2
-                        , ColorControls.view
+                        ]
+                    , L.layout.spacerY 4
+                    , section "Colors"
+                        [ ColorControls.view
                             { theme = theme
                             , onUpdateColors = UpdatedColors
                             }
                             theme.colors
                         ]
-                ]
+                    ]
             ]
         ]
 
@@ -501,6 +531,7 @@ themeToCss theme =
 -- HELPERS
 
 
+stepToShowHide : DemoStep -> { showTypography : Bool, showStyle : Bool, showControls : Bool }
 stepToShowHide step =
     case step of
         ComponentLibrary ->

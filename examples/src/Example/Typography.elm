@@ -1,4 +1,4 @@
-module Example.Typography exposing (..)
+module Example.Typography exposing (ThemeTypography, adventureTypography, allWeights, baseTypography, elegantTypography, intToWeight, namedFontFamilies, partyTypography, weightToInt, weightToName)
 
 import Elemental.Typography exposing (FontFamilies, Typography)
 
@@ -27,12 +27,6 @@ type alias ThemeTypography =
     }
 
 
-sampleTypographies : List ( String, ThemeTypography )
-sampleTypographies =
-    [ ( "Relaxed", baseTypography )
-    ]
-
-
 baseTypography : ThemeTypography
 baseTypography =
     { body =
@@ -52,7 +46,7 @@ baseTypography =
             { families = ibmPlexSans
             , size = 16
             , normalWeight = normal
-            , boldWeight = bold
+            , boldWeight = medium
             , lineHeight = 24
             , letterSpacing = 0
             , bold = False
@@ -187,7 +181,7 @@ elegantTypography =
             { families = raleway
             , size = 16
             , normalWeight = normal
-            , boldWeight = bold
+            , boldWeight = medium
             , lineHeight = 24
             , letterSpacing = 0
             , bold = False
@@ -322,7 +316,7 @@ partyTypography =
             { families = roboto
             , size = 16
             , normalWeight = normal
-            , boldWeight = bold
+            , boldWeight = medium
             , lineHeight = 24
             , letterSpacing = 0
             , bold = False
@@ -457,7 +451,7 @@ adventureTypography =
             { families = cardo
             , size = 16
             , normalWeight = normal
-            , boldWeight = bold
+            , boldWeight = medium
             , lineHeight = 24
             , letterSpacing = 0
             , bold = False

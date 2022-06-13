@@ -22,3 +22,15 @@ view theme lines =
         , Typography.toStyle theme.typography.code
         ]
         lines
+
+
+customView1 : Theme -> List (H.Html msg) -> H.Html msg
+customView1 theme lines =
+    L.viewColumn L.Normal
+        [ Css.width <| Css.pct 100
+        , Css.backgroundColor theme.colors.background.code
+        , BorderRadius.toCssStyle theme.borderRadius.global.small.all
+        , Css.color theme.colors.foreground.code
+        , Typography.toStyle theme.typography.code
+        ]
+        lines

@@ -171,19 +171,14 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                             |> onUpdateTypography
                 }
     in
-    H.details []
-        [ H.summary
-            [ HA.css
-                [ Typography.toStyle theme.typography.code
-                , Css.cursor Css.pointer
-                ]
+    H.div
+        [ HA.css
+            [ Css.borderBottom3 (Css.px 1) Css.solid theme.colors.border
             ]
-            [ H.h6
-                [ HA.css
-                    [ Css.display Css.inline ]
-                ]
-                [ H.text styleName ]
-            ]
+        ]
+        [ H.div
+            [ HA.css [ Typography.toStyle typography ] ]
+            [ H.text styleName ]
         , L.viewColumn L.Normal
             []
             [ L.layout.spacerY 2
@@ -275,7 +270,16 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                 , L.layout.spacerX 4
                 , L.layout.spacerX 4
                 ]
-            , viewTypographyCode theme typography
+            , H.details
+                [ HA.css
+                    [ Typography.toStyle theme.typography.code
+                    , Css.cursor Css.pointer
+                    ]
+                ]
+                [ H.summary [] [ H.text "Code" ]
+                , viewTypographyCode theme typography
+                ]
+            , L.layout.spacerY 4
             ]
         ]
 
