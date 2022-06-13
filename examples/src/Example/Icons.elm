@@ -9,6 +9,7 @@ type Icons
     = CheckCircle
     | ChevronLeft
     | ChevronRight
+    | Edit
     | Palette
     | Send
 
@@ -31,6 +32,9 @@ view icon size =
 
                 ChevronRight ->
                     H.text "chevron_right"
+
+                Edit ->
+                    H.text "edit"
 
                 Palette ->
                     H.text "palette"

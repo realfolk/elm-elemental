@@ -1,27 +1,16 @@
 module Example.View.Components.Switches exposing (..)
 
 import Css
-import Elemental.Css.BorderRadius as BorderRadius
-import Elemental.Form.Field.Select as Select
 import Elemental.Form.Field.Switch as SwitchField
 import Elemental.Form.Validate as V
 import Elemental.Layout as L
-import Elemental.Typography as Typography exposing (Typography)
 import Elemental.View.Form.Field as Support
-import Elemental.View.Form.Field.Input as Input
 import Elemental.View.Form.Field.Switch as Switch
-import Example.Colors as Colors exposing (Colors)
 import Example.Form.Field.Switch as SwitchField
 import Example.Layout as L
-import Example.Theme as Theme exposing (Theme)
-import Example.Typography as Typography exposing (ThemeTypography)
-import Example.View.Codeblock as Codeblock
-import Example.View.Form.Field.Select as Select
+import Example.Theme exposing (Theme)
 import Example.View.Form.Field.Switch as Switch
 import Html.Styled as H
-import Html.Styled.Attributes as HA
-import Html.Styled.Events as HE
-import Lib
 
 
 
@@ -193,7 +182,7 @@ viewFormSwitches theme switchFieldModel =
                 { theme = theme
                 , disabled = False
                 , size = Switch.Small
-                , label = "Apply Coupon?"
+                , label = "Enable 2FA?"
                 , switchText = "Disabled Switch Form Field"
                 , support = Support.Text ""
                 , required = True
@@ -217,6 +206,28 @@ viewFormSwitches theme switchFieldModel =
             { switchOptions
                 | disabled = True
                 , switchText = "Disabled Switch Form Field"
+            }
+            switchFieldModel
+            |> H.map GotSwitchFieldMsg
+        , L.layout.spacerY 4
+        , SwitchField.field.view
+            { switchOptions
+                | switchText = "Switch with Error"
+            }
+            { switchFieldModel
+                | errors =
+                    if SwitchField.field.getValue switchFieldModel then
+                        []
+
+                    else
+                        [ "Two-factor authentication is required for admin accounts" ]
+            }
+            |> H.map GotSwitchFieldMsg
+        , L.layout.spacerY 4
+        , SwitchField.field.view
+            { switchOptions
+                | switchText = "Switch with Support Text"
+                , support = Support.Text "Some support text"
             }
             switchFieldModel
             |> H.map GotSwitchFieldMsg

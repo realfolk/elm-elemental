@@ -33,86 +33,134 @@ type alias Options msg =
 
 view : Options msg -> ThemeTypography -> H.Html msg
 view { theme, onUpdateTypography } typographyTheme =
-    L.viewColumn L.Normal
-        []
-        [ viewTypography theme
-            { styleName = "H4 Heading"
-            , onUpdateTypography = onUpdateTypography
-            , intoTypographyTheme =
-                \typography ->
-                    let
-                        heading =
-                            typographyTheme.heading
-                    in
-                    { typographyTheme | heading = { heading | h4 = typography } }
-            , typography = typographyTheme.heading.h4
-            }
-        , L.layout.spacerY 8
-        , viewTypography theme
-            { styleName = "H5 Heading"
-            , onUpdateTypography = onUpdateTypography
-            , intoTypographyTheme =
-                \typography ->
-                    let
-                        heading =
-                            typographyTheme.heading
-                    in
-                    { typographyTheme | heading = { heading | h5 = typography } }
-            , typography = typographyTheme.heading.h5
-            }
-        , L.layout.spacerY 8
-        , viewTypography theme
-            { styleName = "H6 Heading"
-            , onUpdateTypography = onUpdateTypography
-            , intoTypographyTheme =
-                \typography ->
-                    let
-                        heading =
-                            typographyTheme.heading
-                    in
-                    { typographyTheme | heading = { heading | h6 = typography } }
-            , typography = typographyTheme.heading.h6
-            }
-        , L.layout.spacerY 8
-        , viewTypography
-            theme
-            { styleName = "Body Medium"
-            , onUpdateTypography = onUpdateTypography
-            , intoTypographyTheme =
-                \typography ->
-                    let
-                        body =
-                            typographyTheme.body
-                    in
-                    { typographyTheme | body = { body | medium = typography } }
-            , typography = typographyTheme.body.medium
-            }
-        , L.layout.spacerY 8
-        , viewTypography
-            theme
-            { styleName = "Body Small"
-            , onUpdateTypography = onUpdateTypography
-            , intoTypographyTheme =
-                \typography ->
-                    let
-                        body =
-                            typographyTheme.body
-                    in
-                    { typographyTheme | body = { body | small = typography } }
-            , typography = typographyTheme.body.small
-            }
-        , L.layout.spacerY 8
-        , viewTypography
-            theme
-            { styleName = "Code"
-            , onUpdateTypography = onUpdateTypography
-            , intoTypographyTheme =
-                \typography ->
-                    { typographyTheme | code = typography }
-            , typography = typographyTheme.code
-            }
-        , L.layout.spacerY 8
-        ]
+    L.viewColumn L.Normal [] <|
+        List.intersperse
+            (H.div [ HA.css [ Css.borderTop3 (Css.px 1) Css.solid theme.colors.border ] ]
+                [ L.layout.spacerY 8
+                ]
+            )
+        <|
+            [ viewTypography theme
+                { styleName = "H4 Heading"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        let
+                            heading =
+                                typographyTheme.heading
+                        in
+                        { typographyTheme | heading = { heading | h4 = typography } }
+                , typography = typographyTheme.heading.h4
+                }
+            , viewTypography theme
+                { styleName = "H5 Heading"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        let
+                            heading =
+                                typographyTheme.heading
+                        in
+                        { typographyTheme | heading = { heading | h5 = typography } }
+                , typography = typographyTheme.heading.h5
+                }
+            , viewTypography theme
+                { styleName = "H6 Heading"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        let
+                            heading =
+                                typographyTheme.heading
+                        in
+                        { typographyTheme | heading = { heading | h6 = typography } }
+                , typography = typographyTheme.heading.h6
+                }
+            , viewTypography
+                theme
+                { styleName = "Body Medium"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        let
+                            body =
+                                typographyTheme.body
+                        in
+                        { typographyTheme | body = { body | medium = typography } }
+                , typography = typographyTheme.body.medium
+                }
+            , viewTypography
+                theme
+                { styleName = "Body Small"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        let
+                            body =
+                                typographyTheme.body
+                        in
+                        { typographyTheme | body = { body | small = typography } }
+                , typography = typographyTheme.body.small
+                }
+            , viewTypography
+                theme
+                { styleName = "Code"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        { typographyTheme | code = typography }
+                , typography = typographyTheme.code
+                }
+            , L.viewColumn L.Normal
+                []
+                [ H.h6 [] [ H.text "Form Field " ]
+                , L.layout.spacerY 4
+                , viewTypography
+                    theme
+                    { styleName = "Label"
+                    , onUpdateTypography = onUpdateTypography
+                    , intoTypographyTheme =
+                        \typography ->
+                            let
+                                formField =
+                                    typographyTheme.form.field
+
+                                newFormField =
+                                    { formField | label = typography }
+
+                                form =
+                                    typographyTheme.form
+
+                                newForm =
+                                    { form | field = newFormField }
+                            in
+                            { typographyTheme | form = newForm }
+                    , typography = typographyTheme.form.field.label
+                    }
+                ]
+            , viewTypography
+                theme
+                { styleName = "Support"
+                , onUpdateTypography = onUpdateTypography
+                , intoTypographyTheme =
+                    \typography ->
+                        let
+                            formField =
+                                typographyTheme.form.field
+
+                            newFormField =
+                                { formField | support = typography }
+
+                            form =
+                                typographyTheme.form
+
+                            newForm =
+                                { form | field = newFormField }
+                        in
+                        { typographyTheme | form = newForm }
+                , typography = typographyTheme.form.field.support
+                }
+            ]
 
 
 viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typography } =
@@ -172,10 +220,7 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                 }
     in
     H.div
-        [ HA.css
-            [ Css.borderBottom3 (Css.px 1) Css.solid theme.colors.border
-            ]
-        ]
+        []
         [ H.div
             [ HA.css [ Typography.toStyle typography ] ]
             [ H.text styleName ]

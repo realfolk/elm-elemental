@@ -15,6 +15,7 @@ import Example.Layout as L
 import Example.Theme as Theme exposing (Theme)
 import Example.Typography as Typography exposing (ThemeTypography)
 import Example.View.Components.Buttons as Buttons
+import Example.View.Components.Inputs as Inputs
 import Example.View.Components.Switches as Switches
 import Example.View.ThemeButton as ThemeButton
 import Example.View.ThemeControls.Colors as ColorControls
@@ -48,6 +49,7 @@ main =
 type alias Model =
     { theme : Theme
     , switches : Switches.Model
+    , inputs : Inputs.Model
     , demoStep : DemoStep
     }
 
@@ -63,7 +65,8 @@ init : () -> Url.Url -> B.Key -> ( Model, Cmd Msg )
 init _ _ _ =
     ( { theme = Theme.baseTheme
       , switches = Switches.init ()
-      , demoStep = CompleteControl
+      , inputs = Inputs.init ()
+      , demoStep = ComponentLibrary
       }
     , Cmd.none
     )
@@ -78,6 +81,7 @@ type Msg
     | UpdatedTypography ThemeTypography
     | UpdatedColors Colors.Colors
     | UpdatedSwitches Switches.Msg
+    | UpdatedInputs Inputs.Msg
     | ScrollTo String
     | ClickedDemoPrev
     | ClickedDemoNext
@@ -111,6 +115,13 @@ update msg model =
                     Switches.update switchesMsg model.switches
             in
             ( { model | switches = switchesModel }, Cmd.map UpdatedSwitches switchesCmd )
+
+        UpdatedInputs inputsMsg ->
+            let
+                ( inputsModel, inputsCmd ) =
+                    Inputs.update inputsMsg model.inputs
+            in
+            ( { model | inputs = inputsModel }, Cmd.map UpdatedInputs inputsCmd )
 
         SelectTheme theme ->
             ( { model | theme = theme }, Cmd.none )
@@ -316,6 +327,13 @@ viewComponents ({ theme } as model) =
             H.h4 [] [ H.text "Components" ]
         , L.layout.spacerY 2
         , componentSection
+            { title = "Buttons"
+            , onClick = ScrollTo ColorControls.buttonSectionId
+            }
+        , L.layout.spacerY 2
+        , Buttons.view theme (model.demoStep /= ComponentLibrary) NoOp
+        , L.layout.spacerY 8
+        , componentSection
             { title = "Switches"
             , onClick = ScrollTo ColorControls.switchSectionId
             }
@@ -324,20 +342,25 @@ viewComponents ({ theme } as model) =
             |> H.map UpdatedSwitches
         , L.layout.spacerY 8
         , componentSection
-            { title = "Buttons"
-            , onClick = ScrollTo ColorControls.buttonSectionId
+            { title = "Inputs"
+
+            -- , onClick = ScrollTo ColorControls.buttonSectionId
+            , onClick = NoOp
             }
         , L.layout.spacerY 2
-        , Buttons.view theme (model.demoStep /= ComponentLibrary) NoOp
+        , Inputs.view theme model.inputs
+            |> H.map UpdatedInputs
         ]
 
 
+themeControlsId : String
 themeControlsId =
     "theme-controls"
 
 
+sidebarMaxWidth : number
 sidebarMaxWidth =
-    700
+    600
 
 
 viewSidebar : Theme -> Bool -> H.Html msg -> H.Html msg
@@ -383,6 +406,7 @@ viewSidebar theme show child =
         [ child ]
 
 
+viewThemeControls : Theme -> Bool -> H.Html Msg
 viewThemeControls theme showControls =
     let
         section title children =
@@ -439,7 +463,8 @@ viewThemeControls theme showControls =
                 ]
                 [ H.text (String.toUpper "Choose A Template") ]
             , L.layout.spacerY 2
-            , L.viewWrappedRow []
+            , L.viewWrappedRow
+                []
                 [ ThemeButton.viewChangeTheme theme Theme.baseTheme "Base" SelectTheme
                 , L.layout.spacerX 2
                 , ThemeButton.viewChangeTheme theme Theme.elegantTheme "Elegant" SelectTheme
@@ -470,6 +495,7 @@ viewThemeControls theme showControls =
                             }
                             theme.colors
                         ]
+                    , L.layout.spacerY 4
                     ]
             ]
         ]
@@ -547,6 +573,7 @@ stepToShowHide step =
             { showTypography = True, showStyle = True, showControls = True }
 
 
+prevDemoStep : DemoStep -> DemoStep
 prevDemoStep step =
     case step of
         ComponentLibrary ->
@@ -562,6 +589,7 @@ prevDemoStep step =
             CommunicationTool
 
 
+nextDemoStep : DemoStep -> DemoStep
 nextDemoStep step =
     case step of
         ComponentLibrary ->

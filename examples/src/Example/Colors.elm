@@ -195,7 +195,7 @@ elegantColors =
             }
         }
     , foreground =
-        { regular = rgb 0x00 0x00 0x00
+        { regular = Css.hex "#005236"
         , soft = Css.hex "7d8493"
         , code = white
         }
