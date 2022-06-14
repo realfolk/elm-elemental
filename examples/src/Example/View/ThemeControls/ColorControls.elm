@@ -57,9 +57,9 @@ view { theme, onUpdateColors } themeColors =
             , L.layout.spacerY 8
             , borderTree theme themeColors
             , L.layout.spacerY 8
-            , switchTree theme themeColors
-            , L.layout.spacerY 8
             , buttonTree theme themeColors
+            , L.layout.spacerY 8
+            , switchTree theme themeColors
             , L.layout.spacerY 8
             ]
 

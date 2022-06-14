@@ -37,7 +37,7 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , onUrlRequest = \_ -> NoOp
+        , onUrlRequest = \_ -> NoOp 
         , onUrlChange = \_ -> NoOp
         }
 
@@ -66,7 +66,7 @@ init _ _ _ =
     ( { theme = Theme.baseTheme
       , switches = Switches.init ()
       , inputs = Inputs.init ()
-      , demoStep = ComponentLibrary
+      , demoStep = CompleteControl
       }
     , Cmd.none
     )
@@ -252,6 +252,77 @@ viewHeader theme demoStep =
 
 viewTypography : Theme -> H.Html msg
 viewTypography theme =
+    let
+        typographySpec =
+            [ ( "Heading H4", \t -> t.heading.h4, [] )
+            , ( "Heading H5", \t -> t.heading.h5, [] )
+            , ( "Body Medium", \t -> t.body.medium, [] )
+            , ( "Body Small", \t -> t.body.small, [] )
+            , ( "Body Small", \t -> t.body.small, [] )
+            , ( "Code"
+              , \t -> t.code
+              , [ Css.backgroundColor theme.colors.background.code
+                , Css.color theme.colors.foreground.code
+                , Css.display Css.inlineBlock
+                , Css.padding <| L.layout.computeSpacerPx 1
+                ]
+              )
+            ]
+
+        viewTypographySpec ( name, fromTheme, attrs ) =
+            let
+                typography =
+                    fromTheme theme.typography
+            in
+            viewRow
+                { typography = typography
+                , attrs = attrs
+                , name = name
+                , family =
+                    typography.families
+                        |> List.head
+                        |> Maybe.withDefault ""
+                , fontSize =
+                    String.fromFloat typography.size ++ "px"
+                , lineHeight =
+                    String.fromFloat typography.lineHeight ++ "px"
+                }
+
+        viewRow { typography, attrs, name, family, fontSize, lineHeight } =
+            L.viewRow L.Normal
+                [ Css.minHeight <| Css.px 40
+                ]
+                [ H.div
+                    [ HA.css
+                        ([ Typography.toStyle <| typography
+                         , Css.minWidth <| Css.px 200
+                         ]
+                            ++ attrs
+                        )
+                    ]
+                    [ H.text name ]
+                , L.layout.spacerX 10
+                , H.div
+                    [ HA.css
+                        [ Css.minWidth <| Css.px 200 ]
+                    ]
+                    [ H.text family
+                    ]
+                , L.layout.spacerX 10
+                , H.div
+                    [ HA.css
+                        [ Css.minWidth <| Css.px 100 ]
+                    ]
+                    [ H.text fontSize
+                    ]
+                , H.div
+                    [ HA.css
+                        [ Css.minWidth <| Css.px 40 ]
+                    ]
+                    [ H.text lineHeight
+                    ]
+                ]
+    in
     L.viewColumn L.Normal
         []
         [ H.div
@@ -261,34 +332,20 @@ viewTypography theme =
                 ]
             ]
             [ H.text (String.toUpper "Typography") ]
-        , L.layout.spacerY 2
-        , H.h4 [] [ H.text "H4 Heading" ]
-        , L.layout.spacerY 2
-        , H.h5 [] [ H.text "H5 Heading" ]
-        , L.layout.spacerY 2
-        , H.h6 [] [ H.text "H6 Heading" ]
-        , L.layout.spacerY 2
-        , H.div
-            [ HA.css [ Typography.toStyle theme.typography.body.medium ]
-            ]
-            [ H.text "Body Medium" ]
-        , L.layout.spacerY 2
-        , H.div
-            [ HA.css [ Typography.toStyle theme.typography.body.small ]
-            ]
-            [ H.text "Body Small" ]
-        , L.layout.spacerY 2
-        , H.div
-            [ HA.css
-                [ Typography.toStyle theme.typography.code
-                , Css.backgroundColor theme.colors.background.code
-                , Css.color theme.colors.foreground.code
-                , Css.display Css.inlineBlock
-                , Css.padding <| L.layout.computeSpacerPx 1
-                ]
-            ]
-            [ H.text "Code" ]
-        , L.layout.spacerY 2
+        , viewRow
+            { typography = theme.typography.body.medium
+            , attrs = []
+            , name = "Category"
+            , family = "Family"
+            , fontSize = "Font Size"
+            , lineHeight = "Line Height"
+            }
+        , L.viewColumn L.Normal
+            []
+            (typographySpec
+                |> List.map viewTypographySpec
+                |> List.intersperse (L.layout.spacerY 2)
+            )
         ]
 
 
@@ -301,7 +358,11 @@ viewComponents ({ theme } as model) =
                 [ Typography.toStyle theme.typography.code
                 , Css.color theme.colors.foreground.regular
                 ]
-                [ H.text (String.toUpper options.title)
+                [ -- H.h4 [ HA.css [ Css.backgroundColor theme.colors.background.alternate ] ]
+                  -- [
+                  H.text (String.toUpper options.title)
+
+                -- ]
                 , L.layout.spacerX 2
                 , if model.demoStep == ComponentLibrary then
                     H.text ""

@@ -40,68 +40,78 @@ view { theme, onUpdateTypography } typographyTheme =
                 ]
             )
         <|
-            [ viewTypography theme
-                { styleName = "H4 Heading"
-                , onUpdateTypography = onUpdateTypography
-                , intoTypographyTheme =
-                    \typography ->
-                        let
-                            heading =
-                                typographyTheme.heading
-                        in
-                        { typographyTheme | heading = { heading | h4 = typography } }
-                , typography = typographyTheme.heading.h4
-                }
-            , viewTypography theme
-                { styleName = "H5 Heading"
-                , onUpdateTypography = onUpdateTypography
-                , intoTypographyTheme =
-                    \typography ->
-                        let
-                            heading =
-                                typographyTheme.heading
-                        in
-                        { typographyTheme | heading = { heading | h5 = typography } }
-                , typography = typographyTheme.heading.h5
-                }
-            , viewTypography theme
-                { styleName = "H6 Heading"
-                , onUpdateTypography = onUpdateTypography
-                , intoTypographyTheme =
-                    \typography ->
-                        let
-                            heading =
-                                typographyTheme.heading
-                        in
-                        { typographyTheme | heading = { heading | h6 = typography } }
-                , typography = typographyTheme.heading.h6
-                }
-            , viewTypography
-                theme
-                { styleName = "Body Medium"
-                , onUpdateTypography = onUpdateTypography
-                , intoTypographyTheme =
-                    \typography ->
-                        let
-                            body =
-                                typographyTheme.body
-                        in
-                        { typographyTheme | body = { body | medium = typography } }
-                , typography = typographyTheme.body.medium
-                }
-            , viewTypography
-                theme
-                { styleName = "Body Small"
-                , onUpdateTypography = onUpdateTypography
-                , intoTypographyTheme =
-                    \typography ->
-                        let
-                            body =
-                                typographyTheme.body
-                        in
-                        { typographyTheme | body = { body | small = typography } }
-                , typography = typographyTheme.body.small
-                }
+            [ L.viewColumn L.Normal
+                []
+                [ H.h6 [] [ H.text "Heading " ]
+                , L.layout.spacerY 4
+                , viewTypography theme
+                    { styleName = "H4 Heading"
+                    , onUpdateTypography = onUpdateTypography
+                    , intoTypographyTheme =
+                        \typography ->
+                            let
+                                heading =
+                                    typographyTheme.heading
+                            in
+                            { typographyTheme | heading = { heading | h4 = typography } }
+                    , typography = typographyTheme.heading.h4
+                    }
+                , viewTypography theme
+                    { styleName = "H5 Heading"
+                    , onUpdateTypography = onUpdateTypography
+                    , intoTypographyTheme =
+                        \typography ->
+                            let
+                                heading =
+                                    typographyTheme.heading
+                            in
+                            { typographyTheme | heading = { heading | h5 = typography } }
+                    , typography = typographyTheme.heading.h5
+                    }
+                , viewTypography theme
+                    { styleName = "H6 Heading"
+                    , onUpdateTypography = onUpdateTypography
+                    , intoTypographyTheme =
+                        \typography ->
+                            let
+                                heading =
+                                    typographyTheme.heading
+                            in
+                            { typographyTheme | heading = { heading | h6 = typography } }
+                    , typography = typographyTheme.heading.h6
+                    }
+                ]
+            , L.viewColumn L.Normal
+                []
+                [ H.h6 [] [ H.text "Body " ]
+                , L.layout.spacerY 4
+                , viewTypography
+                    theme
+                    { styleName = "Body Medium"
+                    , onUpdateTypography = onUpdateTypography
+                    , intoTypographyTheme =
+                        \typography ->
+                            let
+                                body =
+                                    typographyTheme.body
+                            in
+                            { typographyTheme | body = { body | medium = typography } }
+                    , typography = typographyTheme.body.medium
+                    }
+                , viewTypography
+                    theme
+                    { styleName = "Body Small"
+                    , onUpdateTypography = onUpdateTypography
+                    , intoTypographyTheme =
+                        \typography ->
+                            let
+                                body =
+                                    typographyTheme.body
+                            in
+                            { typographyTheme | body = { body | small = typography } }
+                    , typography = typographyTheme.body.small
+                    }
+                ]
             , viewTypography
                 theme
                 { styleName = "Code"
