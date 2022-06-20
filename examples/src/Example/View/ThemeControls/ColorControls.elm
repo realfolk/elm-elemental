@@ -61,6 +61,8 @@ view { theme, onUpdateColors } themeColors =
             , L.layout.spacerY 8
             , switchTree theme themeColors
             , L.layout.spacerY 8
+            , formTree theme themeColors
+            , L.layout.spacerY 8
             ]
 
 
@@ -70,17 +72,22 @@ viewColorTree theme showCode colorTree =
         ColorTree { id, name } children ->
             H.div [ HA.id id ]
                 [ L.viewColumn L.Normal [] <|
-                    (H.h6
-                        [ HA.css
-                            [ Css.display Css.inline ]
-                        ]
-                        [ H.text name ]
+                    ((if String.isEmpty name then
+                        H.text ""
+
+                      else
+                        H.h6
+                            [ HA.css
+                                [ Css.display Css.inline ]
+                            ]
+                            [ H.text name ]
+                     )
                         :: L.layout.spacerY 4
                         :: (children
                                 |> List.map (viewColorTree theme False)
                            )
                     )
-                , if Debug.log "" showCode then
+                , if showCode then
                     Codeblock.view theme
                         [ viewTreeCode theme True colorTree
                         , H.pre [] [ H.text "}" ]
@@ -436,6 +443,246 @@ switchTree theme themeColors =
                 ]
 
 
+formTree theme themeColors =
+    let
+        form =
+            themeColors.form
+    in
+    H.map (\newForm -> { themeColors | form = newForm }) <|
+        viewColorTree theme True <|
+            ColorTree
+                { id = switchSectionId
+                , name = "Form"
+                , codeName = "form"
+                }
+                [ Node
+                    { styleName = ""
+                    , colorSet =
+                        [ { name = "Error"
+                          , intoSet =
+                                \color ->
+                                    { form | error = color }
+                          , color = form.error
+                          }
+                        ]
+                    }
+                , ColorTree
+                    { id = ""
+                    , name = "Field"
+                    , codeName = "field"
+                    }
+                    [ Node
+                        { styleName = ""
+                        , colorSet =
+                            [ { name = "Caret"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+                                        in
+                                        { form | field = { field | caret = color } }
+                              , color = form.field.caret
+                              }
+                            , { name = "Label"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+                                        in
+                                        { form | field = { field | label = color } }
+                              , color = form.field.label
+                              }
+                            , { name = "Required"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+                                        in
+                                        { form | field = { field | required = color } }
+                              , color = form.field.required
+                              }
+                            , { name = "Support Text"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+                                        in
+                                        { form | field = { field | supportText = color } }
+                              , color = form.field.supportText
+                              }
+                            ]
+                        }
+                    , Node
+                        { styleName = "Background"
+                        , colorSet =
+                            [ { name = "Disabled"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            background =
+                                                field.background
+                                        in
+                                        { form | field = { field | background = { background | disabled = color } } }
+                              , color = form.field.background.disabled
+                              }
+                            , { name = "Focus"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            background =
+                                                field.background
+                                        in
+                                        { form | field = { field | background = { background | focus = color } } }
+                              , color = form.field.background.focus
+                              }
+                            , { name = "Normal"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            background =
+                                                field.background
+                                        in
+                                        { form | field = { field | background = { background | normal = color } } }
+                              , color = form.field.background.normal
+                              }
+                            ]
+                        }
+                    , Node
+                        { styleName = "Border"
+                        , colorSet =
+                            [ { name = "Error"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            border =
+                                                field.border
+                                        in
+                                        { form | field = { field | border = { border | error = color } } }
+                              , color = form.field.border.error
+                              }
+                            , { name = "Focus"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            border =
+                                                field.border
+                                        in
+                                        { form | field = { field | border = { border | focus = color } } }
+                              , color = form.field.border.focus
+                              }
+                            , { name = "Normal"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            border =
+                                                field.border
+                                        in
+                                        { form | field = { field | border = { border | normal = color } } }
+                              , color = form.field.border.normal
+                              }
+                            ]
+                        }
+                    , Node
+                        { styleName = "Focus Highlight"
+                        , colorSet =
+                            [ { name = "Error"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            focusHighlight =
+                                                field.focusHighlight
+                                        in
+                                        { form | field = { field | focusHighlight = { focusHighlight | error = color } } }
+                              , color = form.field.focusHighlight.error
+                              }
+                            , { name = "Normal"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            focusHighlight =
+                                                field.focusHighlight
+                                        in
+                                        { form | field = { field | focusHighlight = { focusHighlight | normal = color } } }
+                              , color = form.field.focusHighlight.normal
+                              }
+                            ]
+                        }
+                    , Node
+                        { styleName = "foreground"
+                        , colorSet =
+                            [ { name = "Disabled"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            foreground =
+                                                field.foreground
+                                        in
+                                        { form | field = { field | foreground = { foreground | disabled = color } } }
+                              , color = form.field.foreground.disabled
+                              }
+                            , { name = "Placeholder"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            foreground =
+                                                field.foreground
+                                        in
+                                        { form | field = { field | foreground = { foreground | placeholder = color } } }
+                              , color = form.field.foreground.placeholder
+                              }
+                            , { name = "Value"
+                              , intoSet =
+                                    \color ->
+                                        let
+                                            field =
+                                                form.field
+
+                                            foreground =
+                                                field.foreground
+                                        in
+                                        { form | field = { field | foreground = { foreground | value = color } } }
+                              , color = form.field.foreground.value
+                              }
+                            ]
+                        }
+                    ]
+                ]
+
+
 buttonSectionId =
     "button-colors-section"
 
@@ -550,9 +797,6 @@ viewTreeCode theme firstItem colorTree =
     case colorTree of
         ColorTree { name, codeName } children ->
             let
-                _ =
-                    Debug.log "Tree" name
-
                 innerBlock =
                     L.viewColumn L.Normal
                         []
@@ -592,10 +836,6 @@ viewTreeCode theme firstItem colorTree =
                     ]
 
         Node colorSet ->
-            let
-                _ =
-                    Debug.log "Name" colorSet.styleName
-            in
             viewCode theme firstItem colorSet
 
 
@@ -614,27 +854,31 @@ viewCode theme firstItem { colorSet, styleName } =
 
         leading index =
             indent <|
-                if index == 0 then
+                if index == 0 && (styleName /= "" || firstItem) then
                     "{ "
 
                 else
                     ", "
 
         viewColorCode index { color, name } =
-            H.pre [] [ H.text (leading index ++ String.toLower name ++ " = Css.hex \"" ++ colorToHexWithAlpha color ++ "\"") ]
+            H.pre [] [ H.text (leading index ++ toCamelCase name ++ " = Css.hex \"" ++ colorToHexWithAlpha color ++ "\"") ]
 
         includeStyleName =
             not <| String.isEmpty styleName
 
         children =
             (if includeStyleName then
+                let
+                    name =
+                        toCamelCase styleName
+                in
                 [ H.pre []
                     [ if firstItem then
                         H.text "{ "
 
                       else
                         H.text ", "
-                    , H.text (String.toLower styleName ++ " =")
+                    , H.text (name ++ " =")
                     ]
                 ]
 
@@ -657,6 +901,19 @@ viewCode theme firstItem { colorSet, styleName } =
     in
     children
         |> Codeblock.customView1 theme
+
+
+toCamelCase styleName =
+    styleName
+        |> String.uncons
+        |> Maybe.map
+            (\parts ->
+                case parts of
+                    ( firstChar, tail ) ->
+                        String.cons (Char.toLower firstChar) tail
+                            |> String.replace " " ""
+            )
+        |> Maybe.withDefault ""
 
 
 

@@ -13,15 +13,21 @@ import Html.Styled as H
 
 view : Theme -> List (H.Html msg) -> H.Html msg
 view theme lines =
-    L.viewColumn L.Normal
+    L.viewRow L.Normal
         [ Css.width <| Css.pct 100
         , Css.backgroundColor theme.colors.background.code
+        , Css.overflowX Css.auto
         , BorderRadius.toCssStyle theme.borderRadius.global.small.all
+        , Css.backgroundColor theme.colors.background.code
         , Css.color theme.colors.foreground.code
-        , Css.padding2 (Css.px 12) (Css.px 24)
-        , Typography.toStyle theme.typography.code
         ]
-        lines
+        [ L.viewColumn L.Normal
+            [ Css.width <| Css.pct 100
+            , Css.margin2 (Css.px 12) (Css.px 16)
+            , Typography.toStyle theme.typography.code
+            ]
+            lines
+        ]
 
 
 customView1 : Theme -> List (H.Html msg) -> H.Html msg

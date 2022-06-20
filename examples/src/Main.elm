@@ -20,6 +20,7 @@ import Example.View.Components.Buttons as Buttons
 import Example.View.Components.Inputs as Inputs
 import Example.View.Components.Switches as Switches
 import Example.View.ThemeButton as ThemeButton
+import Example.View.ThemeControls.BorderRadiusControls as BorderRadiusControls
 import Example.View.ThemeControls.ColorControls as ColorControls
 import Example.View.ThemeControls.TypographyControls as TypographyControls
 import Example.View.ThemeEditor as ThemeEditor
@@ -37,7 +38,7 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , onUrlRequest = \_ -> NoOp 
+        , onUrlRequest = \_ -> NoOp
         , onUrlChange = \_ -> NoOp
         }
 
@@ -50,15 +51,8 @@ type alias Model =
     { theme : Theme
     , switches : Switches.Model
     , inputs : Inputs.Model
-    , demoStep : DemoStep
+    , showStyles : Bool
     }
-
-
-type DemoStep
-    = ComponentLibrary
-    | ConsistentStyling
-    | CommunicationTool
-    | CompleteControl
 
 
 init : () -> Url.Url -> B.Key -> ( Model, Cmd Msg )
@@ -66,7 +60,7 @@ init _ _ _ =
     ( { theme = Theme.baseTheme
       , switches = Switches.init ()
       , inputs = Inputs.init ()
-      , demoStep = CompleteControl
+      , showStyles = True
       }
     , Cmd.none
     )
@@ -80,11 +74,11 @@ type Msg
     = NoOp
     | UpdatedTypography ThemeTypography
     | UpdatedColors Colors.Colors
+    | UpdatedBorderRadius Theme.ThemeBorderRadiusGenerator
     | UpdatedSwitches Switches.Msg
     | UpdatedInputs Inputs.Msg
     | ScrollTo String
-    | ClickedDemoPrev
-    | ClickedDemoNext
+    | ToggleShowStyles
     | SelectTheme Theme
     | UpdatedTheme Theme
 
@@ -108,6 +102,21 @@ update msg model =
                     model.theme
             in
             ( { model | theme = { theme | colors = colors } }, Cmd.none )
+
+        UpdatedBorderRadius generator ->
+            let
+                theme =
+                    model.theme
+            in
+            ( { model
+                | theme =
+                    { theme
+                        | borderRadius = Theme.generatorToBorderRadius generator
+                        , borderRadiusG = generator
+                    }
+              }
+            , Cmd.none
+            )
 
         UpdatedSwitches switchesMsg ->
             let
@@ -136,11 +145,8 @@ update msg model =
                 |> Task.attempt (always NoOp)
             )
 
-        ClickedDemoPrev ->
-            ( { model | demoStep = prevDemoStep model.demoStep }, Cmd.none )
-
-        ClickedDemoNext ->
-            ( { model | demoStep = nextDemoStep model.demoStep }, Cmd.none )
+        ToggleShowStyles ->
+            ( { model | showStyles = not model.showStyles }, Cmd.none )
 
 
 
@@ -160,18 +166,13 @@ view :
     Model
     -> B.Document Msg
 view model =
-    let
-        showHide =
-            stepToShowHide model.demoStep
-    in
     { title = "Example"
     , body =
         List.map H.toUnstyled <|
             [ themeToCss model.theme
             , L.viewRow
                 L.Normal
-                [ Css.backgroundColor model.theme.colors.background.normal
-                , Css.width <| Css.vw 100
+                [ Css.width <| Css.pct 100
                 , Css.overflowX Css.hidden
                 , Css.position Css.relative
                 , Css.height <| Css.pct 100
@@ -179,39 +180,43 @@ view model =
                 [ L.viewColumn L.Normal
                     [ Css.width <| Css.pct 100
                     , Css.height <| Css.pct 100
-                    , Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 8)
-                    , Css.overflowY Css.auto
-                    ]
-                    [ L.layout.spacerY 8
-                    , viewHeader model.theme model.demoStep
-                    , if model.demoStep == ComponentLibrary then
-                        H.text ""
+                    , if model.showStyles then
+                        Css.padding (Css.px 0)
 
                       else
-                        viewTypography model.theme
-                    , if model.demoStep == ComponentLibrary then
-                        H.text ""
-
-                      else
-                        L.layout.spacerY 12
-                    , viewComponents model
+                        Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 8)
                     ]
-                , viewSidebar model.theme showHide.showStyle <|
-                    viewThemeControls model.theme showHide.showControls
+                    [ L.viewColumn L.Normal
+                        [ Css.backgroundColor model.theme.colors.background.normal
+                        , Css.width <| Css.pct 100
+                        , Css.height <| Css.pct 100
+                        , if model.showStyles then
+                            Css.padding2 (L.layout.computeSpacerPx 4) (L.layout.computeSpacerPx 8)
+
+                          else
+                            Css.padding2 (L.layout.computeSpacerPx 8) (L.layout.computeSpacerPx 16)
+                        , Css.overflowY Css.auto
+                        ]
+                        [ L.layout.spacerY 8
+                        , viewHeader model.theme model.showStyles
+                        , L.layout.spacerY 8
+                        , viewTypography model.theme
+                        , L.layout.spacerY 12
+                        , viewComponents model
+                        ]
+                    ]
+                , viewSidebar model.theme model.showStyles <|
+                    viewThemeControls model.theme
                 ]
             ]
     }
 
 
-viewHeader : Theme -> DemoStep -> H.Html Msg
-viewHeader theme demoStep =
+viewHeader : Theme -> Bool -> H.Html Msg
+viewHeader theme showingStyles =
     let
         controlsAttrs =
-            [ Css.opacity (Css.num 0.1)
-            , Css.hover
-                [ Css.opacity (Css.num 1)
-                ]
-            ]
+            []
     in
     L.viewRow L.Normal
         []
@@ -223,27 +228,21 @@ viewHeader theme demoStep =
             [ L.viewRow L.Normal
                 controlsAttrs
                 [ H.button
-                    [ HE.onClick ClickedDemoPrev
+                    [ HE.onClick ToggleShowStyles
                     , HA.css
                         [ Css.cursor Css.pointer
-                        , Css.backgroundColor theme.colors.background.normal
+                        , Css.backgroundColor theme.colors.background.alternate
                         , Css.color theme.colors.foreground.regular
                         , Css.displayFlex
+                        , Css.padding (Css.px 4)
+                        , BorderRadius.toCssStyle theme.borderRadius.global.small.all
                         ]
                     ]
-                    [ Icons.view Icons.ChevronLeft 20
-                    ]
-                , L.layout.spacerY 2
-                , H.button
-                    [ HE.onClick ClickedDemoNext
-                    , HA.css
-                        [ Css.cursor Css.pointer
-                        , Css.backgroundColor theme.colors.background.normal
-                        , Css.color theme.colors.foreground.regular
-                        , Css.displayFlex
-                        ]
-                    ]
-                    [ Icons.view Icons.ChevronRight 20
+                    [ if showingStyles then
+                        Icons.view Icons.ChevronRight 24
+
+                      else
+                        Icons.view Icons.ChevronLeft 24
                     ]
                 ]
             ]
@@ -253,14 +252,16 @@ viewHeader theme demoStep =
 viewTypography : Theme -> H.Html msg
 viewTypography theme =
     let
+        themeTypography =
+            theme.typography
+
         typographySpec =
-            [ ( "Heading H4", \t -> t.heading.h4, [] )
-            , ( "Heading H5", \t -> t.heading.h5, [] )
-            , ( "Body Medium", \t -> t.body.medium, [] )
-            , ( "Body Small", \t -> t.body.small, [] )
-            , ( "Body Small", \t -> t.body.small, [] )
+            [ ( "Heading H4", themeTypography.heading.h4, [] )
+            , ( "Heading H5", themeTypography.heading.h5, [] )
+            , ( "Body Medium", themeTypography.body.medium, [] )
+            , ( "Body Small", themeTypography.body.small, [] )
             , ( "Code"
-              , \t -> t.code
+              , themeTypography.code
               , [ Css.backgroundColor theme.colors.background.code
                 , Css.color theme.colors.foreground.code
                 , Css.display Css.inlineBlock
@@ -269,11 +270,7 @@ viewTypography theme =
               )
             ]
 
-        viewTypographySpec ( name, fromTheme, attrs ) =
-            let
-                typography =
-                    fromTheme theme.typography
-            in
+        viewTypographySpec ( name, typography, attrs ) =
             viewRow
                 { typography = typography
                 , attrs = attrs
@@ -288,64 +285,98 @@ viewTypography theme =
                     String.fromFloat typography.lineHeight ++ "px"
                 }
 
+        rowHeight =
+            typographySpec
+                |> List.map
+                    (\( _, t, _ ) ->
+                        t.size
+                    )
+                |> List.maximum
+                |> Maybe.withDefault 20
+
         viewRow { typography, attrs, name, family, fontSize, lineHeight } =
-            L.viewRow L.Normal
-                [ Css.minHeight <| Css.px 40
+            H.tr
+                [ HA.css
+                    [ Css.borderBottom3 (Css.px 1) Css.solid theme.colors.border
+                    ]
                 ]
-                [ H.div
+                [ H.td
                     [ HA.css
-                        ([ Typography.toStyle <| typography
-                         , Css.minWidth <| Css.px 200
-                         ]
-                            ++ attrs
-                        )
+                        [ Css.padding2 (Css.px 8) Css.zero
+                        ]
                     ]
-                    [ H.text name ]
-                , L.layout.spacerX 10
-                , H.div
+                    [ H.div
+                        [ HA.css
+                            ([ Typography.toStyle <| typography
+                             , Css.minWidth <| Css.px 200
+                             , Css.minHeight <| Css.px rowHeight
+                             , Css.display Css.inlineFlex
+                             , Css.alignItems Css.center
+                             ]
+                                ++ attrs
+                            )
+                        ]
+                        [ H.text name ]
+                    ]
+                , H.td
                     [ HA.css
-                        [ Css.minWidth <| Css.px 200 ]
+                        [ Css.padding2 (Css.px 4) Css.zero
+                        ]
                     ]
-                    [ H.text family
+                    [ H.div
+                        [ HA.css
+                            [ Css.minWidth <| Css.px 200 ]
+                        ]
+                        [ H.text family
+                        ]
                     ]
-                , L.layout.spacerX 10
-                , H.div
+                , H.td
                     [ HA.css
-                        [ Css.minWidth <| Css.px 100 ]
+                        [ Css.padding2 (Css.px 4) Css.zero
+                        ]
                     ]
-                    [ H.text fontSize
+                    [ H.div
+                        [ HA.css
+                            [ Css.minWidth <| Css.px 100 ]
+                        ]
+                        [ H.text fontSize
+                        ]
                     ]
-                , H.div
+                , H.td
                     [ HA.css
-                        [ Css.minWidth <| Css.px 40 ]
+                        [ Css.padding2 (Css.px 4) Css.zero
+                        ]
                     ]
-                    [ H.text lineHeight
+                    [ H.div
+                        [ HA.css
+                            [ Css.minWidth <| Css.px 40 ]
+                        ]
+                        [ H.text lineHeight
+                        ]
                     ]
                 ]
     in
     L.viewColumn L.Normal
         []
-        [ H.div
-            [ HA.css
-                [ Typography.toStyle theme.typography.code
-                , Css.color theme.colors.foreground.regular
-                ]
+        [ H.h5 []
+            [ H.text (String.toUpper "Typography")
             ]
-            [ H.text (String.toUpper "Typography") ]
-        , viewRow
-            { typography = theme.typography.body.medium
-            , attrs = []
-            , name = "Category"
-            , family = "Family"
-            , fontSize = "Font Size"
-            , lineHeight = "Line Height"
-            }
         , L.viewColumn L.Normal
             []
-            (typographySpec
+            [ typographySpec
                 |> List.map viewTypographySpec
-                |> List.intersperse (L.layout.spacerY 2)
-            )
+                |> (::)
+                    (viewRow
+                        { typography = theme.typography.body.medium
+                        , attrs = []
+                        , name = "Category"
+                        , family = "Family"
+                        , fontSize = "Font Size"
+                        , lineHeight = "Line Height"
+                        }
+                    )
+                |> H.table []
+            ]
         ]
 
 
@@ -364,36 +395,28 @@ viewComponents ({ theme } as model) =
 
                 -- ]
                 , L.layout.spacerX 2
-                , if model.demoStep == ComponentLibrary then
-                    H.text ""
-
-                  else
-                    H.button
-                        [ HE.onClick options.onClick
-                        , HA.css
-                            [ Css.cursor Css.pointer
-                            , Css.backgroundColor theme.colors.background.normal
-                            , Css.color theme.colors.foreground.regular
-                            , Css.displayFlex
-                            ]
+                , H.button
+                    [ HE.onClick options.onClick
+                    , HA.css
+                        [ Css.cursor Css.pointer
+                        , Css.backgroundColor theme.colors.background.normal
+                        , Css.color theme.colors.foreground.regular
+                        , Css.displayFlex
                         ]
-                        [ Icons.view Icons.Palette 20 ]
+                    ]
+                    [ Icons.view Icons.Palette 20 ]
                 ]
     in
     L.viewColumn L.Normal
         []
-        [ if model.demoStep == ComponentLibrary then
-            H.text ""
-
-          else
-            H.h4 [] [ H.text "Components" ]
+        [ H.h4 [] [ H.text "Components" ]
         , L.layout.spacerY 2
         , componentSection
             { title = "Buttons"
             , onClick = ScrollTo ColorControls.buttonSectionId
             }
         , L.layout.spacerY 2
-        , Buttons.view theme (model.demoStep /= ComponentLibrary) NoOp
+        , Buttons.view theme NoOp
         , L.layout.spacerY 8
         , componentSection
             { title = "Switches"
@@ -422,7 +445,7 @@ themeControlsId =
 
 sidebarMaxWidth : number
 sidebarMaxWidth =
-    600
+    500
 
 
 viewSidebar : Theme -> Bool -> H.Html msg -> H.Html msg
@@ -468,8 +491,8 @@ viewSidebar theme show child =
         [ child ]
 
 
-viewThemeControls : Theme -> Bool -> H.Html Msg
-viewThemeControls theme showControls =
+viewThemeControls : Theme -> H.Html Msg
+viewThemeControls theme =
     let
         section title children =
             H.details
@@ -535,30 +558,34 @@ viewThemeControls theme showControls =
                 , L.layout.spacerX 2
                 , ThemeButton.viewChangeTheme theme Theme.partyTheme "Party" SelectTheme
                 ]
-            , if not showControls then
-                H.text ""
-
-              else
-                L.viewColumn L.Normal
-                    []
-                    [ L.layout.spacerY 6
-                    , section "Typography"
-                        [ TypographyControls.view
-                            { theme = theme
-                            , onUpdateTypography = UpdatedTypography
-                            }
-                            theme.typography
-                        ]
-                    , L.layout.spacerY 4
-                    , section "Colors"
-                        [ ColorControls.view
-                            { theme = theme
-                            , onUpdateColors = UpdatedColors
-                            }
-                            theme.colors
-                        ]
-                    , L.layout.spacerY 4
+            , L.viewColumn L.Normal
+                []
+                [ L.layout.spacerY 6
+                , section "Typography"
+                    [ TypographyControls.view
+                        { theme = theme
+                        , onUpdateTypography = UpdatedTypography
+                        }
+                        theme.typography
                     ]
+                , L.layout.spacerY 4
+                , section "Colors"
+                    [ ColorControls.view
+                        { theme = theme
+                        , onUpdateColors = UpdatedColors
+                        }
+                        theme.colors
+                    ]
+                , L.layout.spacerY 4
+                , section "Border Radius"
+                    [ BorderRadiusControls.view
+                        { theme = theme
+                        , onUpdateRadii = UpdatedBorderRadius
+                        }
+                        theme.borderRadiusG
+                    ]
+                , L.layout.spacerY 4
+                ]
             ]
         ]
 
@@ -613,55 +640,3 @@ themeToCss theme =
             , Css.padding Css.zero
             ]
         ]
-
-
-
--- HELPERS
-
-
-stepToShowHide : DemoStep -> { showTypography : Bool, showStyle : Bool, showControls : Bool }
-stepToShowHide step =
-    case step of
-        ComponentLibrary ->
-            { showTypography = False, showStyle = False, showControls = False }
-
-        ConsistentStyling ->
-            { showTypography = True, showStyle = False, showControls = False }
-
-        CommunicationTool ->
-            { showTypography = True, showStyle = True, showControls = False }
-
-        CompleteControl ->
-            { showTypography = True, showStyle = True, showControls = True }
-
-
-prevDemoStep : DemoStep -> DemoStep
-prevDemoStep step =
-    case step of
-        ComponentLibrary ->
-            ComponentLibrary
-
-        ConsistentStyling ->
-            ComponentLibrary
-
-        CommunicationTool ->
-            ConsistentStyling
-
-        CompleteControl ->
-            CommunicationTool
-
-
-nextDemoStep : DemoStep -> DemoStep
-nextDemoStep step =
-    case step of
-        ComponentLibrary ->
-            ConsistentStyling
-
-        ConsistentStyling ->
-            CommunicationTool
-
-        CommunicationTool ->
-            CompleteControl
-
-        CompleteControl ->
-            CompleteControl

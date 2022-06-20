@@ -1,4 +1,4 @@
-module Example.Theme exposing (..)
+module Example.Theme exposing (Config, Effects, Shadows, Theme, ThemeBorderRadius, ThemeBorderRadiusGenerator, adventureTheme, baseConfig, baseTheme, elegantTheme, generatorToBorderRadius, partyTheme)
 
 import Css
 import Elemental.Css.BorderRadius as BorderRadius exposing (BorderRadius)
@@ -12,39 +12,84 @@ type alias Theme =
 
     -- , effects : Effects
     , borderRadius : ThemeBorderRadius
+    , borderRadiusG : ThemeBorderRadiusGenerator
     , config : Config
     }
 
 
+baseTheme : Theme
 baseTheme =
     { colors = Colors.baseColors
     , config = baseConfig
     , typography = Typography.baseTypography
-    , borderRadius = baseBorderRadius
+    , borderRadius = generatorToBorderRadius baseBorderRadiusG
+    , borderRadiusG = baseBorderRadiusG
     }
 
 
 elegantTheme =
+    let
+        customBorderRadiusG =
+            { button =
+                { small = 3
+                , medium = 5
+                }
+            , global =
+                { small = 2
+                , medium = 6
+                , large = 12
+                }
+            }
+    in
     { colors = Colors.elegantColors
     , config = baseConfig
     , typography = Typography.elegantTypography
-    , borderRadius = baseBorderRadius
+    , borderRadius = generatorToBorderRadius customBorderRadiusG
+    , borderRadiusG = customBorderRadiusG
     }
 
 
 partyTheme =
+    let
+        customBorderRadiusG =
+            { button =
+                { small = 20
+                , medium = 24
+                }
+            , global =
+                { small = 4
+                , medium = 8
+                , large = 16
+                }
+            }
+    in
     { colors = Colors.partyColors
     , config = baseConfig
     , typography = Typography.partyTypography
-    , borderRadius = baseBorderRadius
+    , borderRadius = generatorToBorderRadius customBorderRadiusG
+    , borderRadiusG = customBorderRadiusG
     }
 
 
 adventureTheme =
+    let
+        customBorderRadiusG =
+            { button =
+                { small = 0
+                , medium = 0
+                }
+            , global =
+                { small = 4
+                , medium = 8
+                , large = 16
+                }
+            }
+    in
     { colors = Colors.adventureColors
     , config = baseConfig
     , typography = Typography.adventureTypography
-    , borderRadius = baseBorderRadius
+    , borderRadius = generatorToBorderRadius customBorderRadiusG
+    , borderRadiusG = customBorderRadiusG
     }
 
 
@@ -78,15 +123,42 @@ type alias ThemeBorderRadius =
     }
 
 
-baseBorderRadius =
+type alias ThemeBorderRadiusGenerator =
+    { button :
+        { small : Float
+        , medium : Float
+        }
+    , global :
+        { small : Float
+        , medium : Float
+        , large : Float
+        }
+    }
+
+
+generatorToBorderRadius generator =
     { button =
-        { small = BorderRadius.borderRadius 20
-        , medium = BorderRadius.borderRadius 24
+        { small = BorderRadius.borderRadius generator.button.small
+        , medium = BorderRadius.borderRadius generator.button.medium
         }
     , global =
-        { small = BorderRadius.borderRadius 4
-        , medium = BorderRadius.borderRadius 8
-        , large = BorderRadius.borderRadius 16
+        { small = BorderRadius.borderRadius generator.global.small
+        , medium = BorderRadius.borderRadius generator.global.medium
+        , large = BorderRadius.borderRadius generator.global.large
+        }
+    }
+
+
+baseBorderRadiusG : ThemeBorderRadiusGenerator
+baseBorderRadiusG =
+    { button =
+        { small = 20
+        , medium = 24
+        }
+    , global =
+        { small = 4
+        , medium = 8
+        , large = 16
         }
     }
 

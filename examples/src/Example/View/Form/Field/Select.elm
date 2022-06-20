@@ -66,7 +66,7 @@ toOptions options =
             SelectView.viewDefaultCaret fieldColors.foreground.disabled
 
         else
-            SelectView.viewDefaultCaret fieldColors.foreground.value
+            SelectView.viewDefaultCaret fieldColors.caret
     , choices = List.map options.toSelectChoice options.choices
     , layout = L.layout
     , label = options.label

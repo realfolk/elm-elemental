@@ -4,7 +4,7 @@ import Elemental.Form.Field.Switch as Field exposing (Msg_)
 import Elemental.View.Form.Field exposing (Support)
 import Elemental.View.Form.Field.Switch as Switch
 import Example.Layout as L
-import Example.Theme as Theme exposing (Theme)
+import Example.Theme exposing (Theme)
 
 
 toOptions :

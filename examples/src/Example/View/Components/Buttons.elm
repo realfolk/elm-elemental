@@ -20,41 +20,14 @@ type Msg
     = NoOp
 
 
-view : Theme -> Bool -> msg -> H.Html msg
-view theme complex noOp =
-    if complex then
-        L.viewColumn L.Normal
-            []
-            [ viewGroup { theme = theme, name = "Primary", toColors = .primary, noOp = noOp }
-            , L.layout.spacerY 2
-            , viewGroup { theme = theme, name = "Secondary", toColors = .secondary, noOp = noOp }
-            ]
-
-    else
-        L.viewRow L.Normal
-            []
-            [ ThemeButton.view
-                { onClick = noOp
-                , disabled = False
-                , borderRadius = theme.borderRadius.button.medium
-                , colors = theme.colors.button.primary
-                , typography = theme.typography.button.medium
-                }
-                { name = "Enabled"
-                , icon = Button.NoIcon
-                }
-            , L.layout.spacerX 2
-            , ThemeButton.view
-                { onClick = noOp
-                , disabled = True
-                , borderRadius = theme.borderRadius.button.medium
-                , colors = theme.colors.button.primary
-                , typography = theme.typography.button.medium
-                }
-                { name = "Disabled"
-                , icon = Button.NoIcon
-                }
-            ]
+view : Theme -> msg -> H.Html msg
+view theme noOp =
+    L.viewColumn L.Normal
+        []
+        [ viewGroup { theme = theme, name = "Primary", toColors = .primary, noOp = noOp }
+        , L.layout.spacerY 2
+        , viewGroup { theme = theme, name = "Secondary", toColors = .secondary, noOp = noOp }
+        ]
 
 
 viewGroup { theme, name, toColors, noOp } =
@@ -62,15 +35,27 @@ viewGroup { theme, name, toColors, noOp } =
         []
         [ H.h6 [] [ H.text name ]
         , H.text "Medium Size"
-        , viewSizedGroup { theme = theme, toColors = toColors, toSize = .medium, noOp = noOp }
+        , viewSizedGroup
+            { theme = theme
+            , toColors = toColors
+            , toSize = .medium
+            , toSizeBorder = .medium
+            , noOp = noOp
+            }
         , L.layout.spacerY 2
         , H.text "Small Size"
-        , viewSizedGroup { theme = theme, toColors = toColors, toSize = .small, noOp = noOp }
+        , viewSizedGroup
+            { theme = theme
+            , toColors = toColors
+            , toSize = .small
+            , toSizeBorder = .small
+            , noOp = noOp
+            }
         , L.layout.spacerY 2
         ]
 
 
-viewSizedGroup { theme, toColors, toSize, noOp } =
+viewSizedGroup { theme, toColors, toSize, toSizeBorder, noOp } =
     L.viewColumn L.Normal
         []
         [ L.viewRow L.Normal
@@ -78,7 +63,7 @@ viewSizedGroup { theme, toColors, toSize, noOp } =
             [ ThemeButton.view
                 { onClick = noOp
                 , disabled = False
-                , borderRadius = theme.borderRadius.button.medium
+                , borderRadius = theme.borderRadius.button |> toSizeBorder
                 , colors = theme.colors.button |> toColors
                 , typography = theme.typography.button |> toSize
                 }
@@ -89,7 +74,7 @@ viewSizedGroup { theme, toColors, toSize, noOp } =
             , ThemeButton.view
                 { onClick = noOp
                 , disabled = False
-                , borderRadius = theme.borderRadius.button.medium
+                , borderRadius = theme.borderRadius.button |> toSizeBorder
                 , colors = theme.colors.button |> toColors
                 , typography = theme.typography.button |> toSize
                 }
@@ -100,7 +85,7 @@ viewSizedGroup { theme, toColors, toSize, noOp } =
             , ThemeButton.view
                 { onClick = noOp
                 , disabled = False
-                , borderRadius = theme.borderRadius.button.medium
+                , borderRadius = theme.borderRadius.button |> toSizeBorder
                 , colors = theme.colors.button |> toColors
                 , typography = theme.typography.button |> toSize
                 }
@@ -114,7 +99,7 @@ viewSizedGroup { theme, toColors, toSize, noOp } =
             [ ThemeButton.view
                 { onClick = noOp
                 , disabled = True
-                , borderRadius = theme.borderRadius.button.medium
+                , borderRadius = theme.borderRadius.button |> toSizeBorder
                 , colors = theme.colors.button |> toColors
                 , typography = theme.typography.button |> toSize
                 }
@@ -125,7 +110,7 @@ viewSizedGroup { theme, toColors, toSize, noOp } =
             , ThemeButton.view
                 { onClick = noOp
                 , disabled = True
-                , borderRadius = theme.borderRadius.button.medium
+                , borderRadius = theme.borderRadius.button |> toSizeBorder
                 , colors = theme.colors.button |> toColors
                 , typography = theme.typography.button |> toSize
                 }
@@ -136,7 +121,7 @@ viewSizedGroup { theme, toColors, toSize, noOp } =
             , ThemeButton.view
                 { onClick = noOp
                 , disabled = True
-                , borderRadius = theme.borderRadius.button.medium
+                , borderRadius = theme.borderRadius.button |> toSizeBorder
                 , colors = theme.colors.button |> toColors
                 , typography = theme.typography.button |> toSize
                 }

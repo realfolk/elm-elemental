@@ -187,13 +187,13 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                 , disabled = False
                 }
 
+        selectModel : input -> Select.Model input
         selectModel initialValue =
             Select.field.init
                 { value = initialValue
                 , validator = V.firstError []
                 }
                 |> Tuple.first
-                |> Debug.log ""
 
         selectView options model intoTypography =
             H.div [ HA.css [ Css.width <| Css.px 200 ] ]
@@ -237,20 +237,38 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
         , L.viewColumn L.Normal
             []
             [ L.layout.spacerY 2
-            , selectView
-                (selectOptions
-                    { label = "Family"
-                    , choices = Typography.namedFontFamilies
-                    , toSelectChoice =
-                        \( name, family ) ->
-                            { text = name
-                            , placeholder = False
-                            , value = family
-                            }
-                    }
-                )
-                (selectModel typography.families)
-                (\value -> { typography | families = value })
+            , L.viewRow L.Normal
+                []
+                [ selectView
+                    (selectOptions
+                        { label = "Family"
+                        , choices = Typography.namedFontFamilies
+                        , toSelectChoice =
+                            \( name, family ) ->
+                                { text = name
+                                , placeholder = False
+                                , value = family
+                                }
+                        }
+                    )
+                    (selectModel typography.families)
+                    (\value -> { typography | families = value })
+                , L.layout.spacerX 4
+                , selectView
+                    (selectOptions
+                        { label = "Size"
+                        , choices = List.range 10 24 ++ [ 28, 32, 36, 40, 48 ]
+                        , toSelectChoice =
+                            \size ->
+                                { text = String.fromInt size
+                                , placeholder = False
+                                , value = size
+                                }
+                        }
+                    )
+                    (selectModel (round typography.size))
+                    (\value -> { typography | size = toFloat value })
+                ]
             , L.layout.spacerY 2
             , L.viewRow L.Normal
                 []
@@ -285,7 +303,7 @@ viewTypography theme { styleName, onUpdateTypography, intoTypographyTheme, typog
                     (\value -> { typography | boldWeight = value })
                 ]
             , L.layout.spacerY 2
-            , L.viewRow L.Normal
+            , L.viewWrappedRow
                 []
                 [ Switch.view
                     (switchOptions
@@ -344,12 +362,22 @@ viewTypographyCode theme typography =
     let
         intToName =
             Typography.intToWeight >> Typography.weightToName
+
+        noSelectText string =
+            H.div
+                [ HA.css
+                    [ Css.property "user-select" "none"
+                    , Css.pointerEvents Css.none
+                    , Css.display Css.inline
+                    ]
+                ]
+                [ H.text string ]
     in
     Codeblock.view theme
         [ H.div [] [ H.text ("{ families = " ++ Debug.toString typography.families) ]
         , H.div [] [ H.text (", size = " ++ String.fromFloat typography.size) ]
-        , H.div [] [ H.text (", normalWeight = " ++ String.fromInt typography.normalWeight ++ " (" ++ intToName typography.normalWeight ++ ")") ]
-        , H.div [] [ H.text (", boldWeight = " ++ String.fromInt typography.boldWeight ++ " (" ++ intToName typography.boldWeight ++ ")") ]
+        , H.div [] [ H.text (", normalWeight = " ++ String.fromInt typography.normalWeight), noSelectText (" (" ++ intToName typography.normalWeight ++ ")") ]
+        , H.div [] [ H.text (", boldWeight = " ++ String.fromInt typography.boldWeight), noSelectText (" (" ++ intToName typography.boldWeight ++ ")") ]
         , H.div [] [ H.text (", lineHeight = " ++ String.fromFloat typography.lineHeight) ]
         , H.div [] [ H.text (", letterSpacing = " ++ String.fromFloat typography.letterSpacing) ]
         , H.div [] [ H.text (", bold = " ++ boolToStr typography.bold) ]

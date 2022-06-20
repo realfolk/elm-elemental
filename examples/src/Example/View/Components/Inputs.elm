@@ -294,25 +294,29 @@ viewSelectGroup : Theme -> SelectField.Model String -> H.Html (Elemental.Form.Fi
 viewSelectGroup theme formModel =
     let
         options =
-            SelectField.toOptions
-                { theme = theme
-                , choices = [ "A", "B", "C", "D" ]
-                , toSelectChoice =
-                    \name ->
-                        { text = name
-                        , placeholder = False
-                        , value = name
-                        }
-                , label = "Grade"
-                , support = Support.Text ""
-                , autofocus = False
-                , required = False
-                , disabled = False
-                }
+            { theme = theme
+            , choices =
+                [ ( "A", False )
+                , ( "B", False )
+                , ( "C", False )
+                , ( "D", False )
+                ]
+            , toSelectChoice =
+                \( name, placeholder ) ->
+                    { text = name
+                    , placeholder = placeholder
+                    , value = name
+                    }
+            , label = "Grade"
+            , support = Support.Text ""
+            , autofocus = False
+            , required = False
+            , disabled = False
+            }
 
         selectView opts model =
             H.div [ HA.css [ Css.width <| Css.px 200 ] ]
-                [ SelectField.field.view opts model
+                [ SelectField.field.view (SelectField.toOptions opts) model
                 ]
     in
     L.viewColumn L.Normal
@@ -334,8 +338,15 @@ viewSelectGroup theme formModel =
             { left =
                 selectView
                     { options
-                        | label = "Optional"
+                        | label = "With Placeholder"
                         , required = False
+                        , choices =
+                            [ ( "Pick one", True )
+                            , ( "A", False )
+                            , ( "B", False )
+                            , ( "C", False )
+                            , ( "D", False )
+                            ]
                     }
                     formModel
             , right =
@@ -356,7 +367,12 @@ viewSelectGroup theme formModel =
                     }
                     formModel
             , right =
-                H.text ""
+                selectView
+                    { options
+                        | label = "Optional"
+                        , required = False
+                    }
+                    formModel
             }
         , L.layout.spacerY 4
         ]

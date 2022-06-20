@@ -244,12 +244,12 @@ elegantTypography =
                 }
             , support =
                 { families = raleway
-                , size = 14
-                , normalWeight = normal
-                , boldWeight = bold
+                , size = 13
+                , normalWeight = 400
+                , boldWeight = 700
                 , lineHeight = 20
                 , letterSpacing = 0
-                , bold = False
+                , bold = True
                 , underline = False
                 , italic = False
                 , uppercase = False
@@ -501,22 +501,22 @@ adventureTypography =
     , form =
         { field =
             { label =
-                { families = ibmPlexMono
-                , size = 13
-                , normalWeight = normal
-                , boldWeight = normal
+                { families = dellaRespira
+                , size = 15
+                , normalWeight = 400
+                , boldWeight = 400
                 , lineHeight = 20
                 , letterSpacing = 0.08
                 , bold = False
                 , underline = False
                 , italic = False
-                , uppercase = True
+                , uppercase = False
                 }
             , support =
-                { families = raleway
+                { families = dellaRespira
                 , size = 14
-                , normalWeight = normal
-                , boldWeight = bold
+                , normalWeight = 400
+                , boldWeight = 700
                 , lineHeight = 20
                 , letterSpacing = 0
                 , bold = False
@@ -569,11 +569,16 @@ adventureTypography =
 
 
 -- FONT FAMILIES
+-- MONOSPACE
 
 
 ibmPlexMono : FontFamilies
 ibmPlexMono =
     [ "IBM Plex Mono", "mono" ]
+
+
+
+-- SANS-SERIF
 
 
 ibmPlexSans : FontFamilies
@@ -588,7 +593,16 @@ dmSans =
 
 roboto : FontFamilies
 roboto =
-    [ "Roboto", "serif" ]
+    [ "Roboto", "sans-serif" ]
+
+
+raleway : FontFamilies
+raleway =
+    [ "Raleway", "sans-serif" ]
+
+
+
+-- SERIF
 
 
 vollkorn : FontFamilies
@@ -601,14 +615,9 @@ cardo =
     [ "Cardo", "serif" ]
 
 
-dellRespira : FontFamilies
-dellRespira =
+dellaRespira : FontFamilies
+dellaRespira =
     [ "Della Respira", "serif" ]
-
-
-raleway : FontFamilies
-raleway =
-    [ "Raleway", "serif" ]
 
 
 medievalSharp : FontFamilies
@@ -626,14 +635,13 @@ namedFontFamilies =
     [ ( "IBM Plex Mono", ibmPlexMono )
     , ( "IBM Plex Sans", ibmPlexSans )
     , ( "DM Sans", dmSans )
-    , ( "Roboto", roboto )
-    , ( "Della Respira", dellRespira )
     , ( "Raleway", raleway )
-    , ( "Vollkorn", vollkorn )
+    , ( "Roboto", roboto )
     , ( "Cardo", cardo )
-    , ( "Della Respira", dellRespira )
+    , ( "Della Respira", dellaRespira )
     , ( "MedievalSharp", medievalSharp )
     , ( "Rancho", rancho )
+    , ( "Vollkorn", vollkorn )
     ]
 
 

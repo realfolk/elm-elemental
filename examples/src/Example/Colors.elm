@@ -104,31 +104,31 @@ baseColors =
         , code = white
         }
     , form =
-        { error = rgb 0xEE 0x34 0x34
+        { error = Css.hex "#ee3434"
         , field =
             { background =
-                { disabled = rgb 0xEC 0xE5 0xCF
-                , focus = rgb 0xFB 0xF9 0xF4
-                , normal = white
+                { disabled = Css.hex "#ece5cf"
+                , focus = Css.hex "#fbf9f4"
+                , normal = Css.hex "#ffffff"
                 }
             , border =
-                { error = rgb 0xEE 0x34 0x34
-                , focus = rgb 0x34 0x91 0xEE
-                , normal = border
+                { error = Css.hex "#ee3434"
+                , focus = Css.hex "#3491ee"
+                , normal = Css.hex "#cfd5e8"
                 }
-            , caret = rgb 0xCC 0xB9 0x7C
+            , caret = Css.hex "#665b38"
             , focusHighlight =
-                { error = rgba 0xEE 0x34 0x34 0.4
-                , normal = rgba 0x85 0xBD 0xF5 0.65
+                { error = Css.hex "#ee343466"
+                , normal = Css.hex "#85bdf5a6"
                 }
             , foreground =
-                { disabled = rgb 0x44 0x47 0x46
-                , placeholder = rgb 0x78 0x7D 0x7B
-                , value = rgb 0x00 0x00 0x00
+                { disabled = Css.hex "#444746"
+                , placeholder = Css.hex "#787d7b"
+                , value = Css.hex "#000000"
                 }
-            , label = rgb 0x00 0x00 0x00
-            , required = rgb 0xEE 0x91 0x34
-            , supportText = rgb 0x44 0x47 0x46
+            , label = Css.hex "#000000"
+            , required = Css.hex "#ee9134"
+            , supportText = Css.hex "#444746"
             }
         }
     , switch =
@@ -163,9 +163,9 @@ elegantColors =
     { background =
         { normal = white
         , alternate = elevated
-        , code = Css.hex "2e3440"
+        , code = Css.hex "#001f5c"
         }
-    , border = Css.hex "#3c539f"
+    , border = Css.hex "#bdccff"
     , button =
         { primary =
             { background =
@@ -200,31 +200,31 @@ elegantColors =
         , code = white
         }
     , form =
-        { error = rgb 0xEE 0x34 0x34
+        { error = Css.hex "#ee3434"
         , field =
-            { background =
-                { disabled = rgb 0xEC 0xE5 0xCF
-                , focus = rgb 0xFB 0xF9 0xF4
-                , normal = white
+            { label = Css.hex "#000000"
+            , required = Css.hex "#ee9134"
+            , supportText = Css.hex "#444746"
+            , background =
+                { disabled = Css.hex "#ebecff"
+                , focus = Css.hex "#fbf9f4"
+                , normal = Css.hex "#ffffff"
                 }
             , border =
-                { error = rgb 0xEE 0x34 0x34
-                , focus = rgb 0x34 0x91 0xEE
-                , normal = border
+                { error = Css.hex "#ee3434"
+                , focus = Css.hex "#3491ee"
+                , normal = Css.hex "#b5bdd9"
                 }
-            , caret = rgb 0xCC 0xB9 0x7C
+            , caret = Css.hex "#38664a"
             , focusHighlight =
-                { error = rgba 0xEE 0x34 0x34 0.4
-                , normal = rgba 0x85 0xBD 0xF5 0.65
+                { error = Css.hex "#ee343466"
+                , normal = Css.hex "#85bdf5a6"
                 }
             , foreground =
-                { disabled = rgb 0x44 0x47 0x46
-                , placeholder = rgb 0x78 0x7D 0x7B
-                , value = rgb 0x00 0x00 0x00
+                { disabled = Css.hex "#444746"
+                , placeholder = Css.hex "#787d7b"
+                , value = Css.hex "#000000"
                 }
-            , label = rgb 0x00 0x00 0x00
-            , required = rgb 0xEE 0x91 0x34
-            , supportText = rgb 0x44 0x47 0x46
             }
         }
     , switch =
@@ -296,47 +296,47 @@ partyColors =
         , code = white
         }
     , form =
-        { error = rgb 0xEE 0x34 0x34
+        { error = Css.hex "#ee3434"
         , field =
             { background =
-                { disabled = rgb 0xEC 0xE5 0xCF
-                , focus = rgb 0xFB 0xF9 0xF4
-                , normal = white
+                { disabled = Css.hex "#ece5cf"
+                , focus = Css.hex "#fbf9f4"
+                , normal = Css.hex "#ffffff"
                 }
             , border =
-                { error = rgb 0xEE 0x34 0x34
-                , focus = rgb 0x34 0x91 0xEE
-                , normal = border
+                { error = Css.hex "#ee3434"
+                , focus = Css.hex "#3491ee"
+                , normal = Css.hex "#cfd5e8"
                 }
-            , caret = rgb 0xCC 0xB9 0x7C
+            , caret = Css.hex "#0b00a3"
             , focusHighlight =
-                { error = rgba 0xEE 0x34 0x34 0.4
-                , normal = rgba 0x85 0xBD 0xF5 0.65
+                { error = Css.hex "#ee343466"
+                , normal = Css.hex "#85bdf5a6"
                 }
             , foreground =
-                { disabled = rgb 0x44 0x47 0x46
-                , placeholder = rgb 0x78 0x7D 0x7B
-                , value = rgb 0x00 0x00 0x00
+                { disabled = Css.hex "#444746"
+                , placeholder = Css.hex "#787d7b"
+                , value = Css.hex "#000000"
                 }
-            , label = rgb 0x00 0x00 0x00
-            , required = rgb 0xEE 0x91 0x34
-            , supportText = rgb 0x44 0x47 0x46
+            , label = Css.hex "#000000"
+            , required = Css.hex "#ee9134"
+            , supportText = Css.hex "#444746"
             }
         }
     , switch =
         { background =
-            { disabled = Css.hex "#4fd86b"
-            , on = Css.hex "#1adb40"
+            { disabled = Css.hex "#93b8b1"
+            , on = Css.hex "#1adbbb"
             , off = Css.hex "#dfe4d6"
             }
         , border =
             { disabled = Css.hex "#ffffff"
-            , on = Css.hex "#1ad940"
+            , on = Css.hex "#14b2bd"
             , off = Css.hex "#74796e"
             }
         , handle =
             { background =
-                { disabled = Css.hex "#0ca12a"
+                { disabled = Css.hex "#0abdb1"
                 , on = Css.hex "#363636"
                 , off = Css.hex "#74796e"
                 }
@@ -392,31 +392,31 @@ adventureColors =
         , code = white
         }
     , form =
-        { error = rgb 0xEE 0x34 0x34
+        { error = Css.hex "#ee3434"
         , field =
-            { background =
-                { disabled = rgb 0xEC 0xE5 0xCF
-                , focus = rgb 0xFB 0xF9 0xF4
-                , normal = white
+            { label = Css.hex "#000000"
+            , required = Css.hex "#ee9134"
+            , supportText = Css.hex "#444746"
+            , background =
+                { disabled = Css.hex "#ecd0d0"
+                , focus = Css.hex "#fbf9f4"
+                , normal = Css.hex "#ffffff"
                 }
             , border =
-                { error = rgb 0xEE 0x34 0x34
-                , focus = rgb 0x34 0x91 0xEE
-                , normal = border
+                { error = Css.hex "#ee3434"
+                , focus = Css.hex "#3491ee"
+                , normal = Css.hex "#a17d7d"
                 }
-            , caret = rgb 0xCC 0xB9 0x7C
+            , caret = Css.hex "#b76666"
             , focusHighlight =
-                { error = rgba 0xEE 0x34 0x34 0.4
-                , normal = rgba 0x85 0xBD 0xF5 0.65
+                { error = Css.hex "#ee343466"
+                , normal = Css.hex "#85bdf5a6"
                 }
             , foreground =
-                { disabled = rgb 0x44 0x47 0x46
-                , placeholder = rgb 0x78 0x7D 0x7B
-                , value = rgb 0x00 0x00 0x00
+                { disabled = Css.hex "#444746"
+                , placeholder = Css.hex "#787d7b"
+                , value = Css.hex "#000000"
                 }
-            , label = rgb 0x00 0x00 0x00
-            , required = rgb 0xEE 0x91 0x34
-            , supportText = rgb 0x44 0x47 0x46
             }
         }
     , switch =
