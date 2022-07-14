@@ -14,6 +14,7 @@ import Elemental.Layout as Layout exposing (Layout)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attrs
 import Html.Styled.Events as Events
+import Lib.Maybe as Maybe
 import Svg.Styled as Svg
 import Svg.Styled.Attributes as SvgAttrs
 
@@ -92,9 +93,7 @@ view options value =
                 |> Maybe.withDefault " "
 
         hasSelectedText =
-            Maybe.map .text selectedChoice
-                |> Maybe.map (always True)
-                |> Maybe.withDefault False
+            Maybe.toBool selectedChoice
 
         fieldColors =
             options.theme.colors
