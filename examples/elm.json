@@ -2,7 +2,8 @@
     "type": "application",
     "source-directories": [
         "src",
-        "../src"
+        "../src",
+        "../lib/realfolk/elm-lib/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
