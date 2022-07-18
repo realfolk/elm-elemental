@@ -131,14 +131,28 @@ viewCustom options =
         ( element, targetAttributes ) =
             targetToElementAndAttributes options.target
 
+        viewInnerContent cssStyles =
+            L.viewRow L.Center cssStyles <|
+                case options.icon of
+                    NoIcon ->
+                        [ H.text options.text ]
+
+                    LeftIcon viewIcon ->
+                        [ viewIcon
+                        , options.layout.spacerX options.style.spacers.icon
+                        , H.text options.text
+                        ]
+
+                    RightIcon viewIcon ->
+                        [ H.text options.text
+                        , options.layout.spacerX options.style.spacers.icon
+                        , viewIcon
+                        ]
+
         content =
             if isLoading then
-                H.div
-                    [ HA.css []
-                    ]
-                    [ H.span
-                        [ HA.css [ Css.opacity Css.zero ] ]
-                        [ H.text options.text ]
+                H.div []
+                    [ viewInnerContent [ Css.opacity Css.zero ]
                     , options.loadingSpinner
                         |> List.singleton
                         |> H.div
@@ -156,27 +170,7 @@ viewCustom options =
                     ]
 
             else
-                case options.icon of
-                    NoIcon ->
-                        H.text options.text
-
-                    LeftIcon viewIcon ->
-                        L.viewRow
-                            L.Center
-                            []
-                            [ viewIcon
-                            , options.layout.spacerX options.style.spacers.icon
-                            , H.text options.text
-                            ]
-
-                    RightIcon viewIcon ->
-                        L.viewRow
-                            L.Center
-                            []
-                            [ H.text options.text
-                            , options.layout.spacerX options.style.spacers.icon
-                            , viewIcon
-                            ]
+                viewInnerContent []
     in
     element
         (outerCss :: targetAttributes)
