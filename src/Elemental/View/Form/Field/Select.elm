@@ -14,6 +14,7 @@ import Elemental.Layout as Layout exposing (Layout)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attrs
 import Html.Styled.Events as Events
+import Lib.Maybe as Maybe
 import Svg.Styled as Svg
 import Svg.Styled.Attributes as SvgAttrs
 
@@ -90,6 +91,9 @@ view options value =
         selectedText =
             Maybe.map .text selectedChoice
                 |> Maybe.withDefault " "
+
+        hasSelectedText =
+            Maybe.toBool selectedChoice
 
         fieldColors =
             options.theme.colors
@@ -171,7 +175,11 @@ view options value =
             [ LibCss.grow
             , Css.overflow Css.hidden
             , Css.textOverflow Css.ellipsis
-            , Css.whiteSpace Css.noWrap
+            , if hasSelectedText then
+                Css.whiteSpace Css.noWrap
+
+              else
+                Css.whiteSpace Css.pre
             ]
             [ Html.text selectedText ]
         , options.layout.spacerX options.theme.spacerMultiples.caret
