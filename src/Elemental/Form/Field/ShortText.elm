@@ -86,6 +86,7 @@ type alias Options_ =
     , icon : Maybe Icon
     , placeholder : String
     , autofocus : Bool
+    , customAttrs : List (H.Attribute Msg_)
     }
 
 
@@ -115,6 +116,6 @@ view options model =
         , error = Field.hasError model
         , placeholder = options.placeholder
         , onInput = ChangedInput
-        , customAttrs = []
+        , customAttrs = options.customAttrs
         }
         model.value
