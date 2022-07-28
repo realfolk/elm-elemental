@@ -1,4 +1,4 @@
-module New.Elemental.Data.Axis exposing (D2, D3)
+module New.Elemental.Lib.Axis exposing (D2, D3)
 
 
 type alias D2 a =

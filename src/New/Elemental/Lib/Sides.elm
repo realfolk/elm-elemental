@@ -1,4 +1,4 @@
-module New.Elemental.Data.Sides exposing
+module New.Elemental.Lib.Sides exposing
     ( Sides
     , all
     , bottom

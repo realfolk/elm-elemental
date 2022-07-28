@@ -1,4 +1,4 @@
-module New.Elemental.Data.Color exposing
+module New.Elemental.Lib.Color exposing
     ( Color
     , black
     , getAlphaChannel

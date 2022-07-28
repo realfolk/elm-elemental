@@ -7,9 +7,9 @@ module New.Elemental.Box.Structure exposing
     , Structure
     )
 
-import New.Elemental.Data.Axis as Axis
-import New.Elemental.Data.Sides exposing (Sides)
-import New.Elemental.Data.Size as Size
+import New.Elemental.Lib.Axis as Axis
+import New.Elemental.Lib.Sides exposing (Sides)
+import New.Elemental.Lib.Size as Size
 
 
 type alias Structure =

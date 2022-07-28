@@ -5,8 +5,8 @@ module New.Elemental.Box.Style.Position exposing
     )
 
 import Css
-import New.Elemental.Data.Sides as Sides exposing (Sides)
-import New.Elemental.Data.Size as Size
+import New.Elemental.Lib.Sides as Sides exposing (Sides)
+import New.Elemental.Lib.Size as Size
 
 
 type Position

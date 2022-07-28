@@ -6,8 +6,8 @@ module New.Elemental.Box.Style.Border exposing
     )
 
 import Css
-import New.Elemental.Data.Color as Color exposing (Color)
-import New.Elemental.Data.Size as Size
+import New.Elemental.Lib.Color as Color exposing (Color)
+import New.Elemental.Lib.Size as Size
 
 
 type Border

@@ -7,7 +7,7 @@ module New.Elemental.Box.Style.Background exposing
     )
 
 import Css
-import New.Elemental.Data.Color as Color exposing (Color)
+import New.Elemental.Lib.Color as Color exposing (Color)
 
 
 type Background

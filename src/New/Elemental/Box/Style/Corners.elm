@@ -1,7 +1,7 @@
 module New.Elemental.Box.Style.Corners exposing (Corners(..), toCssStyle)
 
 import Css
-import New.Elemental.Data.Size as Size
+import New.Elemental.Lib.Size as Size
 
 
 type Corners

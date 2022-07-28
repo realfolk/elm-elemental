@@ -1,10 +1,13 @@
-module New.Elemental.Data.Size exposing
-    ( Em
+module New.Elemental.Lib.Size exposing
+    ( Deg
+    , Em
     , Pct
     , Px
     , Rem
     , Vh
     , Vw
+    , deg
+    , degToCssValue
     , em
     , emToCssValue
     , pct
@@ -98,3 +101,16 @@ vw =
 vwToCssValue : Vw -> Css.Vw
 vwToCssValue (Vw n) =
     Css.vw n
+
+
+type Deg
+    = Deg Float
+
+
+deg =
+    Deg
+
+
+degToCssValue : Deg -> Css.AngleOrDirection (Css.Angle {})
+degToCssValue (Deg n) =
+    Css.deg n
