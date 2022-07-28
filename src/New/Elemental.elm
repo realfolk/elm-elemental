@@ -1,4 +1,4 @@
-module ElementExperiment exposing (..)
+module New.Elemental exposing (..)
 
 import Css
 import Elemental.Typography exposing (Typography)
@@ -7,82 +7,25 @@ import Svg.Styled exposing (Svg)
 
 
 
--- Example
-
-
-defaultRow : Element msg
-defaultRow =
-    container
-        { width = Hug
-        , height = Hug
-        , direction = Row
-        , alignment = Axis2d Start Start
-        , distribution = Packed
-        , padding = BoxSides (Px 0) (Px 0) (Px 0) (Px 0)
-        , position = Nothing
-        , background = Nothing
-        , typography = Nothing
-        , textColor = Nothing
-        , cursor = Nothing
-        }
-        []
-        []
-
-
-setWidth : Dimension -> Element msg -> Element msg
-setWidth =
-    Debug.todo ""
-
-
-paddingTop : Size -> Element msg -> Element msg
-paddingTop =
-    Debug.todo ""
-
-
-showPointer : Element msg -> Element msg
-showPointer =
-    Debug.todo ""
-
-
-addChildren : List (Element msg) -> Element msg -> Element msg
-addChildren =
-    Debug.todo ""
-
-
-spacing : Float -> Element msg -> Element msg
-spacing =
-    Debug.todo ""
-
-
-exampleRow =
-    defaultRow
-        |> setWidth Fill
-        |> paddingTop (Px 24)
-        |> showPointer
-        |> addChildren []
-        |> spacing 16
-
-
-
 -- Element
 
 
 type Element msg
-    = Container (HtmlCompatibility msg) ContainerProperties (List (Interaction msg)) (List (Element msg))
+    = Box (HtmlCompatibility msg) BoxProperties (List (Interaction msg)) (List (Element msg))
     | Space Float -- pixels
     | Text String
     | Html (Html msg)
     | Svg (Svg msg)
 
 
-container : ContainerProperties -> List (Interaction msg) -> List (Element msg) -> Element msg
-container =
-    Container { tag = "div", extraAttributes = [] }
+box : BoxProperties -> List (Interaction msg) -> List (Element msg) -> Element msg
+box =
+    Box { tag = "div", extraAttributes = [] }
 
 
-customContainer : HtmlCompatibility msg -> ContainerProperties -> List (Interaction msg) -> List (Element msg) -> Element msg
-customContainer =
-    Container
+customBox : HtmlCompatibility msg -> BoxProperties -> List (Interaction msg) -> List (Element msg) -> Element msg
+customBox =
+    Box
 
 
 text : String -> Element msg
@@ -107,7 +50,7 @@ fromSvg =
 toHtml : Element msg -> Html msg
 toHtml element =
     case element of
-        Container compatibility properties interactions children ->
+        Box compatibility properties interactions children ->
             -- TODO properties and interactions
             Html.node compatibility.tag compatibility.extraAttributes (List.map toHtml children)
 
@@ -135,11 +78,11 @@ type alias HtmlCompatibility msg =
 
 
 
--- Container Properties
+-- Box Properties
 
 
-type alias ContainerProperties =
-    -- Core container properties
+type alias BoxProperties =
+    -- Core box properties
     { width : Dimension
     , height : Dimension
 
@@ -159,7 +102,7 @@ type alias ContainerProperties =
 
 
 
--- Core Container Properties
+-- Core Box Properties
 
 
 type Direction
@@ -193,7 +136,7 @@ type Distribution
 
 
 type Position
-    = Nudge (BoxSides Float)
+    = Nudge (BoxSides Float) --TODO Maybe remove Nudge and use a Transform style type
     | Floating FloatingContainer (BoxSides Float)
     | Sticky (BoxSides Float)
 
@@ -217,7 +160,6 @@ type Cursor
 
 type Interaction msg
     = Click (InteractionOutcome msg)
-    | Hover (InteractionOutcome msg)
     | MouseEnter (InteractionOutcome msg)
     | MouseLeave (InteractionOutcome msg)
     | MouseOver (InteractionOutcome msg)
@@ -231,7 +173,7 @@ type Interaction msg
 
 type alias InteractionOutcome msg =
     { message : Maybe msg
-    , modify : ContainerProperties -> ContainerProperties
+    , modify : BoxProperties -> BoxProperties
     }
 
 
