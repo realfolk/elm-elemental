@@ -38,15 +38,13 @@ toCssStyle style =
         toOptionalStyle toStyle =
             Maybe.map toStyle >> Maybe.withDefault (Css.batch [])
 
-        appendMaybeTransforms toTransforms maybeValue acc =
-            Maybe.map toTransforms maybeValue
-                |> Maybe.withDefault []
-                |> List.append acc
-
         transform =
-            appendMaybeTransforms Nudge.toCssTransforms style.nudge []
-                |> appendMaybeTransforms (Rotate.toCssTransform >> List.singleton) style.rotate
-                |> appendMaybeTransforms (Scale.toCssTransform >> List.singleton) style.scale
+            [ Maybe.map Nudge.toCssTransforms style.nudge
+            , Maybe.map (Rotate.toCssTransform >> List.singleton) style.rotate
+            , Maybe.map (Scale.toCssTransform >> List.singleton) style.scale
+            ]
+                |> List.filterMap identity
+                |> List.concat
                 |> Css.transforms
 
         textColor =

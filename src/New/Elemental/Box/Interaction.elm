@@ -1,7 +1,9 @@
 module New.Elemental.Box.Interaction exposing
     ( Interaction
     , onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
-    , toHtmlAttribute
+    , cancelClick
+    , and
+    , toHtmlAttributes
     )
 
 {-| This library exports an Interaction type and a set of functions to manage interactions.
@@ -17,9 +19,23 @@ module New.Elemental.Box.Interaction exposing
 @docs onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
 
 
+# Cancellation
+
+Use these functions if you want to cancel listening for a particular event on an `Interaction`.
+
+TODO remaining cancel functions
+
+@docs cancelClick
+
+
+# Combinators
+
+@docs and
+
+
 # Converters
 
-@docs toHtmlAttribute
+@docs toHtmlAttributes
 
 -}
 
@@ -30,28 +46,6 @@ import Json.Decode as Decode
 
 {-| Represents an Interaction to listen for. An Interaction may have an `input` and produces a `msg`.
 -}
-
-
-
-{--type Interaction msg
-    = Click msg
-    | DoubleClick msg
-    | MouseEnter msg
-    | MouseLeave msg
-    | MouseOver msg
-    | MouseOut msg
-    | MouseDown msg
-    | MouseUp msg
-    | TouchStart msg
-    | TouchEnd msg
-    | TouchMove msg
-    | Focus msg
-    | Blur msg
-    | Input (String -> msg)
-    | Check (Bool -> msg)
-    | Submit msg--}
-
-
 type alias Interaction msg =
     { click : Maybe msg
     , doubleClick : Maybe msg
@@ -102,13 +96,6 @@ onClick msg =
     { none | click = Just msg }
 
 
-{-| Cancel listening for "click" interactions.
--}
-cancelClick : Interaction msg -> Interaction msg
-cancelClick interaction =
-    { interaction | click = Nothing }
-
-
 {-| Listen for "doubleclick" interactions.
 -}
 onDoubleClick : msg -> Interaction msg
@@ -119,100 +106,107 @@ onDoubleClick msg =
 {-| Listen for "mouseenter" interactions.
 -}
 onMouseEnter : msg -> Interaction msg
-onMouseEnter =
-    MouseEnter
+onMouseEnter msg =
+    { none | mouseEnter = Just msg }
 
 
 {-| Listen for "mouseleave" interactions.
 -}
 onMouseLeave : msg -> Interaction msg
-onMouseLeave =
-    MouseLeave
+onMouseLeave msg =
+    { none | mouseLeave = Just msg }
 
 
 {-| Listen for "mouseover" interactions.
 -}
 onMouseOver : msg -> Interaction msg
-onMouseOver =
-    MouseOver
+onMouseOver msg =
+    { none | mouseOver = Just msg }
 
 
 {-| Listen for "mouseout" interactions.
 -}
 onMouseOut : msg -> Interaction msg
-onMouseOut =
-    MouseOut
+onMouseOut msg =
+    { none | mouseOut = Just msg }
 
 
 {-| Listen for "mousedown" interactions.
 -}
 onMouseDown : msg -> Interaction msg
-onMouseDown =
-    MouseDown
+onMouseDown msg =
+    { none | mouseDown = Just msg }
 
 
 {-| Listen for "mouseup" interactions.
 -}
 onMouseUp : msg -> Interaction msg
-onMouseUp =
-    MouseUp
+onMouseUp msg =
+    { none | mouseUp = Just msg }
 
 
 {-| Listen for "touchstart" interactions.
 -}
 onTouchStart : msg -> Interaction msg
-onTouchStart =
-    TouchStart
+onTouchStart msg =
+    { none | touchStart = Just msg }
 
 
 {-| Listen for "touchend" interactions.
 -}
 onTouchEnd : msg -> Interaction msg
-onTouchEnd =
-    TouchEnd
+onTouchEnd msg =
+    { none | touchEnd = Just msg }
 
 
 {-| Listen for "touchmove" interactions.
 -}
 onTouchMove : msg -> Interaction msg
-onTouchMove =
-    TouchMove
+onTouchMove msg =
+    { none | touchMove = Just msg }
 
 
 {-| Listen for "focus" interactions.
 -}
 onFocus : msg -> Interaction msg
-onFocus =
-    Focus
+onFocus msg =
+    { none | focus = Just msg }
 
 
 {-| Listen for "blur" interactions.
 -}
 onBlur : msg -> Interaction msg
-onBlur =
-    Blur
+onBlur msg =
+    { none | blur = Just msg }
 
 
 {-| Listen for String input interactions. You will normally use `onInput` functions
 exported by individual view or component modules instead of using this function directly.
 -}
 onInput : (String -> msg) -> Interaction msg
-onInput =
-    Input
+onInput toMsg =
+    { none | input = Just toMsg }
 
 
 {-| Listen for checkbox interactions.
 -}
 onCheck : (Bool -> msg) -> Interaction msg
-onCheck =
-    Check
+onCheck toMsg =
+    { none | check = Just toMsg }
 
 
 {-| Listen for form submission interactions.
 -}
 onSubmit : msg -> Interaction msg
-onSubmit =
-    Submit
+onSubmit toMsg =
+    { none | submit = Just toMsg }
+
+
+{-| Cancel listening for "click" interactions.
+-}
+cancelClick : Interaction msg -> Interaction msg
+cancelClick interaction =
+    { interaction | click = Nothing }
 
 
 {-| Combine two `Interaction`s, preferring the first over the second.
@@ -244,55 +238,29 @@ and a b =
     }
 
 
-{-| Converts an Interaction into an Html.Styled.Attribute.
+{-| Converts an Interaction into a `List (Html.Styled.Attribute msg)`.
 -}
-toHtmlAttribute : Interaction msg -> Html.Attribute msg
-toHtmlAttribute interaction =
-    case interaction of
-        Click msg ->
-            Html.onClick msg
-
-        DoubleClick msg ->
-            Html.onDoubleClick msg
-
-        MouseEnter msg ->
-            Html.onMouseEnter msg
-
-        MouseLeave msg ->
-            Html.onMouseLeave msg
-
-        MouseOver msg ->
-            Html.onMouseOver msg
-
-        MouseOut msg ->
-            Html.onMouseOut msg
-
-        MouseDown msg ->
-            Html.onMouseDown msg
-
-        MouseUp msg ->
-            Html.onMouseUp msg
-
-        TouchStart msg ->
-            Html.on "touchstart" (Decode.succeed msg)
-
-        TouchEnd msg ->
-            Html.on "touchend" (Decode.succeed msg)
-
-        TouchMove msg ->
-            Html.on "touchmove" (Decode.succeed msg)
-
-        Focus msg ->
-            Html.onFocus msg
-
-        Blur msg ->
-            Html.onBlur msg
-
-        Input toMsg ->
-            Html.onInput toMsg
-
-        Check toMsg ->
-            Html.onCheck toMsg
-
-        Submit msg ->
-            Html.onSubmit msg
+toHtmlAttributes : Interaction msg -> List (Html.Attribute msg)
+toHtmlAttributes interaction =
+    let
+        customEvent name =
+            Decode.succeed >> Html.on name
+    in
+    List.filterMap identity
+        [ Maybe.map Html.onClick interaction.click
+        , Maybe.map Html.onDoubleClick interaction.doubleClick
+        , Maybe.map Html.onMouseEnter interaction.mouseEnter
+        , Maybe.map Html.onMouseLeave interaction.mouseLeave
+        , Maybe.map Html.onMouseOver interaction.mouseOver
+        , Maybe.map Html.onMouseOut interaction.mouseOut
+        , Maybe.map Html.onMouseDown interaction.mouseDown
+        , Maybe.map Html.onMouseUp interaction.mouseUp
+        , Maybe.map (customEvent "touchstart") interaction.touchStart
+        , Maybe.map (customEvent "touchend") interaction.touchEnd
+        , Maybe.map (customEvent "touchmove") interaction.touchMove
+        , Maybe.map Html.onFocus interaction.focus
+        , Maybe.map Html.onBlur interaction.blur
+        , Maybe.map Html.onInput interaction.input
+        , Maybe.map Html.onCheck interaction.check
+        , Maybe.map Html.onSubmit interaction.submit
+        ]
