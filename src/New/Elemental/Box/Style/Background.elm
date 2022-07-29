@@ -21,9 +21,17 @@ solid =
     Solid
 
 
+
+-- TODO
+
+
 gradient : Background
 gradient =
     Gradient
+
+
+
+-- TODO
 
 
 tiled : Background
@@ -35,7 +43,7 @@ toCssStyle : Background -> Css.Style
 toCssStyle bg =
     case bg of
         Solid color ->
-            Css.backgroundColor <| Color.toCssColor color
+            Css.backgroundColor <| Color.toCssValue color
 
         Gradient ->
             Debug.todo ""

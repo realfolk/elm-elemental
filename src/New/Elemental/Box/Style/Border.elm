@@ -1,6 +1,7 @@
 module New.Elemental.Box.Style.Border exposing
     ( Border
     , BorderStyle(..)
+    , border
     , solid
     , toCssStyle
     )
@@ -13,26 +14,31 @@ import New.Elemental.Lib.Size as Size
 type Border
     = Border
         { style : BorderStyle
-        , thickness : Size.Px
+        , width : Size.Px
         , color : Color
         }
 
 
-solid : Size.Px -> Color -> Border
-solid thickness color =
+border : BorderStyle -> Size.Px -> Color -> Border
+border style width color =
     Border
-        { style = Solid
-        , thickness = thickness
+        { style = style
+        , width = width
         , color = color
         }
 
 
+solid : Size.Px -> Color -> Border
+solid =
+    border Solid
+
+
 toCssStyle : Border -> Css.Style
-toCssStyle (Border border) =
+toCssStyle (Border border_) =
     Css.batch
-        [ Css.borderWidth <| Size.pxToCssValue border.thickness
-        , Css.borderColor <| Color.toCssValue border.color
-        , borderStyleToCssStyle border.style
+        [ Css.borderWidth <| Size.pxToCssValue border_.width
+        , Css.borderColor <| Color.toCssValue border_.color
+        , borderStyleToCssStyle border_.style
         ]
 
 

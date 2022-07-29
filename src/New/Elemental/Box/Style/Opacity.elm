@@ -1,6 +1,6 @@
 module New.Elemental.Box.Style.Opacity exposing
     ( Opacity
-    , fromFloat
+    , opacity
     , opaque
     , toCssStyle
     , transparent
@@ -13,6 +13,11 @@ type Opacity
     = Opacity Float
 
 
+opacity : Float -> Opacity
+opacity =
+    max 0 >> min 1 >> Opacity
+
+
 transparent : Opacity
 transparent =
     Opacity 0
@@ -21,11 +26,6 @@ transparent =
 opaque : Opacity
 opaque =
     Opacity 1
-
-
-fromFloat : Float -> Opacity
-fromFloat =
-    max 0 >> min 1 >> Opacity
 
 
 toCssStyle : Opacity -> Css.Style
