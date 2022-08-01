@@ -1,6 +1,6 @@
 module New.Elemental.Box.Interaction exposing
     ( Interaction
-    , onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
+    , none, onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
     , cancelClick
     , and
     , toHtmlAttributes
@@ -16,7 +16,7 @@ module New.Elemental.Box.Interaction exposing
 
 # Constructors
 
-@docs onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
+@docs none, onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
 
 
 # Cancellation

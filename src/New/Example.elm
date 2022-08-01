@@ -1,0 +1,56 @@
+module New.Example exposing (..)
+
+import New.Elemental exposing (..)
+import New.Elemental.Box as Box
+import New.Elemental.Box.Structure as Structure
+import New.Elemental.Box.Style as Style
+import New.Elemental.Box.Style.Background as Background
+import New.Elemental.Box.Style.Corners as Corners
+import New.Elemental.Browser as Browser
+import New.Elemental.Lib.Color as Color
+import New.Elemental.Lib.Size as Size
+
+
+main =
+    Browser.sandbox
+        { init = init
+        , update = update
+        , view = view
+        }
+
+
+init =
+    ()
+
+
+update () () =
+    ()
+
+
+view () =
+    viewHello "World"
+
+
+viewHello : String -> Element msg
+viewHello name =
+    let
+        setStyle s b =
+            { b | style = s }
+
+        none =
+            Style.none
+
+        style =
+            { none
+                | background = Just <| Background.solid Color.black
+                , textColor = Just <| Color.white
+                , corners = Just <| Corners.Rounded <| Size.px 20
+            }
+    in
+    Box.defaultRow
+        (Structure.Fixed <| Size.px 200)
+        (Structure.Fixed <| Size.px 200)
+        [ text <| "Hello, " ++ name ++ "!"
+        ]
+        |> setStyle style
+        |> box

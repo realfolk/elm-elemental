@@ -7,6 +7,8 @@ module New.Elemental.Box.Structure exposing
     , Padding
     , Position(..)
     , Structure
+    , defaultColumn
+    , defaultRow
     , toCssStyle
     )
 
@@ -26,12 +28,41 @@ type alias Structure =
     }
 
 
+defaultRow : Dimension -> Dimension -> Structure
+defaultRow width height =
+    { width = width
+    , height = height
+    , direction = Row
+    , distribution = Packed Start False
+    , alignment = Start
+    , padding = Sides.all <| Size.px 0
+    , position = Normal
+    }
+
+
+defaultColumn : Dimension -> Dimension -> Structure
+defaultColumn width height =
+    { width = width
+    , height = height
+    , direction = Column
+    , distribution = Packed Start False
+    , alignment = Start
+    , padding = Sides.all <| Size.px 0
+    , position = Normal
+    }
+
+
 toCssStyle : Structure -> Css.Style
 toCssStyle structure =
+    let
+        direction =
+            structure.direction
+    in
     Css.batch
-        [ dimensionToCssStyle Css.width structure.width
-        , dimensionToCssStyle Css.height structure.height
-        , directionToCssStyle structure.direction
+        [ Css.displayFlex
+        , dimensionToCssStyle (direction == Row) Css.width Css.width structure.width
+        , dimensionToCssStyle (direction == Column) Css.height Css.height structure.height
+        , directionToCssStyle direction
         , distributionToCssStyle structure.distribution
         , alignmentToCssStyle structure.alignment
         , paddingToCssStyle structure.padding
@@ -40,43 +71,44 @@ toCssStyle structure =
 
 
 type Dimension
-    = Fixed Bool Size.Px
-    | Fill Bool
+    = Fixed Size.Px
+    | Fill
     | Hug
 
 
-dimensionToCssStyle : (Css.Px -> Css.Style) -> Dimension -> Css.Style
-dimensionToCssStyle fixedToStyle dimension =
+dimensionToCssStyle : Bool -> (Css.Pct -> Css.Style) -> (Css.Px -> Css.Style) -> Dimension -> Css.Style
+dimensionToCssStyle followsDirection pctToStyle pxToStyle dimension =
     let
-        wrapStyle wrap =
-            if wrap then
-                Css.flexWrap Css.noWrap
-
-            else
-                Css.flexWrap Css.wrap
+        growAndShrink grow shrink =
+            Css.batch <|
+                [ Css.flexGrow <| Css.int grow
+                , Css.flexShrink <| Css.int shrink
+                ]
     in
-    case dimension of
-        Fixed wrap px ->
-            Css.batch
-                [ Css.flexGrow <| Css.int 1
-                , Css.flexShrink <| Css.int 0
-                , fixedToStyle <| Size.pxToCssValue px
-                , wrapStyle wrap
+    Css.batch <|
+        case ( followsDirection, dimension ) of
+            ( True, Fixed px ) ->
+                [ growAndShrink 0 0
+                , pxToStyle <| Size.pxToCssValue px
                 ]
 
-        Fill wrap ->
-            Css.batch
-                [ Css.flexGrow <| Css.int 1
-                , Css.flexShrink <| Css.int 0
-                , wrapStyle wrap
+            ( False, Fixed px ) ->
+                [ pxToStyle <| Size.pxToCssValue px
                 ]
 
-        Hug ->
-            Css.batch
-                [ Css.flexGrow <| Css.int 0
-                , Css.flexShrink <| Css.int 1
-                , Css.flexWrap Css.noWrap
+            ( True, Fill ) ->
+                [ growAndShrink 1 0
+                , Css.flexBasis <| Css.px 0 -- Ensures all "Fill" siblings consume space equally.
                 ]
+
+            ( False, Fill ) ->
+                [ pctToStyle <| Css.pct 100 ]
+
+            ( True, Hug ) ->
+                [ growAndShrink 0 1 ]
+
+            ( False, Hug ) ->
+                []
 
 
 type Direction
@@ -95,25 +127,36 @@ directionToCssStyle direction =
 
 
 type Distribution
-    = Packed Alignment
+    = Packed Alignment Bool
     | SpaceBetween
 
 
 distributionToCssStyle : Distribution -> Css.Style
 distributionToCssStyle distribution =
-    Css.justifyContent <|
+    Css.batch <|
         case distribution of
-            Packed Start ->
-                Css.flexStart
+            Packed alignment wrap ->
+                [ if wrap then
+                    Css.flexWrap Css.noWrap
 
-            Packed Center ->
-                Css.center
+                  else
+                    Css.flexWrap Css.wrap
+                , Css.justifyContent <|
+                    case alignment of
+                        Start ->
+                            Css.flexStart
 
-            Packed End ->
-                Css.flexEnd
+                        Center ->
+                            Css.center
+
+                        End ->
+                            Css.flexEnd
+                ]
 
             SpaceBetween ->
-                Css.spaceBetween
+                [ Css.flexWrap Css.noWrap
+                , Css.justifyContent Css.spaceBetween
+                ]
 
 
 type Alignment
@@ -141,13 +184,12 @@ type alias Padding =
 
 
 paddingToCssStyle : Padding -> Css.Style
-paddingToCssStyle =
-    Sides.toCssStyle
-        { top = Size.pxToCssValue >> Css.paddingTop
-        , right = Size.pxToCssValue >> Css.paddingRight
-        , bottom = Size.pxToCssValue >> Css.paddingBottom
-        , left = Size.pxToCssValue >> Css.paddingLeft
-        }
+paddingToCssStyle padding =
+    Css.padding4
+        (Size.pxToCssValue padding.top)
+        (Size.pxToCssValue padding.right)
+        (Size.pxToCssValue padding.bottom)
+        (Size.pxToCssValue padding.left)
 
 
 type Position
