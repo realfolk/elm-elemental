@@ -1,7 +1,7 @@
 module New.Elemental.Box.Interaction exposing
     ( Interaction
     , none, onBlur, onCheck, onClick, onDoubleClick, onFocus, onInput, onMouseDown, onMouseEnter, onMouseLeave, onMouseOut, onMouseOver, onMouseUp, onSubmit, onTouchEnd, onTouchMove, onTouchStart
-    , cancelClick
+    , cancelBlur, cancelCheck, cancelClick, cancelDoubleClick, cancelFocus, cancelInput, cancelMouseDown, cancelMouseEnter, cancelMouseLeave, cancelMouseOut, cancelMouseOver, cancelMouseUp, cancelSubmit, cancelTouchEnd, cancelTouchMove, cancelTouchStart
     , and
     , toHtmlAttributes
     )
@@ -23,9 +23,7 @@ module New.Elemental.Box.Interaction exposing
 
 Use these functions if you want to cancel listening for a particular event on an `Interaction`.
 
-TODO remaining cancel functions
-
-@docs cancelClick
+@docs cancelBlur, cancelCheck, cancelClick, cancelDoubleClick, cancelFocus, cancelInput, cancelMouseDown, cancelMouseEnter, cancelMouseLeave, cancelMouseOut, cancelMouseOver, cancelMouseUp, cancelSubmit, cancelTouchEnd, cancelTouchMove, cancelTouchStart
 
 
 # Combinators
@@ -89,98 +87,98 @@ none =
     }
 
 
-{-| Emit a `msg` on "click" interactions.
+{-| Emit a `msg` on `click` events.
 -}
 onClick : msg -> Interaction msg
 onClick msg =
     { none | click = Just msg }
 
 
-{-| Listen for "doubleclick" interactions.
+{-| Listen for `dblclick` events.
 -}
 onDoubleClick : msg -> Interaction msg
 onDoubleClick msg =
     { none | doubleClick = Just msg }
 
 
-{-| Listen for "mouseenter" interactions.
+{-| Listen for `mouseenter` events.
 -}
 onMouseEnter : msg -> Interaction msg
 onMouseEnter msg =
     { none | mouseEnter = Just msg }
 
 
-{-| Listen for "mouseleave" interactions.
+{-| Listen for `mouseleave` events.
 -}
 onMouseLeave : msg -> Interaction msg
 onMouseLeave msg =
     { none | mouseLeave = Just msg }
 
 
-{-| Listen for "mouseover" interactions.
+{-| Listen for `mouseover` events.
 -}
 onMouseOver : msg -> Interaction msg
 onMouseOver msg =
     { none | mouseOver = Just msg }
 
 
-{-| Listen for "mouseout" interactions.
+{-| Listen for `mouseout` events.
 -}
 onMouseOut : msg -> Interaction msg
 onMouseOut msg =
     { none | mouseOut = Just msg }
 
 
-{-| Listen for "mousedown" interactions.
+{-| Listen for `mousedown` events.
 -}
 onMouseDown : msg -> Interaction msg
 onMouseDown msg =
     { none | mouseDown = Just msg }
 
 
-{-| Listen for "mouseup" interactions.
+{-| Listen for `mouseup` events.
 -}
 onMouseUp : msg -> Interaction msg
 onMouseUp msg =
     { none | mouseUp = Just msg }
 
 
-{-| Listen for "touchstart" interactions.
+{-| Listen for `touchstart` events.
 -}
 onTouchStart : msg -> Interaction msg
 onTouchStart msg =
     { none | touchStart = Just msg }
 
 
-{-| Listen for "touchend" interactions.
+{-| Listen for `touchend` events.
 -}
 onTouchEnd : msg -> Interaction msg
 onTouchEnd msg =
     { none | touchEnd = Just msg }
 
 
-{-| Listen for "touchmove" interactions.
+{-| Listen for `touchmove` events.
 -}
 onTouchMove : msg -> Interaction msg
 onTouchMove msg =
     { none | touchMove = Just msg }
 
 
-{-| Listen for "focus" interactions.
+{-| Listen for `focus` events.
 -}
 onFocus : msg -> Interaction msg
 onFocus msg =
     { none | focus = Just msg }
 
 
-{-| Listen for "blur" interactions.
+{-| Listen for `blur` events.
 -}
 onBlur : msg -> Interaction msg
 onBlur msg =
     { none | blur = Just msg }
 
 
-{-| Listen for String input interactions. You will normally use `onInput` functions
+{-| Listen for `String` input interactions. You will normally use `onInput` functions
 exported by individual view or component modules instead of using this function directly.
 -}
 onInput : (String -> msg) -> Interaction msg
@@ -188,25 +186,130 @@ onInput toMsg =
     { none | input = Just toMsg }
 
 
-{-| Listen for checkbox interactions.
+{-| Listen for checkbox toggle events.
 -}
 onCheck : (Bool -> msg) -> Interaction msg
 onCheck toMsg =
     { none | check = Just toMsg }
 
 
-{-| Listen for form submission interactions.
+{-| Listen for form submission events.
 -}
 onSubmit : msg -> Interaction msg
 onSubmit toMsg =
     { none | submit = Just toMsg }
 
 
-{-| Cancel listening for "click" interactions.
+{-| Cancel listening for `click` events.
 -}
 cancelClick : Interaction msg -> Interaction msg
 cancelClick interaction =
     { interaction | click = Nothing }
+
+
+{-| Cancel listening for `dblclick` events.
+-}
+cancelDoubleClick : Interaction msg -> Interaction msg
+cancelDoubleClick interaction =
+    { interaction | doubleClick = Nothing }
+
+
+{-| Cancel listening for `mouseenter` events.
+-}
+cancelMouseEnter : Interaction msg -> Interaction msg
+cancelMouseEnter interaction =
+    { interaction | mouseEnter = Nothing }
+
+
+{-| Cancel listening for `mouseleave` events.
+-}
+cancelMouseLeave : Interaction msg -> Interaction msg
+cancelMouseLeave interaction =
+    { interaction | mouseLeave = Nothing }
+
+
+{-| Cancel listening for `mouseover` events.
+-}
+cancelMouseOver : Interaction msg -> Interaction msg
+cancelMouseOver interaction =
+    { interaction | mouseOver = Nothing }
+
+
+{-| Cancel listening for `mouseout` events.
+-}
+cancelMouseOut : Interaction msg -> Interaction msg
+cancelMouseOut interaction =
+    { interaction | mouseOut = Nothing }
+
+
+{-| Cancel listening for `mousedown` events.
+-}
+cancelMouseDown : Interaction msg -> Interaction msg
+cancelMouseDown interaction =
+    { interaction | mouseDown = Nothing }
+
+
+{-| Cancel listening for `mouseup` events.
+-}
+cancelMouseUp : Interaction msg -> Interaction msg
+cancelMouseUp interaction =
+    { interaction | mouseUp = Nothing }
+
+
+{-| Cancel listening for `touchstart` events.
+-}
+cancelTouchStart : Interaction msg -> Interaction msg
+cancelTouchStart interaction =
+    { interaction | touchStart = Nothing }
+
+
+{-| Cancel listening for `touchend` events.
+-}
+cancelTouchEnd : Interaction msg -> Interaction msg
+cancelTouchEnd interaction =
+    { interaction | touchEnd = Nothing }
+
+
+{-| Cancel listening for `touchmove` events.
+-}
+cancelTouchMove : Interaction msg -> Interaction msg
+cancelTouchMove interaction =
+    { interaction | touchMove = Nothing }
+
+
+{-| Cancel listening for `focus` events.
+-}
+cancelFocus : Interaction msg -> Interaction msg
+cancelFocus interaction =
+    { interaction | focus = Nothing }
+
+
+{-| Cancel listening for `blur` events.
+-}
+cancelBlur : Interaction msg -> Interaction msg
+cancelBlur interaction =
+    { interaction | blur = Nothing }
+
+
+{-| Cancel listening for `String` input events.
+-}
+cancelInput : Interaction msg -> Interaction msg
+cancelInput interaction =
+    { interaction | input = Nothing }
+
+
+{-| Cancel listening for checkbox toggle events.
+-}
+cancelCheck : Interaction msg -> Interaction msg
+cancelCheck interaction =
+    { interaction | check = Nothing }
+
+
+{-| Cancel listening for form submission events.
+-}
+cancelSubmit : Interaction msg -> Interaction msg
+cancelSubmit interaction =
+    { interaction | submit = Nothing }
 
 
 {-| Combine two `Interaction`s, preferring the first over the second.

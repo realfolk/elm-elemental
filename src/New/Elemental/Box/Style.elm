@@ -1,7 +1,33 @@
 module New.Elemental.Box.Style exposing
     ( Style
     , none
+    , setBackground
+    , setBorder
+    , setCorners
+    , setCursor
+    , setNudge
+    , setOpacity
+    , setRotate
+    , setScale
+    , setShadow
+    , setTextAlignment
+    , setTextColor
+    , setTextWrap
+    , setTypography
     , toCssStyle
+    , unsetBackground
+    , unsetBorder
+    , unsetCorners
+    , unsetCursor
+    , unsetNudge
+    , unsetOpacity
+    , unsetRotate
+    , unsetScale
+    , unsetShadow
+    , unsetTextAlignment
+    , unsetTextColor
+    , unsetTextWrap
+    , unsetTypography
     )
 
 import Css
@@ -18,6 +44,10 @@ import New.Elemental.Box.Style.Text.Alignment as TextAlignment exposing (TextAli
 import New.Elemental.Box.Style.Text.Wrap as TextWrap exposing (TextWrap)
 import New.Elemental.Box.Style.Typography as Typography exposing (Typography)
 import New.Elemental.Lib.Color as Color exposing (Color)
+
+
+
+-- TODO overflow
 
 
 type alias Style =
@@ -86,3 +116,133 @@ toCssStyle style =
         , transform
         , textColor
         ]
+
+
+setBackground : Background -> Style -> Style
+setBackground a style =
+    { style | background = Just a }
+
+
+unsetBackground : Style -> Style
+unsetBackground style =
+    { style | background = Nothing }
+
+
+setBorder : Border -> Style -> Style
+setBorder a style =
+    { style | border = Just a }
+
+
+unsetBorder : Style -> Style
+unsetBorder style =
+    { style | border = Nothing }
+
+
+setCorners : Corners -> Style -> Style
+setCorners a style =
+    { style | corners = Just a }
+
+
+unsetCorners : Style -> Style
+unsetCorners style =
+    { style | corners = Nothing }
+
+
+setCursor : Cursor -> Style -> Style
+setCursor a style =
+    { style | cursor = Just a }
+
+
+unsetCursor : Style -> Style
+unsetCursor style =
+    { style | cursor = Nothing }
+
+
+setNudge : Nudge -> Style -> Style
+setNudge a style =
+    { style | nudge = Just a }
+
+
+unsetNudge : Style -> Style
+unsetNudge style =
+    { style | nudge = Nothing }
+
+
+setOpacity : Opacity -> Style -> Style
+setOpacity a style =
+    { style | opacity = Just a }
+
+
+unsetOpacity : Style -> Style
+unsetOpacity style =
+    { style | opacity = Nothing }
+
+
+setRotate : Rotate -> Style -> Style
+setRotate a style =
+    { style | rotate = Just a }
+
+
+unsetRotate : Style -> Style
+unsetRotate style =
+    { style | rotate = Nothing }
+
+
+setScale : Scale -> Style -> Style
+setScale a style =
+    { style | scale = Just a }
+
+
+unsetScale : Style -> Style
+unsetScale style =
+    { style | scale = Nothing }
+
+
+setShadow : Shadow -> Style -> Style
+setShadow a style =
+    { style | shadow = Just a }
+
+
+unsetShadow : Style -> Style
+unsetShadow style =
+    { style | shadow = Nothing }
+
+
+setTextAlignment : TextAlignment -> Style -> Style
+setTextAlignment a style =
+    { style | textAlignment = Just a }
+
+
+unsetTextAlignment : Style -> Style
+unsetTextAlignment style =
+    { style | textAlignment = Nothing }
+
+
+setTextColor : Color -> Style -> Style
+setTextColor a style =
+    { style | textColor = Just a }
+
+
+unsetTextColor : Style -> Style
+unsetTextColor style =
+    { style | textColor = Nothing }
+
+
+setTextWrap : TextWrap -> Style -> Style
+setTextWrap a style =
+    { style | textWrap = Just a }
+
+
+unsetTextWrap : Style -> Style
+unsetTextWrap style =
+    { style | textWrap = Nothing }
+
+
+setTypography : Typography -> Style -> Style
+setTypography a style =
+    { style | typography = Just a }
+
+
+unsetTypography : Style -> Style
+unsetTypography style =
+    { style | typography = Nothing }

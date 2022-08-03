@@ -46,7 +46,7 @@ toCssStyle bg =
             Css.backgroundColor <| Color.toCssValue color
 
         Gradient ->
-            Debug.todo ""
+            Css.backgroundColor <| Color.toCssValue Color.black
 
         Tiled ->
-            Debug.todo ""
+            Css.backgroundColor <| Color.toCssValue Color.black

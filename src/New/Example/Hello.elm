@@ -1,4 +1,4 @@
-module New.Example exposing (..)
+module New.Example.Hello exposing (..)
 
 import New.Elemental exposing (..)
 import New.Elemental.Box as Box

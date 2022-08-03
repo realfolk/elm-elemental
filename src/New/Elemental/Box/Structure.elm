@@ -9,6 +9,14 @@ module New.Elemental.Box.Structure exposing
     , Structure
     , defaultColumn
     , defaultRow
+    , setAlignment
+    , setDirection
+    , setDistribution
+    , setHeight
+    , setInline
+    , setPadding
+    , setPosition
+    , setWidth
     , toCssStyle
     )
 
@@ -18,7 +26,8 @@ import New.Elemental.Lib.Size as Size
 
 
 type alias Structure =
-    { width : Dimension
+    { inline : Bool
+    , width : Dimension
     , height : Dimension
     , direction : Direction
     , distribution : Distribution
@@ -30,7 +39,8 @@ type alias Structure =
 
 defaultRow : Dimension -> Dimension -> Structure
 defaultRow width height =
-    { width = width
+    { inline = False
+    , width = width
     , height = height
     , direction = Row
     , distribution = Packed Start False
@@ -42,7 +52,8 @@ defaultRow width height =
 
 defaultColumn : Dimension -> Dimension -> Structure
 defaultColumn width height =
-    { width = width
+    { inline = False
+    , width = width
     , height = height
     , direction = Column
     , distribution = Packed Start False
@@ -57,9 +68,16 @@ toCssStyle structure =
     let
         direction =
             structure.direction
+
+        display =
+            if structure.inline then
+                Css.display Css.inlineFlex
+
+            else
+                Css.displayFlex
     in
     Css.batch
-        [ Css.displayFlex
+        [ display
         , dimensionToCssStyle (direction == Row) Css.width Css.width structure.width
         , dimensionToCssStyle (direction == Column) Css.height Css.height structure.height
         , directionToCssStyle direction
@@ -68,6 +86,50 @@ toCssStyle structure =
         , paddingToCssStyle structure.padding
         , positionToCssStyle structure.position
         ]
+
+
+setInline : Bool -> Structure -> Structure
+setInline a s =
+    { s | inline = a }
+
+
+setWidth : Dimension -> Structure -> Structure
+setWidth a s =
+    { s | width = a }
+
+
+setHeight : Dimension -> Structure -> Structure
+setHeight a s =
+    { s | height = a }
+
+
+setDirection : Direction -> Structure -> Structure
+setDirection a s =
+    { s | direction = a }
+
+
+setDistribution : Distribution -> Structure -> Structure
+setDistribution a s =
+    { s | distribution = a }
+
+
+setAlignment : Alignment -> Structure -> Structure
+setAlignment a s =
+    { s | alignment = a }
+
+
+setPadding : Padding -> Structure -> Structure
+setPadding a s =
+    { s | padding = a }
+
+
+setPosition : Position -> Structure -> Structure
+setPosition a s =
+    { s | position = a }
+
+
+
+-- TODO setters
 
 
 type Dimension
