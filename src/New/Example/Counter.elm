@@ -44,8 +44,9 @@ update msg (Counter n) =
             Counter <| n - 1
 
 
+view : Model -> Element Msg
 view (Counter n) =
-    Box.defaultRow Structure.Hug Structure.Hug
+    Box.defaultRow
         |> Box.setChildren [ viewButton Decrement, viewCount n, viewButton Increment ]
         |> box
 
@@ -56,7 +57,7 @@ viewCount n =
         padding =
             Sides.leftAndRight (Size.px 0) (Size.px 24)
     in
-    Box.defaultRow Structure.Hug Structure.Hug
+    Box.defaultRow
         |> Box.setChildren [ text <| String.fromInt n ]
         |> Box.mapStructure (Structure.setPadding padding)
         |> box
@@ -73,7 +74,7 @@ viewButton msg =
                 Decrement ->
                     "- Decrement"
     in
-    Box.defaultRow Structure.Hug Structure.Hug
+    Box.defaultRow
         |> Box.setChildren [ text text_ ]
         |> Box.setInteraction (Interaction.onClick msg)
         |> Box.setCompatibility (Compatibility.fromTag "button")

@@ -38,11 +38,11 @@ type alias Structure =
     }
 
 
-defaultRow : Dimension -> Dimension -> Structure
-defaultRow width height =
+defaultRow : Structure
+defaultRow =
     { inline = False
-    , width = width
-    , height = height
+    , width = Hug
+    , height = Hug
     , direction = Row
     , distribution = Packed Start False
     , alignment = Start
@@ -51,11 +51,11 @@ defaultRow width height =
     }
 
 
-defaultColumn : Dimension -> Dimension -> Structure
-defaultColumn width height =
+defaultColumn : Structure
+defaultColumn =
     { inline = False
-    , width = width
-    , height = height
+    , width = Hug
+    , height = Hug
     , direction = Column
     , distribution = Packed Start False
     , alignment = Start

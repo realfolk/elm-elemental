@@ -43,8 +43,12 @@ viewHello name =
                 , textColor = Just <| Color.white
                 , corners = Just <| Corners.all <| Corners.Rounded <| Size.px 20
             }
+
+        dimension =
+            Structure.Fixed <| Size.px 200
     in
-    Box.defaultRow (Structure.Fixed <| Size.px 200) (Structure.Fixed <| Size.px 200)
+    Box.defaultRow
+        |> Box.mapStructure (Structure.setWidth dimension >> Structure.setHeight dimension)
         |> Box.setChildren [ text <| "Hello, " ++ name ++ "!" ]
         |> Box.setStyle style
         |> box

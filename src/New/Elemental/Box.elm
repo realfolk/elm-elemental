@@ -38,20 +38,20 @@ type alias Box child msg =
     }
 
 
-defaultRow : Structure.Dimension -> Structure.Dimension -> Box child msg
-defaultRow width height =
+defaultRow : Box child msg
+defaultRow =
     { compatibility = Compatibility.fromTag "div"
-    , structure = Structure.defaultRow width height
+    , structure = Structure.defaultRow
     , style = Style.none
     , interaction = Interaction.none
     , children = []
     }
 
 
-defaultColumn : Structure.Dimension -> Structure.Dimension -> Box child msg
-defaultColumn width height =
+defaultColumn : Box child msg
+defaultColumn =
     { compatibility = Compatibility.fromTag "div"
-    , structure = Structure.defaultColumn width height
+    , structure = Structure.defaultColumn
     , style = Style.none
     , interaction = Interaction.none
     , children = []
