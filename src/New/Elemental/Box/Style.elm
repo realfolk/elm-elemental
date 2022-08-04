@@ -37,6 +37,7 @@ import New.Elemental.Box.Style.Corners as Corners exposing (Corners)
 import New.Elemental.Box.Style.Cursor as Cursor exposing (Cursor)
 import New.Elemental.Box.Style.Nudge as Nudge exposing (Nudge)
 import New.Elemental.Box.Style.Opacity as Opacity exposing (Opacity)
+import New.Elemental.Box.Style.Overflow as Overflow exposing (Overflow)
 import New.Elemental.Box.Style.Rotate as Rotate exposing (Rotate)
 import New.Elemental.Box.Style.Scale as Scale exposing (Scale)
 import New.Elemental.Box.Style.Shadow as Shadow exposing (Shadow)
@@ -46,10 +47,6 @@ import New.Elemental.Box.Style.Typography as Typography exposing (Typography)
 import New.Elemental.Lib.Color as Color exposing (Color)
 
 
-
--- TODO overflow
-
-
 type alias Style =
     { background : Maybe Background
     , border : Maybe Border
@@ -57,6 +54,7 @@ type alias Style =
     , cursor : Maybe Cursor
     , nudge : Maybe Nudge
     , opacity : Maybe Opacity
+    , overflow : Maybe Overflow
     , rotate : Maybe Rotate
     , scale : Maybe Scale
     , shadow : Maybe Shadow
@@ -75,6 +73,7 @@ none =
     , cursor = Nothing
     , nudge = Nothing
     , opacity = Nothing
+    , overflow = Nothing
     , rotate = Nothing
     , scale = Nothing
     , shadow = Nothing
@@ -109,6 +108,7 @@ toCssStyle style =
         , toOptionalStyle Corners.toCssStyle style.corners
         , toOptionalStyle Cursor.toCssStyle style.cursor
         , toOptionalStyle Opacity.toCssStyle style.opacity
+        , toOptionalStyle Overflow.toCssStyle style.overflow
         , toOptionalStyle Shadow.toCssStyle style.shadow
         , toOptionalStyle TextAlignment.toCssStyle style.textAlignment
         , toOptionalStyle TextWrap.toCssStyle style.textWrap
