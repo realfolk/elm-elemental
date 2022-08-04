@@ -41,7 +41,7 @@ viewHello name =
             { none
                 | background = Just <| Background.solid Color.black
                 , textColor = Just <| Color.white
-                , corners = Just <| Corners.Rounded <| Size.px 20
+                , corners = Just <| Corners.all <| Corners.Rounded <| Size.px 20
             }
     in
     Box.defaultRow (Structure.Fixed <| Size.px 200) (Structure.Fixed <| Size.px 200)
