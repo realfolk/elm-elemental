@@ -9,6 +9,7 @@ module New.Elemental.Box.Structure exposing
     , Structure
     , defaultColumn
     , defaultRow
+    , fixed
     , setAlignment
     , setDirection
     , setDistribution
@@ -128,14 +129,15 @@ setPosition a s =
     { s | position = a }
 
 
-
--- TODO setters
-
-
 type Dimension
     = Fixed Size.Px
     | Fill
     | Hug
+
+
+fixed : Float -> Dimension
+fixed =
+    Size.px >> Fixed
 
 
 dimensionToCssStyle : Bool -> (Css.Pct -> Css.Style) -> (Css.Px -> Css.Style) -> Dimension -> Css.Style

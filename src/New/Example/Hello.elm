@@ -34,9 +34,6 @@ view () =
 viewHello : String -> Element msg
 viewHello name =
     let
-        setStyle s b =
-            { b | style = s }
-
         none =
             Style.none
 
@@ -47,10 +44,7 @@ viewHello name =
                 , corners = Just <| Corners.Rounded <| Size.px 20
             }
     in
-    Box.defaultRow
-        (Structure.Fixed <| Size.px 200)
-        (Structure.Fixed <| Size.px 200)
-        [ text <| "Hello, " ++ name ++ "!"
-        ]
-        |> setStyle style
+    Box.defaultRow (Structure.Fixed <| Size.px 200) (Structure.Fixed <| Size.px 200)
+        |> Box.setChildren [ text <| "Hello, " ++ name ++ "!" ]
+        |> Box.setStyle style
         |> box

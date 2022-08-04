@@ -45,28 +45,20 @@ update msg (Counter n) =
 
 
 view (Counter n) =
-    Box.defaultRow
-        Structure.Hug
-        Structure.Hug
-        [ viewButton Decrement, viewCount n, viewButton Increment ]
+    Box.defaultRow Structure.Hug Structure.Hug
+        |> Box.setChildren [ viewButton Decrement, viewCount n, viewButton Increment ]
         |> box
 
 
 viewCount : Int -> Element msg
 viewCount n =
     let
-        setPadding s =
-            { s | padding = Sides.leftAndRight (Size.px 0) (Size.px 24) }
-
-        setStructure b =
-            { b | structure = setPadding b.structure }
+        padding =
+            Sides.leftAndRight (Size.px 0) (Size.px 24)
     in
-    Box.defaultRow
-        Structure.Hug
-        Structure.Hug
-        [ text <| String.fromInt n
-        ]
-        |> setStructure
+    Box.defaultRow Structure.Hug Structure.Hug
+        |> Box.setChildren [ text <| String.fromInt n ]
+        |> Box.mapStructure (Structure.setPadding padding)
         |> box
 
 
@@ -80,17 +72,9 @@ viewButton msg =
 
                 Decrement ->
                     "- Decrement"
-
-        setInteraction b =
-            { b | interaction = Interaction.onClick msg }
-
-        setCompatibility b =
-            { b | compatibility = Compatibility.fromTag "button" }
     in
-    Box.defaultRow
-        Structure.Hug
-        Structure.Hug
-        [ text text_ ]
-        |> setInteraction
-        |> setCompatibility
+    Box.defaultRow Structure.Hug Structure.Hug
+        |> Box.setChildren [ text text_ ]
+        |> Box.setInteraction (Interaction.onClick msg)
+        |> Box.setCompatibility (Compatibility.fromTag "button")
         |> box

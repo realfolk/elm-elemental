@@ -14,7 +14,7 @@ type Scale
 
 scale : Float -> Scale
 scale =
-    Scale
+    max 0 >> Scale
 
 
 toCssTransform : Scale -> Css.Transform {}

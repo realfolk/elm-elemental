@@ -12,6 +12,7 @@ module New.Elemental.Box.Style.Typography exposing
     , capitalize
     , italicize
     , lowercase
+    , noTransformation
     , removeOverline
     , removeStrikethrough
     , removeUnderline
@@ -138,6 +139,11 @@ unsetDecorationColor t =
     { t | decorationColor = Nothing }
 
 
+noTransformation : Typography -> Typography
+noTransformation t =
+    { t | transformation = NoTransformation }
+
+
 uppercase : Typography -> Typography
 uppercase t =
     { t | transformation = Uppercase }
@@ -191,6 +197,9 @@ toCssStyle t =
 
             else
                 Css.fontStyle Css.normal
+
+        textTransform =
+            transformationToCssStyle t.transformation
     in
     Css.batch
         [ Css.fontFamilies t.families
@@ -198,9 +207,9 @@ toCssStyle t =
         , Css.lineHeight <| Size.pxToCssValue t.lineHeight
         , Css.letterSpacing <| Size.emToCssValue t.letterSpacing
         , weightToCssStyle t.weight
-        , transformationToCssStyle t.transformation
         , fontStyle
         , textDecoration
+        , textTransform
         ]
 
 
@@ -250,20 +259,23 @@ weightToCssStyle weight =
 
 
 type Transformation
-    = Uppercase
+    = NoTransformation
+    | Uppercase
     | Lowercase
     | Capitalize
 
 
 transformationToCssStyle : Transformation -> Css.Style
 transformationToCssStyle t =
-    Css.textTransform <|
-        case t of
-            Uppercase ->
-                Css.uppercase
+    case t of
+        NoTransformation ->
+            Css.textTransform Css.none
 
-            Lowercase ->
-                Css.lowercase
+        Uppercase ->
+            Css.textTransform Css.uppercase
 
-            Capitalize ->
-                Css.capitalize
+        Lowercase ->
+            Css.textTransform Css.lowercase
+
+        Capitalize ->
+            Css.textTransform Css.capitalize
