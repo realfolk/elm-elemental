@@ -8,6 +8,7 @@ module New.Elemental.Lib.Color exposing
     , rgb
     , rgba
     , toCssValue
+    , toString
     , transparent
     , white
     )
@@ -69,6 +70,19 @@ toCssValue color =
         (getGreenChannel color)
         (getBlueChannel color)
         (getAlphaChannel color)
+
+
+toString : Color -> String
+toString color =
+    "rgba("
+        ++ String.fromInt (getRedChannel color)
+        ++ ","
+        ++ String.fromInt (getGreenChannel color)
+        ++ ","
+        ++ String.fromInt (getBlueChannel color)
+        ++ ","
+        ++ String.fromFloat (getAlphaChannel color)
+        ++ ")"
 
 
 
