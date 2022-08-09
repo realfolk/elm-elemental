@@ -30,7 +30,7 @@ viewBox options text_ =
                 >> Style.setBackground (Background.solid options.colors.background)
                 >> Style.setTextColor options.colors.foreground
     in
-    Box.defaultRow
+    Box.default
         |> Box.mapStructure (Structure.setPadding options.padding)
         |> Box.mapStyle updateStyle
         |> Box.setChildren [ text text_ ]

@@ -11,6 +11,7 @@ module New.Elemental exposing
 import Html as Unstyled
 import Html.Styled as Html exposing (Html)
 import New.Elemental.Box as Box exposing (Box)
+import New.Elemental.Box.Structure as Structure
 import Svg.Styled exposing (Svg)
 
 
@@ -41,11 +42,11 @@ svg =
     Svg
 
 
-toHtml : Element msg -> Html msg
-toHtml element =
+toHtml : Structure.Direction -> Element msg -> Html msg
+toHtml parentDirection element =
     case element of
         Box box_ ->
-            Box.toHtml toHtml box_
+            Box.toHtml parentDirection (toHtml box_.structure.direction) box_
 
         Text text_ ->
             Html.text text_
@@ -57,6 +58,6 @@ toHtml element =
             svg_
 
 
-toUnstyledHtml : Element msg -> Unstyled.Html msg
-toUnstyledHtml =
-    toHtml >> Html.toUnstyled
+toUnstyledHtml : Structure.Direction -> Element msg -> Unstyled.Html msg
+toUnstyledHtml parentDirection =
+    toHtml parentDirection >> Html.toUnstyled

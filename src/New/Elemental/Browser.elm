@@ -1,25 +1,26 @@
 module New.Elemental.Browser exposing
-    ( Document
+    ( Body
+    , Document
     , UrlRequest(..)
     , application
     , document
-    , element
-    , sandbox
     , toUnstyledDocument
     )
 
 import Browser
 import Browser.Navigation
+import Css
 import Css.Global as CssGlobal
 import Css.ModernNormalize as Normalize
 import Html.Styled as Html
 import New.Elemental as Elemental exposing (Element)
-import New.Elemental.Box.Structure as Structure exposing (Structure)
+import New.Elemental.Box.Structure as Structure
 import New.Elemental.Box.Style as Style exposing (Style)
 import Url exposing (Url)
 
 
-sandbox :
+
+{--sandbox :
     { init : model
     , view : model -> Element msg
     , update : msg -> model -> model
@@ -46,7 +47,7 @@ element options =
         , view = options.view >> Elemental.toUnstyledHtml
         , update = options.update
         , subscriptions = options.subscriptions
-        }
+        }--}
 
 
 document :
@@ -87,11 +88,7 @@ application options =
 
 type alias Document msg =
     { title : String
-    , body :
-        { structure : Structure
-        , style : Style
-        , children : List (Element msg)
-        }
+    , body : Body msg
     }
 
 
@@ -102,18 +99,36 @@ toUnstyledDocument { title, body } =
             Normalize.snippets
                 |> List.append
                     [ CssGlobal.body
-                        [ Structure.toCssStyle body.structure
+                        [ Css.displayFlex
+                        , Structure.directionToCssStyle body.direction
+                        , Structure.justificationToCssStyle body.direction body.justification
+                        , Structure.alignmentToCssStyle body.direction body.alignment
+                        , Structure.paddingToCssStyle body.padding
+                        , Css.minWidth <| Css.vw 100
+                        , Css.minHeight <| Css.vh 100
                         , Style.toCssStyle body.style
                         ]
+                    , CssGlobal.body body.extraStyles
                     ]
                 |> CssGlobal.global
                 |> Html.toUnstyled
 
         children =
-            css :: List.map Elemental.toUnstyledHtml body.children
+            css :: List.map (Elemental.toUnstyledHtml body.direction) body.children
     in
     { title = title
     , body = children
+    }
+
+
+type alias Body msg =
+    { direction : Structure.Direction
+    , justification : Structure.Justification
+    , alignment : Structure.Alignment
+    , padding : Structure.Padding
+    , style : Style
+    , extraStyles : List Css.Style
+    , children : List (Element msg)
     }
 
 

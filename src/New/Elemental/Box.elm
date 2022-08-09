@@ -3,8 +3,7 @@ module New.Elemental.Box exposing
     , appendChild
     , appendChildren
     , consChild
-    , defaultColumn
-    , defaultRow
+    , default
     , mapChildren
     , mapCompatibility
     , mapEachChild
@@ -38,31 +37,21 @@ type alias Box child msg =
     }
 
 
-defaultRow : Box child msg
-defaultRow =
+default : Box child msg
+default =
     { compatibility = Compatibility.fromTag "div"
-    , structure = Structure.defaultRow
+    , structure = Structure.default
     , style = Style.none
     , interaction = Interaction.none
     , children = []
     }
 
 
-defaultColumn : Box child msg
-defaultColumn =
-    { compatibility = Compatibility.fromTag "div"
-    , structure = Structure.defaultColumn
-    , style = Style.none
-    , interaction = Interaction.none
-    , children = []
-    }
-
-
-toHtml : (child -> Html msg) -> Box child msg -> Html msg
-toHtml childToHtml box =
+toHtml : Structure.Direction -> (child -> Html msg) -> Box child msg -> Html msg
+toHtml parentDirection childToHtml box =
     let
         styles =
-            Structure.toCssStyle box.structure
+            Structure.toCssStyle parentDirection box.structure
                 :: Style.toCssStyle box.style
                 :: box.compatibility.extraStyles
 

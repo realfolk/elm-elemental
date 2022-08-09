@@ -3,22 +3,37 @@ module New.Elemental.Box.Structure exposing
     , Container(..)
     , Dimension(..)
     , Direction(..)
-    , Distribution(..)
+    , Justification(..)
     , Padding
     , Position(..)
+    , Spacing
     , Structure
-    , defaultColumn
-    , defaultRow
+    , alignCenter
+    , alignEnd
+    , alignStart
+    , alignmentToCssStyle
+    , block
+    , column
+    , default
+    , directionToCssStyle
     , fixed
-    , setAlignment
-    , setDirection
-    , setDistribution
+    , inline
+    , justificationToCssStyle
+    , justifyCenter
+    , justifyEnd
+    , justifySpaceBetween
+    , justifyStart
+    , noWrap
+    , paddingToCssStyle
+    , row
+    , setAlignmentSpacing
     , setHeight
-    , setInline
+    , setJustificationSpacing
     , setPadding
     , setPosition
     , setWidth
     , toCssStyle
+    , wrap
     )
 
 import Css
@@ -31,41 +46,28 @@ type alias Structure =
     , width : Dimension
     , height : Dimension
     , direction : Direction
-    , distribution : Distribution
+    , justification : Justification
     , alignment : Alignment
     , padding : Padding
     , position : Position
     }
 
 
-defaultRow : Structure
-defaultRow =
-    { inline = False
-    , width = Hug
-    , height = Hug
-    , direction = Row
-    , distribution = Packed Start False
-    , alignment = Start
-    , padding = Sides.all <| Size.px 0
-    , position = Normal
-    }
-
-
-defaultColumn : Structure
-defaultColumn =
+default : Structure
+default =
     { inline = False
     , width = Hug
     , height = Hug
     , direction = Column
-    , distribution = Packed Start False
-    , alignment = Start
+    , justification = Packed (Start (Size.px 0)) False
+    , alignment = Start <| Size.px 0
     , padding = Sides.all <| Size.px 0
     , position = Normal
     }
 
 
-toCssStyle : Structure -> Css.Style
-toCssStyle structure =
+toCssStyle : Direction -> Structure -> Css.Style
+toCssStyle parentDirection structure =
     let
         direction =
             structure.direction
@@ -79,19 +81,24 @@ toCssStyle structure =
     in
     Css.batch
         [ display
-        , dimensionToCssStyle (direction == Row) Css.width Css.width structure.width
-        , dimensionToCssStyle (direction == Column) Css.height Css.height structure.height
+        , dimensionToCssStyle (parentDirection == Row) Css.width Css.width structure.width
+        , dimensionToCssStyle (parentDirection == Column) Css.height Css.height structure.height
         , directionToCssStyle direction
-        , distributionToCssStyle structure.distribution
-        , alignmentToCssStyle structure.alignment
+        , justificationToCssStyle direction structure.justification
+        , alignmentToCssStyle direction structure.alignment
         , paddingToCssStyle structure.padding
         , positionToCssStyle structure.position
         ]
 
 
-setInline : Bool -> Structure -> Structure
-setInline a s =
-    { s | inline = a }
+inline : Structure -> Structure
+inline s =
+    { s | inline = True }
+
+
+block : Structure -> Structure
+block s =
+    { s | inline = False }
 
 
 setWidth : Dimension -> Structure -> Structure
@@ -104,19 +111,108 @@ setHeight a s =
     { s | height = a }
 
 
-setDirection : Direction -> Structure -> Structure
-setDirection a s =
-    { s | direction = a }
+row : Structure -> Structure
+row s =
+    { s | direction = Row }
 
 
-setDistribution : Distribution -> Structure -> Structure
-setDistribution a s =
-    { s | distribution = a }
+column : Structure -> Structure
+column s =
+    { s | direction = Column }
 
 
-setAlignment : Alignment -> Structure -> Structure
-setAlignment a s =
-    { s | alignment = a }
+justifyStart : Structure -> Structure
+justifyStart s =
+    { s
+        | justification =
+            Packed
+                (Start (getJustificationSpacing s.justification))
+                (getJustificationWrap s.justification)
+    }
+
+
+justifyCenter : Structure -> Structure
+justifyCenter s =
+    { s
+        | justification =
+            Packed
+                (Center (getJustificationSpacing s.justification))
+                (getJustificationWrap s.justification)
+    }
+
+
+justifyEnd : Structure -> Structure
+justifyEnd s =
+    { s
+        | justification =
+            Packed
+                (End (getJustificationSpacing s.justification))
+                (getJustificationWrap s.justification)
+    }
+
+
+justifySpaceBetween : Structure -> Structure
+justifySpaceBetween s =
+    { s | justification = SpaceBetween }
+
+
+setJustificationSpacing : Spacing -> Structure -> Structure
+setJustificationSpacing a s =
+    { s
+        | justification =
+            case s.justification of
+                Packed alignment wrap_ ->
+                    Packed (setAlignmentSpacing_ a alignment) wrap_
+
+                _ ->
+                    s.justification
+    }
+
+
+wrap : Structure -> Structure
+wrap s =
+    { s
+        | justification =
+            case s.justification of
+                Packed alignment _ ->
+                    Packed alignment True
+
+                _ ->
+                    s.justification
+    }
+
+
+noWrap : Structure -> Structure
+noWrap s =
+    { s
+        | justification =
+            case s.justification of
+                Packed alignment _ ->
+                    Packed alignment False
+
+                _ ->
+                    s.justification
+    }
+
+
+alignStart : Structure -> Structure
+alignStart s =
+    { s | alignment = Start (getAlignmentSpacing s.alignment) }
+
+
+alignCenter : Structure -> Structure
+alignCenter s =
+    { s | alignment = Center (getAlignmentSpacing s.alignment) }
+
+
+alignEnd : Structure -> Structure
+alignEnd s =
+    { s | alignment = End (getAlignmentSpacing s.alignment) }
+
+
+setAlignmentSpacing : Spacing -> Structure -> Structure
+setAlignmentSpacing a s =
+    { s | alignment = setAlignmentSpacing_ a s.alignment }
 
 
 setPadding : Padding -> Structure -> Structure
@@ -169,7 +265,7 @@ dimensionToCssStyle followsDirection pctToStyle pxToStyle dimension =
                 [ pctToStyle <| Css.pct 100 ]
 
             ( True, Hug ) ->
-                [ growAndShrink 0 1 ]
+                [ growAndShrink 0 0 ]
 
             ( False, Hug ) ->
                 []
@@ -190,31 +286,67 @@ directionToCssStyle direction =
             Css.flexDirection Css.column
 
 
-type Distribution
+type Justification
     = Packed Alignment Bool
     | SpaceBetween
 
 
-distributionToCssStyle : Distribution -> Css.Style
-distributionToCssStyle distribution =
+getJustificationSpacing : Justification -> Spacing
+getJustificationSpacing justification =
+    case justification of
+        Packed alignment _ ->
+            getAlignmentSpacing alignment
+
+        SpaceBetween ->
+            Size.px 0
+
+
+getJustificationWrap : Justification -> Bool
+getJustificationWrap justification =
+    case justification of
+        Packed _ wrap_ ->
+            wrap_
+
+        SpaceBetween ->
+            False
+
+
+justificationToCssStyle : Direction -> Justification -> Css.Style
+justificationToCssStyle direction justification =
+    let
+        spacingToStyle_ =
+            spacingToStyle <|
+                case direction of
+                    Row ->
+                        "column-gap"
+
+                    Column ->
+                        "row-gap"
+    in
     Css.batch <|
-        case distribution of
-            Packed alignment wrap ->
-                [ if wrap then
-                    Css.flexWrap Css.noWrap
+        case justification of
+            Packed alignment wrap_ ->
+                [ if wrap_ then
+                    Css.flexWrap Css.wrap
 
                   else
-                    Css.flexWrap Css.wrap
-                , Css.justifyContent <|
+                    Css.flexWrap Css.noWrap
+                , Css.batch <|
                     case alignment of
-                        Start ->
-                            Css.flexStart
+                        Start spacing ->
+                            [ Css.justifyContent Css.flexStart
+                            , spacingToStyle_ spacing
+                            ]
 
-                        Center ->
-                            Css.center
+                        Center spacing ->
+                            [ Css.justifyContent Css.center
+                            , spacingToStyle_ spacing
+                            ]
 
-                        End ->
-                            Css.flexEnd
+                        End spacing ->
+                            [ Css.justifyContent Css.flexEnd
+                            , spacingToStyle_ spacing
+                            ]
                 ]
 
             SpaceBetween ->
@@ -224,23 +356,75 @@ distributionToCssStyle distribution =
 
 
 type Alignment
-    = Start
-    | Center
-    | End
+    = Start Spacing
+    | Center Spacing
+    | End Spacing
 
 
-alignmentToCssStyle : Alignment -> Css.Style
-alignmentToCssStyle alignment =
-    Css.justifyContent <|
+getAlignmentSpacing : Alignment -> Spacing
+getAlignmentSpacing alignment =
+    case alignment of
+        Start spacing ->
+            spacing
+
+        Center spacing ->
+            spacing
+
+        End spacing ->
+            spacing
+
+
+setAlignmentSpacing_ : Spacing -> Alignment -> Alignment
+setAlignmentSpacing_ spacing alignment =
+    case alignment of
+        Start _ ->
+            Start spacing
+
+        Center _ ->
+            Center spacing
+
+        End _ ->
+            End spacing
+
+
+alignmentToCssStyle : Direction -> Alignment -> Css.Style
+alignmentToCssStyle direction alignment =
+    let
+        alignContent value =
+            Css.batch
+                [ Css.property "align-content" value
+                , Css.property "align-items" value
+                ]
+
+        spacingToStyle_ =
+            spacingToStyle <|
+                case direction of
+                    Row ->
+                        "row-gap"
+
+                    Column ->
+                        "column-gap"
+    in
+    Css.batch <|
         case alignment of
-            Start ->
-                Css.flexStart
+            Start spacing ->
+                [ alignContent "flex-start"
+                , spacingToStyle_ spacing
+                ]
 
-            Center ->
-                Css.center
+            Center spacing ->
+                [ alignContent "center"
+                , spacingToStyle_ spacing
+                ]
 
-            End ->
-                Css.flexEnd
+            End spacing ->
+                [ alignContent "flex-end"
+                , spacingToStyle_ spacing
+                ]
+
+
+type alias Spacing =
+    Size.Px
 
 
 type alias Padding =
@@ -248,12 +432,12 @@ type alias Padding =
 
 
 paddingToCssStyle : Padding -> Css.Style
-paddingToCssStyle padding =
+paddingToCssStyle padding_ =
     Css.padding4
-        (Size.pxToCssValue padding.top)
-        (Size.pxToCssValue padding.right)
-        (Size.pxToCssValue padding.bottom)
-        (Size.pxToCssValue padding.left)
+        (Size.pxToCssValue padding_.top)
+        (Size.pxToCssValue padding_.right)
+        (Size.pxToCssValue padding_.bottom)
+        (Size.pxToCssValue padding_.left)
 
 
 type Position
@@ -262,7 +446,7 @@ type Position
 
 
 positionToCssStyle : Position -> Css.Style
-positionToCssStyle position =
+positionToCssStyle position_ =
     let
         offsetToStyle toStyle =
             Maybe.map (Size.pxToCssValue >> toStyle)
@@ -278,7 +462,7 @@ positionToCssStyle position =
         sidesToStyle =
             Sides.toCssStyle offsetSidesToStyle
     in
-    case position of
+    case position_ of
         Normal ->
             Css.position Css.relative
 
@@ -298,3 +482,14 @@ positionToCssStyle position =
 type Container
     = FirstNormalParent
     | Viewport
+
+
+spacingToStyle : String -> Size.Px -> Css.Style
+spacingToStyle propertyName spacing =
+    if Size.pxToFloat spacing == 0 then
+        Css.batch []
+
+    else
+        Css.property propertyName <|
+            String.fromFloat (Size.pxToFloat spacing)
+                ++ "px"

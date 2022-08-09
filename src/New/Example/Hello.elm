@@ -47,8 +47,8 @@ viewHello name =
         dimension =
             Structure.Fixed <| Size.px 200
     in
-    Box.defaultRow
-        |> Box.mapStructure (Structure.setWidth dimension >> Structure.setHeight dimension)
+    Box.default
+        |> Box.mapStructure (Structure.row >> Structure.setWidth dimension >> Structure.setHeight dimension)
         |> Box.setChildren [ text <| "Hello, " ++ name ++ "!" ]
         |> Box.setStyle style
         |> box
