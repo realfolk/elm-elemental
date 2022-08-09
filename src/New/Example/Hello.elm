@@ -8,14 +8,17 @@ import New.Elemental.Box.Style.Background as Background
 import New.Elemental.Box.Style.Corners as Corners
 import New.Elemental.Browser as Browser
 import New.Elemental.Lib.Color as Color
+import New.Elemental.Lib.Sides as Sides
 import New.Elemental.Lib.Size as Size
 
 
+main : Program () () ()
 main =
-    Browser.sandbox
-        { init = init
-        , update = update
+    Browser.document
+        { init = \_ -> ( init, Cmd.none )
+        , update = \_ _ -> ( init, Cmd.none )
         , view = view
+        , subscriptions = always Sub.none
         }
 
 
@@ -27,8 +30,21 @@ update () () =
     ()
 
 
-view () =
-    viewHello "World"
+view _ =
+    { title = "Hello, World!"
+    , body = viewBody
+    }
+
+
+viewBody =
+    { direction = Structure.Column
+    , justification = Structure.Packed (Structure.Start (Size.px 48)) False
+    , alignment = Structure.Start (Size.px 0)
+    , padding = Sides.all (Size.px 32)
+    , style = Style.none
+    , extraStyles = []
+    , children = [ viewHello "World" ]
+    }
 
 
 viewHello : String -> Element msg
