@@ -124,6 +124,7 @@ viewCustom options =
                 , Css.displayFlex
                 , Css.flexFlow2 Css.noWrap Css.row
                 , Css.alignItems Css.center
+                , Css.justifyContent Css.center
                 , Css.whiteSpace Css.noWrap
                 , outerCssStyle
                 ]
