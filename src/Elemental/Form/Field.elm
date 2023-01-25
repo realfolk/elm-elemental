@@ -10,6 +10,7 @@ module Elemental.Form.Field exposing
     , hasError
     )
 
+import Css
 import Elemental.Form.Validate as V exposing (Validator)
 import Elemental.Layout as L
 import Elemental.View.Form.Field as Field
@@ -61,6 +62,7 @@ type alias Options msg options =
         , support : Field.Support msg
         , required : Bool
         , disabled : Bool
+        , errorIcon : Maybe (Css.Color -> H.Html msg)
     }
 
 
@@ -163,6 +165,7 @@ view viewField options model =
         , required = options.required
         , disabled = options.disabled
         , errors = model.errors
+        , errorIcon = options.errorIcon
         }
         viewWidget
         |> H.map FieldChanged
