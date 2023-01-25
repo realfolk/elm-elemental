@@ -20,7 +20,7 @@ type alias Options msg =
     , required : Bool
     , disabled : Bool
     , errors : List String
-    , errorIcon : Maybe (Css.Color -> H.Html msg)
+    , maybeToErrorIcon : Maybe (Css.Color -> H.Html msg)
     }
 
 
@@ -58,14 +58,14 @@ view options viewWidget =
     L.viewColumn
         L.Normal
         []
-        [ viewLabel options.theme options.layout options.required hasError options.errorIcon options.label
+        [ viewLabel options.theme options.layout options.required hasError options.maybeToErrorIcon options.label
         , viewWidget
         , viewSupportOrErrorMessages
         ]
 
 
 viewLabel : Theme -> L.Layout msg -> Bool -> Bool -> Maybe (Css.Color -> H.Html msg) -> String -> H.Html msg
-viewLabel theme layout isRequired hasError maybeErrorIcon text =
+viewLabel theme layout isRequired hasError maybeToErrorIcon text =
     if String.isEmpty text then
         viewEmptyLabel
 
@@ -73,7 +73,7 @@ viewLabel theme layout isRequired hasError maybeErrorIcon text =
         L.viewColumn
             L.Normal
             []
-            [ viewNonEmptyLabel theme layout isRequired hasError maybeErrorIcon text
+            [ viewNonEmptyLabel theme layout isRequired hasError maybeToErrorIcon text
             , layout.spacerY 2
             ]
 
@@ -84,7 +84,7 @@ viewEmptyLabel =
 
 
 viewNonEmptyLabel : Theme -> L.Layout msg -> Bool -> Bool -> Maybe (Css.Color -> H.Html msg) -> String -> H.Html msg
-viewNonEmptyLabel theme layout isRequired hasError maybeErrorIcon text =
+viewNonEmptyLabel theme layout isRequired hasError maybeToErrorIcon text =
     let
         labelTypographyStyle =
             Typography.toStyle theme.typography.label
@@ -101,7 +101,7 @@ viewNonEmptyLabel theme layout isRequired hasError maybeErrorIcon text =
         [ L.viewRow
             L.Left
             []
-            [ viewErrorIcon theme layout hasError maybeErrorIcon
+            [ viewErrorIcon theme layout hasError maybeToErrorIcon
             , H.text text
             , viewStar theme layout isRequired
             ]
@@ -126,13 +126,13 @@ viewStar theme layout isRequired =
         H.text ""
 
 viewErrorIcon : Theme -> L.Layout msg -> Bool -> Maybe (Css.Color -> H.Html msg) -> H.Html msg
-viewErrorIcon theme layout hasError maybeIcon =
-    case (maybeIcon, hasError) of
-        (Just icon, True) ->
+viewErrorIcon theme layout hasError maybeToErrorIcon =
+    case (maybeToErrorIcon, hasError) of
+        (Just toErrorIcon, True) ->
             L.viewRow
                 L.Center
                 []
-                [ icon theme.colors.error
+                [ toErrorIcon theme.colors.error
                 , layout.spacerX 1
                 ]
 

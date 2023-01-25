@@ -62,7 +62,7 @@ type alias Options msg options =
         , support : Field.Support msg
         , required : Bool
         , disabled : Bool
-        , errorIcon : Maybe (Css.Color -> H.Html msg)
+        , maybeToErrorIcon : Maybe (Css.Color -> H.Html msg)
     }
 
 
@@ -165,7 +165,7 @@ view viewField options model =
         , required = options.required
         , disabled = options.disabled
         , errors = model.errors
-        , errorIcon = options.errorIcon
+        , maybeToErrorIcon = options.maybeToErrorIcon
         }
         viewWidget
         |> H.map FieldChanged
