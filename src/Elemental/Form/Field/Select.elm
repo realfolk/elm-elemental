@@ -8,6 +8,7 @@ module Elemental.Form.Field.Select exposing
     )
 
 import Elemental.Form.Field as Field
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.View.Form.Field.Select as Select
 import Html.Styled as Html exposing (Html)
 
@@ -57,16 +58,20 @@ type alias Msg value =
 
 type Msg_ value
     = ChangedInput (Maybe value)
+    | UserInteracted Interaction
 
 
-update : Msg_ value -> Model value -> ( Model value, Cmd (Msg_ value) )
+update : Msg_ value -> Model value -> ( Model value, Cmd (Msg_ value), Maybe Interaction )
 update msg model =
     case msg of
         ChangedInput Nothing ->
-            ( model, Cmd.none )
+            ( model, Cmd.none, Nothing )
 
         ChangedInput (Just newValue) ->
-            ( { model | value = newValue }, Cmd.none )
+            ( { model | value = newValue }, Cmd.none, Nothing )
+
+        UserInteracted interaction ->
+            ( model, Cmd.none, Just interaction )
 
 
 
@@ -94,6 +99,8 @@ view options model =
         , disabled = options.disabled
         , error = Field.hasError model
         , onInput = ChangedInput
+        , maybeOnInteraction =
+            Just <| Interaction.config UserInteracted options.userInteractions
         , viewCaret = options.viewCaret
         , choices = options.choices
         , customAttrs = []

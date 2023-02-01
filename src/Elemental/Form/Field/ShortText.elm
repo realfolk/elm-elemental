@@ -9,6 +9,7 @@ module Elemental.Form.Field.ShortText exposing
     )
 
 import Elemental.Form.Field as Field
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.View.Form.Field.Input as Input
 import Html.Styled as H
 
@@ -58,13 +59,17 @@ type alias Msg =
 
 type Msg_
     = ChangedInput String
+    | UserInteracted Interaction
 
 
-update : Msg_ -> Model -> ( Model, Cmd Msg_ )
+update : Msg_ -> Model -> ( Model, Cmd Msg_, Maybe Interaction )
 update msg model =
     case msg of
         ChangedInput newValue ->
-            ( { model | value = newValue }, Cmd.none )
+            ( { model | value = newValue }, Cmd.none, Nothing )
+
+        UserInteracted interaction ->
+            ( model, Cmd.none, Just interaction )
 
 
 
@@ -116,6 +121,8 @@ view options model =
         , error = Field.hasError model
         , placeholder = options.placeholder
         , onInput = ChangedInput
+        , maybeOnInteraction =
+            Just <| Interaction.config UserInteracted options.userInteractions
         , customAttrs = options.customAttrs
         }
         model.value

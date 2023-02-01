@@ -10,6 +10,7 @@ import Css
 import Dict exposing (Dict)
 import Elemental.Css as LibCss
 import Elemental.Css.BorderRadius as BorderRadius
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.Layout as Layout exposing (Layout)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attrs
@@ -26,6 +27,7 @@ type alias Options value msg =
     , disabled : Bool
     , error : Bool
     , onInput : Maybe value -> msg
+    , maybeOnInteraction : Maybe (Interaction.Config msg)
     , viewCaret : Html msg
     , choices : List (Choice value)
     , customAttrs : List (Html.Attribute msg)
@@ -218,7 +220,8 @@ viewHtmlSelect options value choiceTextToValue =
                 []
 
             else
-                [ Events.onInput onInput ]
+                Interaction.onInteraction options.maybeOnInteraction
+                    ++ [ Events.onInput onInput ]
 
         attrs =
             options.customAttrs ++ baseAttrs ++ additionalAttrs
