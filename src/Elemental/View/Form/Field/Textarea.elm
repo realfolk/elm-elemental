@@ -132,7 +132,7 @@ view options value =
                 []
 
             else
-                Interaction.onInteraction options.maybeConfig
+                Interaction.onInteraction options.maybeInteractionConfig
                     ++ [ HE.onInput options.onInput ]
 
         attrs =
