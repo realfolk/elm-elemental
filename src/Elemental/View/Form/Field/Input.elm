@@ -10,7 +10,7 @@ module Elemental.View.Form.Field.Input exposing
 import Css
 import Elemental.Css as LibCss
 import Elemental.Css.BorderRadius as BorderRadius
-import Elemental.Form.Interaction as Interaction exposing (Interaction)
+import Elemental.Form.Interaction as Interaction
 import Elemental.Layout as L
 import Html.Styled as H
 import Html.Styled.Attributes as HA

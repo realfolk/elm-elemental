@@ -3,7 +3,7 @@ module Elemental.View.Form.Field.Textarea exposing (Options, Theme, view)
 import Css
 import Elemental.Css as LibCss
 import Elemental.Css.BorderRadius as BorderRadius
-import Elemental.Form.Interaction as Interaction exposing (Interaction)
+import Elemental.Form.Interaction as Interaction
 import Elemental.Layout as L
 import Html.Styled as H
 import Html.Styled.Attributes as HA
@@ -18,7 +18,7 @@ type alias Options msg =
     , placeholder : String
     , height : Float
     , onInput : String -> msg
-    , maybeConfig : Maybe (Interaction.Config msg)
+    , maybeInteractionConfig : Maybe (Interaction.Config msg)
     }
 
 
