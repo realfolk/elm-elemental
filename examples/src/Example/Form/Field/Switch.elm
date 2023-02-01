@@ -103,4 +103,5 @@ toOptions options =
                 H.div [ HA.css [ Css.color color, Css.displayFlex ] ]
                     [ Icons.view Icons.WarningTriangle 18
                     ]
+    , userInteractions = []
     }

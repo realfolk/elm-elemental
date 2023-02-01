@@ -70,4 +70,5 @@ toOptions options =
     , disabled = options.disabled
     , size = options.size
     , onToggle = options.onToggle
+    , maybeOnInteraction = Nothing
     }

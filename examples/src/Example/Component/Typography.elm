@@ -61,7 +61,7 @@ init _ =
     , importFontInput =
         ShortTextField.field.init
             { value = ""
-            , validator = V.firstError []
+            , validator = V.firstError [ V.ifBlank identity "Can't be empty" ]
             }
             |> Tuple.first
     , createStyleInput =
@@ -120,7 +120,7 @@ update options msg model =
 
         GotSwitchFieldMsg msg_ ->
             let
-                ( switchFieldModel, switchFieldMsg ) =
+                ( switchFieldModel, switchFieldMsg, maybeInteraction ) =
                     SwitchField.field.update msg_ model.showImportedFontsSwitch
             in
             ( { model
@@ -132,7 +132,7 @@ update options msg model =
 
         UpdatedAddFontInput msg_ ->
             let
-                ( shortTextFieldModel, shortTextFieldMsg ) =
+                ( shortTextFieldModel, shortTextFieldMsg, maybeInteraction ) =
                     ShortTextField.field.update msg_ model.importFontInput
             in
             ( { model | importFontInput = shortTextFieldModel }
@@ -159,7 +159,7 @@ update options msg model =
 
         UpdatedCreateStyleInput msg_ ->
             let
-                ( shortTextFieldModel, shortTextFieldMsg ) =
+                ( shortTextFieldModel, shortTextFieldMsg, maybeInteraction ) =
                     ShortTextField.field.update msg_ model.createStyleInput
             in
             ( { model | createStyleInput = shortTextFieldModel }

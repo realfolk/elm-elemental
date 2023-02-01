@@ -14,6 +14,7 @@ import Elemental.View.Form.Field.Switch as Switch
 import Elm
 import Elm.ToString
 import Example.Colors as Colors
+import Example.Form.Field.Select as Select
 import Example.Gen.Tree
 import Example.Gen.Typography as GenTypo exposing (TypographyTree)
 import Example.Layout as L
@@ -22,7 +23,6 @@ import Example.Theme as Theme exposing (Theme)
 import Example.Typography as Typography exposing (ThemeTypography)
 import Example.Typography.Helpers as Typography exposing (..)
 import Example.View.Codeblock as Codeblock
-import Example.Form.Field.Select as Select
 import Example.View.Form.Field.Switch as Switch
 import Html.Styled as H
 import Html.Styled.Attributes as HA
@@ -244,7 +244,7 @@ viewTypography theme customFonts { styleName, onUpdateTypography, typography } =
                     |> H.map
                         (\selectMsg ->
                             Select.field.update selectMsg model
-                                |> Tuple.first
+                                |> (\( fieldModel, _, _ ) -> fieldModel)
                                 |> Select.field.getValue
                                 |> intoTypography
                                 |> onUpdateTypography

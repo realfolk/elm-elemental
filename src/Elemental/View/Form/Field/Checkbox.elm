@@ -8,6 +8,7 @@ module Elemental.View.Form.Field.Checkbox exposing
 import Css
 import Css.Transitions
 import Elemental.Css as LibCss
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.Layout as L
 import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
@@ -22,6 +23,7 @@ type alias Options msg =
     , disabled : Bool
     , size : Size
     , onToggle : Bool -> msg
+    , maybeOnInteraction : Maybe (Interaction.Config msg)
     , icon : Size -> Css.Color -> H.Html msg
     }
 
@@ -174,11 +176,12 @@ viewInput options ( width, height ) isSelected =
                 ]
 
             else
-                [ Events.onCheck options.onToggle
-                , HA.css
-                    [ Css.cursor Css.pointer
-                    ]
-                ]
+                Interaction.onInteraction options.maybeOnInteraction
+                    ++ [ Events.onCheck options.onToggle
+                       , HA.css
+                            [ Css.cursor Css.pointer
+                            ]
+                       ]
 
         attrs =
             baseAttrs ++ additionalAttrs
@@ -265,9 +268,10 @@ viewNonEmptyLabel options currentValue =
                 []
 
             else
-                [ Events.onClick <|
-                    options.onToggle (not currentValue)
-                ]
+                Interaction.onInteraction options.maybeOnInteraction
+                    ++ [ Events.onClick <|
+                            options.onToggle (not currentValue)
+                       ]
     in
     H.div interactionAttr
         [ L.viewRow

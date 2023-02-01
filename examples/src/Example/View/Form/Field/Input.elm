@@ -1,5 +1,6 @@
 module Example.View.Form.Field.Input exposing (..)
 
+import Elemental.Form.Interaction as Interaction
 import Elemental.View.Form.Field as Field exposing (Support)
 import Elemental.View.Form.Field.Input as Input
 import Example.Layout as L
@@ -15,6 +16,7 @@ toOptions :
     , autofocus : Bool
     , icon : Maybe (H.Html msg)
     , onInput : String -> msg
+    , maybeOnInteraction : Maybe (Interaction.Interaction -> msg)
     , customAttrs : List (H.Attribute msg)
     }
     -> Input.Options msg
@@ -55,5 +57,14 @@ toOptions options =
     , disabled = options.disabled
     , error = False
     , onInput = options.onInput
+    , maybeOnInteraction =
+        options.maybeOnInteraction
+            |> Maybe.map
+                (\onInteraction ->
+                    Interaction.config onInteraction <|
+                        [ Interaction.Focus
+                        , Interaction.Blur
+                        ]
+                )
     , customAttrs = options.customAttrs
     }
