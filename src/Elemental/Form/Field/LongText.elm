@@ -8,7 +8,7 @@ module Elemental.Form.Field.LongText exposing
     )
 
 import Elemental.Form.Field as Field
-import Elemental.Form.Interaction as Interaction exposing (Interaction)
+import Elemental.Form.Interaction as Interaction
 import Elemental.View.Form.Field.Textarea as Textarea
 import Html.Styled as H
 
