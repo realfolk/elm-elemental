@@ -1,4 +1,4 @@
-module Elemental.Form.Field.LongText exposing
+module Elemental.Form.Field.Checkbox exposing
     ( Flags
     , Model
     , Msg
@@ -7,14 +7,15 @@ module Elemental.Form.Field.LongText exposing
     , field
     )
 
+import Css
 import Elemental.Form.Field as Field
 import Elemental.Form.Interaction as Interaction exposing (Interaction)
-import Elemental.View.Form.Field.Textarea as Textarea
+import Elemental.View.Form.Field.Checkbox as Checkbox
 import Html.Styled as H
 
 
 type alias Field =
-    Field.Field {} {} Msg_ Options_ String
+    Field.Field {} {} Msg_ Options_ Bool
 
 
 field : Field
@@ -31,11 +32,11 @@ field =
 
 
 type alias Flags =
-    Field.Flags {} String
+    Field.Flags {} Bool
 
 
 type alias Model =
-    Field.Model {} String
+    Field.Model {} Bool
 
 
 init : Flags -> ( Model, Cmd Msg_ )
@@ -57,14 +58,14 @@ type alias Msg =
 
 
 type Msg_
-    = ChangedInput String
+    = ToggledCheckbox Bool
     | UserInteracted Interaction
 
 
 update : Msg_ -> Model -> ( Model, Cmd Msg_, Maybe Interaction )
 update msg model =
     case msg of
-        ChangedInput newValue ->
+        ToggledCheckbox newValue ->
             ( { model | value = newValue }, Cmd.none, Nothing )
 
         UserInteracted interaction ->
@@ -80,36 +81,24 @@ type alias Options =
 
 
 type alias Options_ =
-    { widgetTheme : Textarea.Theme
-    , placeholder : String
-    , height : Float
+    { widgetTheme : Checkbox.Theme
+    , checkboxText : String
+    , size : Checkbox.Size
+    , icon : Checkbox.Size -> Css.Color -> H.Html Msg_
     }
 
 
 view : Options -> Model -> H.Html Msg_
 view options model =
-    let
-        fieldColors =
-            options.widgetTheme.colors
-    in
-    Textarea.view
-        { theme =
-            { colors =
-                { background = fieldColors.background
-                , border = fieldColors.border
-                , focusHighlight = fieldColors.focusHighlight
-                , foreground = fieldColors.foreground
-                }
-            , borderRadius = options.widgetTheme.borderRadius
-            , spacerMultiples = options.widgetTheme.spacerMultiples
-            }
+    Checkbox.view
+        { theme = options.widgetTheme
         , layout = options.layout
+        , text = options.checkboxText
         , disabled = options.disabled
-        , error = Field.hasError model
-        , placeholder = options.placeholder
-        , height = options.height
-        , onInput = ChangedInput
-        , maybeInteractionConfig =
+        , size = options.size
+        , onToggle = ToggledCheckbox
+        , maybeOnInteraction =
             Just <| Interaction.config UserInteracted options.userInteractions
+        , icon = options.icon
         }
         model.value

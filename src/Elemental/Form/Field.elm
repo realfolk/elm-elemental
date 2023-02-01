@@ -11,6 +11,7 @@ module Elemental.Form.Field exposing
     )
 
 import Css
+import Elemental.Form.Interaction exposing (Interaction)
 import Elemental.Form.Validate as V exposing (Validator)
 import Elemental.Layout as L
 import Elemental.View.Form.Field as Field
@@ -19,7 +20,7 @@ import Html.Styled as H
 
 type alias Field flags model msg options value =
     { init : Flags flags value -> ( Model model value, Cmd (Msg msg) )
-    , update : Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg) )
+    , update : Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg), Maybe Interaction )
     , view : Options msg options -> Model model value -> H.Html (Msg msg)
     , getValue : Model model value -> value
     , setValue : value -> Model model value -> Model model value
@@ -63,6 +64,7 @@ type alias Options msg options =
         , required : Bool
         , disabled : Bool
         , maybeToErrorIcon : Maybe (Css.Color -> H.Html msg)
+        , userInteractions : List Interaction
     }
 
 
@@ -76,7 +78,7 @@ type alias Error =
 
 type alias BuilderOptions flags model msg options value =
     { init : Flags flags value -> ( Model model value, Cmd msg )
-    , update : msg -> Model model value -> ( Model model value, Cmd msg )
+    , update : msg -> Model model value -> ( Model model value, Cmd msg, Maybe Interaction )
     , view : Options msg options -> Model model value -> H.Html msg
     }
 
@@ -143,12 +145,22 @@ init initField flags =
         |> Tuple.mapSecond (Cmd.map FieldChanged)
 
 
-update : (Model model value -> Model model value) -> (msg -> Model model value -> ( Model model value, Cmd msg )) -> Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg) )
+update : (Model model value -> Model model value) -> (msg -> Model model value -> ( Model model value, Cmd msg, Maybe Interaction )) -> Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg), Maybe Interaction )
 update validate updateField msg model =
     case msg of
         FieldChanged fieldMsg ->
             updateField fieldMsg model
-                |> Tuple.mapBoth validate (Cmd.map FieldChanged)
+                |> (\( newModel, fieldCmd, maybeInteraction ) ->
+                        ( case maybeInteraction of
+                            Just _ ->
+                                newModel
+
+                            Nothing ->
+                                validate newModel
+                        , Cmd.map FieldChanged fieldCmd
+                        , maybeInteraction
+                        )
+                   )
 
 
 view : (Options msg options -> Model model value -> H.Html msg) -> Options msg options -> Model model value -> H.Html (Msg msg)

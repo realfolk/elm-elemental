@@ -1,4 +1,4 @@
-module Elemental.View.Form.Field.Switch exposing
+module Elemental.View.Form.Field.Checkbox exposing
     ( Options
     , Size(..)
     , Theme
@@ -24,6 +24,7 @@ type alias Options msg =
     , size : Size
     , onToggle : Bool -> msg
     , maybeOnInteraction : Maybe (Interaction.Config msg)
+    , icon : Size -> Css.Color -> H.Html msg
     }
 
 
@@ -36,29 +37,21 @@ type alias Theme =
     { colors :
         { background :
             { disabled : Css.Color
-            , off : Css.Color
-            , on : Css.Color
+            , unchecked : Css.Color
+            , checked : Css.Color
             }
         , border :
             { disabled : Css.Color
-            , off : Css.Color
-            , on : Css.Color
+            , unchecked : Css.Color
+            , checked : Css.Color
             }
         , foreground :
-            { enabled : Css.Color
+            { normal : Css.Color
             , disabled : Css.Color
             }
-        , handle :
-            { background :
-                { disabled : Css.Color
-                , off : Css.Color
-                , on : Css.Color
-                }
-            , border :
-                { disabled : Css.Color
-                , off : Css.Color
-                , on : Css.Color
-                }
+        , label :
+            { normal : Css.Color
+            , disabled : Css.Color
             }
         }
     , spacerMultiples :
@@ -78,10 +71,10 @@ view options isSelected =
         ( width, height ) =
             case options.size of
                 Small ->
-                    ( 34, 20 )
+                    ( 20, 20 )
 
                 Medium ->
-                    ( 42, 24 )
+                    ( 24, 24 )
 
         dimensions =
             ( width, height )
@@ -91,6 +84,10 @@ view options isSelected =
                 [ Css.width <| Css.px width
                 , Css.height <| Css.px height
                 , Css.position Css.relative
+                , Css.displayFlex
+                , Css.flexWrap Css.noWrap
+                , Css.justifyContent Css.center
+                , Css.alignItems Css.center
                 ]
             ]
     in
@@ -104,7 +101,7 @@ view options isSelected =
             []
             [ H.div attrs
                 [ viewInput options dimensions isSelected
-                , viewHandle options dimensions isSelected
+                , viewCheck options isSelected
                 ]
             , viewLabel options isSelected
             ]
@@ -132,16 +129,16 @@ viewInput options ( width, height ) isSelected =
             Css.batch
                 [ Css.backgroundColor <|
                     if isSelected then
-                        fieldColors.background.on
+                        fieldColors.background.checked
 
                     else
-                        fieldColors.background.off
+                        fieldColors.background.unchecked
                 , LibCss.borderAll <|
                     if isSelected then
-                        fieldColors.border.on
+                        fieldColors.border.checked
 
                     else
-                        fieldColors.border.off
+                        fieldColors.border.unchecked
                 , Css.Transitions.transition
                     [ Css.Transitions.left transitionDuration
                     , Css.Transitions.background transitionDuration
@@ -160,7 +157,7 @@ viewInput options ( width, height ) isSelected =
             HA.css
                 [ Css.width <| Css.px width
                 , Css.height <| Css.px height
-                , Css.borderRadius <| Css.px (height / 2)
+                , Css.borderRadius <| Css.px 4
                 , interactionStyle
                 ]
 
@@ -192,77 +189,41 @@ viewInput options ( width, height ) isSelected =
     H.input attrs []
 
 
-viewHandle : Options msg -> ( Float, Float ) -> Bool -> H.Html msg
-viewHandle options ( width, height ) isSelected =
+viewCheck : Options msg -> Bool -> H.Html msg
+viewCheck options isSelected =
     let
-        fieldColors =
-            options.theme.colors
+        checkColor =
+            if options.disabled then
+                options.theme.colors.foreground.disabled
 
-        transitionDuration =
-            options.theme.transitionDuration
+            else
+                options.theme.colors.foreground.normal
 
-        handlePadding =
-            3
-
-        size =
-            height - (2 * handlePadding)
-
-        disabledStyle =
-            Css.batch
-                [ Css.backgroundColor fieldColors.handle.background.disabled
-                , LibCss.borderAll fieldColors.handle.border.disabled
-                ]
-
-        normalStyle =
-            Css.batch
-                [ Css.backgroundColor <|
-                    if isSelected then
-                        fieldColors.handle.background.on
-
-                    else
-                        fieldColors.handle.background.off
-                , LibCss.borderAll <|
-                    if isSelected then
-                        fieldColors.handle.border.on
-
-                    else
-                        fieldColors.handle.border.off
-                , Css.Transitions.transition
-                    [ Css.Transitions.left transitionDuration
-                    , Css.Transitions.background transitionDuration
-                    , Css.Transitions.borderColor transitionDuration
-                    ]
-                ]
+        icon =
+            options.icon options.size checkColor
 
         css =
-            Css.batch
-                [ Css.width <| Css.px size
-                , Css.height <| Css.px size
-                , Css.borderRadius (Css.px (size / 2))
-                , Css.border2 (Css.px 1) Css.solid
-                , Css.left <|
-                    if isSelected then
-                        Css.px (width - handlePadding - size)
+            HA.css
+                [ Css.displayFlex
+                , Css.flexWrap Css.noWrap
+                , Css.justifyContent Css.center
+                , Css.alignItems Css.center
+                , Css.flexShrink <| Css.int 0
+                , Css.flexGrow <| Css.int 0
+                , Css.opacity <|
+                    Css.int
+                        (if isSelected then
+                            1
 
-                    else
-                        Css.px handlePadding
-                , Css.top <| Css.px handlePadding
+                         else
+                            0
+                        )
                 , Css.position Css.absolute
                 , Css.pointerEvents Css.none
+                , Css.color checkColor
                 ]
-
-        handleAttr =
-            [ HA.css
-                [ css
-                , if options.disabled then
-                    disabledStyle
-
-                  else
-                    normalStyle
-                ]
-            ]
     in
-    H.span handleAttr []
+    H.div [ css ] [ icon ]
 
 
 viewLabel : Options msg -> Bool -> H.Html msg
@@ -283,7 +244,7 @@ viewNonEmptyLabel : Options msg -> Bool -> H.Html msg
 viewNonEmptyLabel options currentValue =
     let
         labelColors =
-            options.theme.colors.foreground
+            options.theme.colors.label
 
         labelTypography =
             Typography.toStyle options.theme.typography.label
@@ -298,7 +259,7 @@ viewNonEmptyLabel options currentValue =
 
                 else
                     [ Css.cursor Css.pointer
-                    , Css.color labelColors.enabled
+                    , Css.color labelColors.normal
                     ]
             ]
 

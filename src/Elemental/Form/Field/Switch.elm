@@ -8,6 +8,7 @@ module Elemental.Form.Field.Switch exposing
     )
 
 import Elemental.Form.Field as Field
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.View.Form.Field.Switch as Switch
 import Html.Styled as H
 
@@ -57,13 +58,17 @@ type alias Msg =
 
 type Msg_
     = ToggledSwitch Bool
+    | UserInteracted Interaction
 
 
-update : Msg_ -> Model -> ( Model, Cmd Msg_ )
+update : Msg_ -> Model -> ( Model, Cmd Msg_, Maybe Interaction )
 update msg model =
     case msg of
         ToggledSwitch newValue ->
-            ( { model | value = newValue }, Cmd.none )
+            ( { model | value = newValue }, Cmd.none, Nothing )
+
+        UserInteracted interaction ->
+            ( model, Cmd.none, Just interaction )
 
 
 
@@ -90,5 +95,7 @@ view options model =
         , disabled = options.disabled
         , size = options.size
         , onToggle = ToggledSwitch
+        , maybeOnInteraction =
+            Just <| Interaction.config UserInteracted options.userInteractions
         }
         model.value
