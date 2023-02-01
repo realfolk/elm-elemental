@@ -8,7 +8,7 @@ module Elemental.Form.Field.Switch exposing
     )
 
 import Elemental.Form.Field as Field
-import Elemental.Form.Interaction as Interaction
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.View.Form.Field.Switch as Switch
 import Html.Styled as H
 
