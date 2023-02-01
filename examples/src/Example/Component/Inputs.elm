@@ -10,11 +10,11 @@ import Elemental.Layout as L
 import Elemental.View.Form.Field as Support
 import Elemental.View.Form.Field.Input as Input
 import Example.Form.Field.LongText as LongTextField
+import Example.Form.Field.Select as SelectField
 import Example.Form.Field.ShortText as ShortTextField
 import Example.Icons as Icons
 import Example.Layout as L
 import Example.Theme exposing (Theme)
-import Example.Form.Field.Select as SelectField
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 
@@ -107,8 +107,11 @@ update msg model =
 
         GotShortTextFieldMsg msg_ ->
             let
-                ( shortTextFieldModel, shortTextFieldMsg ) =
+                ( shortTextFieldModel, shortTextFieldMsg, maybeInteraction ) =
                     ShortTextField.field.update msg_ model.shortTextFieldModel
+
+                _ =
+                    Debug.log "" maybeInteraction
             in
             ( { model | shortTextFieldModel = shortTextFieldModel }
             , Cmd.map GotShortTextFieldMsg shortTextFieldMsg
@@ -116,8 +119,11 @@ update msg model =
 
         GotLongTextFieldMsg msg_ ->
             let
-                ( longTextFieldModel, longTextFieldMsg ) =
+                ( longTextFieldModel, longTextFieldMsg, maybeInteraction ) =
                     LongTextField.field.update msg_ model.longTextFieldModel
+
+                _ =
+                    Debug.log "" maybeInteraction
             in
             ( { model | longTextFieldModel = longTextFieldModel }
             , Cmd.map GotLongTextFieldMsg longTextFieldMsg
@@ -125,8 +131,11 @@ update msg model =
 
         GotSelectFieldMsg msg_ ->
             let
-                ( selectFieldModel, selectFieldMsg ) =
+                ( selectFieldModel, selectFieldMsg, maybeInteraction ) =
                     SelectField.field.update msg_ model.selectFieldModel
+
+                _ =
+                    Debug.log "" maybeInteraction
             in
             ( { model | selectFieldModel = selectFieldModel }
             , Cmd.map GotSelectFieldMsg selectFieldMsg
@@ -134,8 +143,11 @@ update msg model =
 
         GotSelectFieldWithPlaceholderMsg msg_ ->
             let
-                ( selectFieldWithPlaceholderModel, selectFieldMsg ) =
+                ( selectFieldWithPlaceholderModel, selectFieldMsg, maybeInteraction ) =
                     SelectField.field.update msg_ model.selectFieldWithPlaceholderModel
+
+                _ =
+                    Debug.log "" maybeInteraction
             in
             ( { model | selectFieldWithPlaceholderModel = selectFieldWithPlaceholderModel }
             , Cmd.map GotSelectFieldWithPlaceholderMsg selectFieldMsg

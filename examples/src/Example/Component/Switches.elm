@@ -89,8 +89,11 @@ update msg model =
 
         GotSwitchFieldMsg msg_ ->
             let
-                ( switchFieldModel, switchFieldMsg ) =
+                ( switchFieldModel, switchFieldMsg, maybeInteraction ) =
                     SwitchField.field.update msg_ model.switchFieldModel
+
+                _ =
+                    Debug.log "" maybeInteraction
             in
             ( { model | switchFieldModel = switchFieldModel }
             , Cmd.map GotSwitchFieldMsg switchFieldMsg
@@ -98,8 +101,11 @@ update msg model =
 
         GotCheckboxFieldMsg msg_ ->
             let
-                ( checkboxFieldModel, checkboxFieldMsg ) =
+                ( checkboxFieldModel, checkboxFieldMsg, maybeInteraction ) =
                     CheckboxField.field.update msg_ model.checkboxFieldModel
+
+                _ =
+                    Debug.log "" maybeInteraction
             in
             ( { model | checkboxFieldModel = checkboxFieldModel }
             , Cmd.map GotCheckboxFieldMsg checkboxFieldMsg

@@ -9,6 +9,7 @@ module Elemental.Form.Field.Checkbox exposing
 
 import Css
 import Elemental.Form.Field as Field
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.View.Form.Field.Checkbox as Checkbox
 import Html.Styled as H
 
@@ -58,13 +59,17 @@ type alias Msg =
 
 type Msg_
     = ToggledCheckbox Bool
+    | UserInteracted Interaction
 
 
-update : Msg_ -> Model -> ( Model, Cmd Msg_ )
+update : Msg_ -> Model -> ( Model, Cmd Msg_, Maybe Interaction )
 update msg model =
     case msg of
         ToggledCheckbox newValue ->
-            ( { model | value = newValue }, Cmd.none )
+            ( { model | value = newValue }, Cmd.none, Nothing )
+
+        UserInteracted interaction ->
+            ( model, Cmd.none, Just interaction )
 
 
 
@@ -92,6 +97,8 @@ view options model =
         , disabled = options.disabled
         , size = options.size
         , onToggle = ToggledCheckbox
+        , maybeOnInteraction =
+            Just <| Interaction.config UserInteracted options.userInteractions
         , icon = options.icon
         }
         model.value

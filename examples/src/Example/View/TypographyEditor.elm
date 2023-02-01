@@ -10,12 +10,12 @@ import Elemental.View.Form.Field as Support
 import Elemental.View.Form.Field.Switch as Switch
 import Elm
 import Elm.ToString
+import Example.Form.Field.Select as Select
 import Example.Layout as L
 import Example.Theme exposing (Theme)
 import Example.Typography as Typography
 import Example.Typography.Helpers as Typography exposing (..)
 import Example.View.Codeblock as Codeblock
-import Example.Form.Field.Select as Select
 import Example.View.Form.Field.Switch as Switch
 import Html.Styled as H
 import Html.Styled.Attributes as HA
@@ -49,7 +49,7 @@ viewTypography theme customFonts { styleName, onUpdateTypography, typography } =
                     |> H.map
                         (\selectMsg ->
                             Select.field.update selectMsg model
-                                |> Tuple.first
+                                |> (\( fieldModel, _, _ ) -> fieldModel)
                                 |> Select.field.getValue
                                 |> intoTypography
                                 |> onUpdateTypography

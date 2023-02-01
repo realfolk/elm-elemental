@@ -214,6 +214,7 @@ viewInput theme value onChangeValue =
                 , customAttrs =
                     [ HA.type_ "number"
                     ]
+                , maybeOnInteraction = Nothing
                 }
     in
     Input.view options (String.fromFloat value)

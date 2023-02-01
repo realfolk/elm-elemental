@@ -2,6 +2,7 @@ module Example.Form.Field.ShortText exposing (..)
 
 import Css
 import Elemental.Form.Field.ShortText as ShortText
+import Elemental.Form.Interaction as Interaction
 import Elemental.View.Form.Field as Field exposing (Support)
 import Elemental.View.Form.Field.Input as Input
 import Example.Icons as Icons
@@ -79,4 +80,8 @@ toOptions options =
                     [ Icons.view Icons.WarningTriangle 18
                     ]
     , customAttrs = []
+    , userInteractions =
+        [ Interaction.Focus
+        , Interaction.Blur
+        ]
     }
