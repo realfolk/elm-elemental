@@ -99,7 +99,7 @@ view options model =
         , disabled = options.disabled
         , error = Field.hasError model
         , onInput = ChangedInput
-        , maybeOnInteraction =
+        , maybeInteractionConfig =
             Just <| Interaction.config UserInteracted options.userInteractions
         , viewCaret = options.viewCaret
         , choices = options.choices

@@ -121,7 +121,7 @@ view options model =
         , error = Field.hasError model
         , placeholder = options.placeholder
         , onInput = ChangedInput
-        , maybeOnInteraction =
+        , maybeInteractionConfig =
             Just <| Interaction.config UserInteracted options.userInteractions
         , customAttrs = options.customAttrs
         }

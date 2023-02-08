@@ -27,7 +27,7 @@ type alias Options value msg =
     , disabled : Bool
     , error : Bool
     , onInput : Maybe value -> msg
-    , maybeOnInteraction : Maybe (Interaction.Config msg)
+    , maybeInteractionConfig : Maybe (Interaction.Config msg)
     , viewCaret : Html msg
     , choices : List (Choice value)
     , customAttrs : List (Html.Attribute msg)
@@ -220,7 +220,7 @@ viewHtmlSelect options value choiceTextToValue =
                 []
 
             else
-                Interaction.onInteraction options.maybeOnInteraction
+                Interaction.toAttr options.maybeInteractionConfig
                     ++ [ Events.onInput onInput ]
 
         attrs =

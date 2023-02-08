@@ -1,4 +1,9 @@
-module Elemental.Form.Interaction exposing (Config, Interaction(..), config, onInteraction)
+module Elemental.Form.Interaction exposing
+    ( Config
+    , Interaction(..)
+    , toAttrs
+    , toConfig
+    )
 
 import Html.Styled as H
 import Html.Styled.Events as HE
@@ -24,26 +29,26 @@ type Interaction
 type Config msg
     = Config
         { toMsg : Interaction -> msg
-        , detectableInteractions : List Interaction
+        , interactions : List Interaction
         }
 
 
-config : (Interaction -> msg) -> List Interaction -> Config msg
-config toMsg detectableInteractions =
-    Config
-        { toMsg = toMsg
-        , detectableInteractions = detectableInteractions
-        }
+toConfig : (Interaction -> msg) -> List Interaction -> Maybe (Config msg)
+toConfig toMsg interactions =
+    if List.isEmpty interactions then
+        Nothing
+
+    else
+        Just <|
+            Config
+                { toMsg = toMsg
+                , interactions = interactions
+                }
 
 
-onInteraction : Maybe (Config msg) -> List (H.Attribute msg)
-onInteraction maybeConfig =
-    case maybeConfig of
-        Just (Config { toMsg, detectableInteractions }) ->
-            List.map (interactionToAttribute toMsg) detectableInteractions
-
-        Nothing ->
-            []
+toAttrs : Config msg -> List (H.Attribute msg)
+toAttrs (Config { toMsg, interactions }) =
+    List.map (interactionToAttribute toMsg) interactions
 
 
 interactionToAttribute : (Interaction -> msg) -> Interaction -> H.Attribute msg

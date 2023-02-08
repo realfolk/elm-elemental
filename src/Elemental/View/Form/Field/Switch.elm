@@ -23,7 +23,7 @@ type alias Options msg =
     , disabled : Bool
     , size : Size
     , onToggle : Bool -> msg
-    , maybeOnInteraction : Maybe (Interaction.Config msg)
+    , maybeInteractionConfig : Maybe (Interaction.Config msg)
     }
 
 
@@ -179,7 +179,7 @@ viewInput options ( width, height ) isSelected =
                 ]
 
             else
-                Interaction.onInteraction options.maybeOnInteraction
+                Interaction.toAttr options.maybeInteractionConfig
                     ++ [ Events.onCheck options.onToggle
                        , HA.css
                             [ Css.cursor Css.pointer
@@ -307,7 +307,7 @@ viewNonEmptyLabel options currentValue =
                 []
 
             else
-                Interaction.onInteraction options.maybeOnInteraction
+                Interaction.toAttr options.maybeInteractionConfig
                     ++ [ Events.onClick <|
                             options.onToggle (not currentValue)
                        ]

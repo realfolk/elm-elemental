@@ -29,7 +29,7 @@ type alias Options msg =
     , placeholder : String
     , onInput : String -> msg
     , customAttrs : List (H.Attribute msg)
-    , maybeOnInteraction : Maybe (Interaction.Config msg)
+    , maybeInteractionConfig : Maybe (Interaction.Config msg)
     }
 
 
@@ -234,7 +234,7 @@ view options value =
                 []
 
             else
-                Interaction.onInteraction options.maybeOnInteraction
+                Interaction.toAttr options.maybeInteractionConfig
                     ++ [ HE.onInput options.onInput ]
 
         attrs =
