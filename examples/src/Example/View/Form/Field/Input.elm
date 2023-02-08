@@ -57,14 +57,14 @@ toOptions options =
     , disabled = options.disabled
     , error = False
     , onInput = options.onInput
-    , maybeOnInteraction =
-        options.maybeOnInteraction
-            |> Maybe.map
-                (\onInteraction ->
-                    Interaction.config onInteraction <|
+    , maybeInteractionConfig =
+        case options.maybeOnInteraction of
+            Just onInteraction ->
+                    Interaction.toConfig onInteraction <|
                         [ Interaction.Focus
                         , Interaction.Blur
                         ]
-                )
+            Nothing -> 
+                Nothing
     , customAttrs = options.customAttrs
     }

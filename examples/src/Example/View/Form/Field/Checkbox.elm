@@ -71,5 +71,5 @@ toOptions options =
 
                 Checkbox.Medium ->
                     Icons.view Icons.Check 24
-    , maybeOnInteraction = Nothing
+    , maybeInteractionConfig = Nothing
     }

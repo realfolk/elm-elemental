@@ -97,8 +97,7 @@ view options model =
         , disabled = options.disabled
         , size = options.size
         , onToggle = ToggledCheckbox
-        , maybeOnInteraction =
-            Just <| Interaction.config UserInteracted options.userInteractions
+        , maybeInteractionConfig = Interaction.toConfig UserInteracted options.userInteractions
         , icon = options.icon
         }
         model.value
