@@ -8,6 +8,7 @@ module Elemental.View.Form.Field.Switch exposing
 import Css
 import Css.Transitions
 import Elemental.Css as LibCss
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.Layout as L
 import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
@@ -22,6 +23,7 @@ type alias Options msg =
     , disabled : Bool
     , size : Size
     , onToggle : Bool -> msg
+    , maybeInteractionConfig : Maybe (Interaction.Config msg)
     }
 
 
@@ -177,11 +179,15 @@ viewInput options ( width, height ) isSelected =
                 ]
 
             else
-                [ Events.onCheck options.onToggle
-                , HA.css
-                    [ Css.cursor Css.pointer
-                    ]
-                ]
+                (options.maybeInteractionConfig
+                    |> Maybe.map Interaction.toAttrs
+                    |> Maybe.withDefault []
+                )
+                    ++ [ Events.onCheck options.onToggle
+                       , HA.css
+                            [ Css.cursor Css.pointer
+                            ]
+                       ]
 
         attrs =
             baseAttrs ++ additionalAttrs
@@ -304,9 +310,13 @@ viewNonEmptyLabel options currentValue =
                 []
 
             else
-                [ Events.onClick <|
-                    options.onToggle (not currentValue)
-                ]
+                (options.maybeInteractionConfig
+                    |> Maybe.map Interaction.toAttrs
+                    |> Maybe.withDefault []
+                )
+                    ++ [ Events.onClick <|
+                            options.onToggle (not currentValue)
+                       ]
     in
     H.div interactionAttr
         [ L.viewRow
