@@ -179,7 +179,10 @@ viewInput options ( width, height ) isSelected =
                 ]
 
             else
-                Interaction.toAttr options.maybeInteractionConfig
+                (options.maybeInteractionConfig
+                    |> Maybe.map Interaction.toAttrs
+                    |> Maybe.withDefault []
+                )
                     ++ [ Events.onCheck options.onToggle
                        , HA.css
                             [ Css.cursor Css.pointer
@@ -307,7 +310,10 @@ viewNonEmptyLabel options currentValue =
                 []
 
             else
-                Interaction.toAttr options.maybeInteractionConfig
+                (options.maybeInteractionConfig
+                    |> Maybe.map Interaction.toAttrs
+                    |> Maybe.withDefault []
+                )
                     ++ [ Events.onClick <|
                             options.onToggle (not currentValue)
                        ]

@@ -220,7 +220,10 @@ viewHtmlSelect options value choiceTextToValue =
                 []
 
             else
-                Interaction.toAttr options.maybeInteractionConfig
+                (options.maybeInteractionConfig
+                    |> Maybe.map Interaction.toAttrs
+                    |> Maybe.withDefault []
+                )
                     ++ [ Events.onInput onInput ]
 
         attrs =

@@ -100,7 +100,7 @@ view options model =
         , error = Field.hasError model
         , onInput = ChangedInput
         , maybeInteractionConfig =
-            Just <| Interaction.config UserInteracted options.userInteractions
+            Interaction.toConfig UserInteracted options.userInteractions
         , viewCaret = options.viewCaret
         , choices = options.choices
         , customAttrs = []

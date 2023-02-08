@@ -234,7 +234,10 @@ view options value =
                 []
 
             else
-                Interaction.toAttr options.maybeInteractionConfig
+                (options.maybeInteractionConfig
+                    |> Maybe.map Interaction.toAttrs
+                    |> Maybe.withDefault []
+                )
                     ++ [ HE.onInput options.onInput ]
 
         attrs =

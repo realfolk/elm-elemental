@@ -122,7 +122,7 @@ view options model =
         , placeholder = options.placeholder
         , onInput = ChangedInput
         , maybeInteractionConfig =
-            Just <| Interaction.config UserInteracted options.userInteractions
+            Interaction.toConfig UserInteracted options.userInteractions
         , customAttrs = options.customAttrs
         }
         model.value

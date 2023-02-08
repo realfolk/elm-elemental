@@ -110,6 +110,6 @@ view options model =
         , height = options.height
         , onInput = ChangedInput
         , maybeInteractionConfig =
-            Just <| Interaction.config UserInteracted options.userInteractions
+            Interaction.toConfig UserInteracted options.userInteractions
         }
         model.value

@@ -96,6 +96,6 @@ view options model =
         , size = options.size
         , onToggle = ToggledSwitch
         , maybeInteractionConfig =
-            Just <| Interaction.config UserInteracted options.userInteractions
+            Interaction.toConfig UserInteracted options.userInteractions
         }
         model.value
