@@ -371,6 +371,7 @@
         "telescopeFzyNative": "telescopeFzyNative",
         "toggleterm": "toggleterm",
         "tokyonightNvim": "tokyonightNvim",
+        "vimAbolish": "vimAbolish",
         "vimNix": "vimNix",
         "vimRooter": "vimRooter",
         "vimRzip": "vimRzip",
@@ -379,11 +380,11 @@
       },
       "locked": {
         "dir": "lib/packages/neovim",
-        "lastModified": 1652434982,
-        "narHash": "sha256-rAMEHoC6mYnXKpKMyprOUGTtucOQ+iVZkdGCCjFmnvM=",
+        "lastModified": 1659384954,
+        "narHash": "sha256-Zb5oW9l0BFe6Gr/78NrFjtj+x3u48SPfC05HK1XBNbI=",
         "owner": "realfolk",
         "repo": "nix",
-        "rev": "a31dd3a126da755af5d77a2789d05b5b07c98ade",
+        "rev": "7402d0ed40e63ab068206b984a3b10cca1eb5f0f",
         "type": "github"
       },
       "original": {
@@ -784,6 +785,22 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "vimAbolish": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1616252559,
+        "narHash": "sha256-iwK7VRF+F+GHJO3Xbbns8jWkIoD/YPQHcWOrsEWNP/E=",
+        "owner": "tpope",
+        "repo": "vim-abolish",
+        "rev": "3f0c8faadf0c5b68bcf40785c1c42e3731bfa522",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tpope",
+        "repo": "vim-abolish",
         "type": "github"
       }
     },
