@@ -157,8 +157,7 @@ update validate updateField msg model =
     case msg of
         FieldChanged fieldMsg ->
             updateField fieldMsg model
-                |> Tuple.mapFirst validate
-                |> Tuple.mapSecond (Cmd.map FieldChanged)
+                |> Tuple.mapBoth validate (Cmd.map FieldChanged)
 
 
 view : (Options fieldMsg msg options -> Model model value -> H.Html msg) -> Options fieldMsg msg options -> Model model value -> H.Html msg
