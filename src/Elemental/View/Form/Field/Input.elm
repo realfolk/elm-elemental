@@ -10,7 +10,7 @@ module Elemental.View.Form.Field.Input exposing
 import Css
 import Elemental.Css as LibCss
 import Elemental.Css.BorderRadius as BorderRadius
-import Elemental.Form.Interaction as Interaction
+import Elemental.Form.Interaction as Interaction exposing (Interaction)
 import Elemental.Layout as L
 import Html.Styled as H
 import Html.Styled.Attributes as HA
@@ -29,7 +29,7 @@ type alias Options msg =
     , placeholder : String
     , onInput : String -> msg
     , customAttrs : List (H.Attribute msg)
-    , maybeInteractionConfig : Maybe (Interaction.Config msg)
+    , interaction : Interaction msg
     }
 
 
@@ -234,10 +234,7 @@ view options value =
                 []
 
             else
-                (options.maybeInteractionConfig
-                    |> Maybe.map Interaction.toAttrs
-                    |> Maybe.withDefault []
-                )
+                Interaction.toAttrs options.interaction
                     ++ [ HE.onInput options.onInput ]
 
         attrs =

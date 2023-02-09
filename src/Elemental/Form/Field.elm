@@ -8,6 +8,7 @@ module Elemental.Form.Field exposing
     , Options
     , build
     , hasError
+    , toFieldMsg
     )
 
 import Css
@@ -18,10 +19,10 @@ import Elemental.View.Form.Field as Field
 import Html.Styled as H
 
 
-type alias Field flags model msg options value =
-    { init : Flags flags value -> ( Model model value, Cmd (Msg msg) )
-    , update : Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg), Maybe Interaction )
-    , view : Options msg options -> Model model value -> H.Html (Msg msg)
+type alias Field flags model fieldMsg msg options value =
+    { init : Flags flags value -> ( Model model value, Cmd (Msg fieldMsg) )
+    , update : Msg fieldMsg -> Model model value -> ( Model model value, Cmd (Msg fieldMsg) )
+    , view : Options fieldMsg msg options -> Model model value -> H.Html msg
     , getValue : Model model value -> value
     , setValue : value -> Model model value -> Model model value
     , validate : Model model value -> Model model value
@@ -55,16 +56,22 @@ type Msg msg
     = FieldChanged msg
 
 
-type alias Options msg options =
+toFieldMsg : msg -> Msg msg
+toFieldMsg =
+    FieldChanged
+
+
+type alias Options fieldMsg msg options =
     { options
         | fieldTheme : Field.Theme
+        , onChange : Msg fieldMsg -> msg
         , layout : L.Layout msg
         , label : String
         , support : Field.Support msg
         , required : Bool
         , disabled : Bool
         , maybeToErrorIcon : Maybe (Css.Color -> H.Html msg)
-        , userInteractions : List Interaction
+        , interaction : Interaction msg
     }
 
 
@@ -76,14 +83,14 @@ type alias Error =
 -- CREATE A FIELD
 
 
-type alias BuilderOptions flags model msg options value =
-    { init : Flags flags value -> ( Model model value, Cmd msg )
-    , update : msg -> Model model value -> ( Model model value, Cmd msg, Maybe Interaction )
-    , view : Options msg options -> Model model value -> H.Html msg
+type alias BuilderOptions flags model fieldMsg msg options value =
+    { init : Flags flags value -> ( Model model value, Cmd fieldMsg )
+    , update : fieldMsg -> Model model value -> ( Model model value, Cmd fieldMsg )
+    , view : Options fieldMsg msg options -> Model model value -> H.Html msg
     }
 
 
-build : BuilderOptions flags model msg options value -> Field flags model msg options value
+build : BuilderOptions flags model fieldMsg msg options value -> Field flags model fieldMsg msg options value
 build options =
     let
         getValue : Model model value -> value
@@ -139,31 +146,22 @@ build options =
 -- HELPERS
 
 
-init : (Flags flags value -> ( Model model value, Cmd msg )) -> Flags flags value -> ( Model model value, Cmd (Msg msg) )
+init : (Flags flags value -> ( Model model value, Cmd fieldMsg )) -> Flags flags value -> ( Model model value, Cmd (Msg fieldMsg) )
 init initField flags =
     initField flags
         |> Tuple.mapSecond (Cmd.map FieldChanged)
 
 
-update : (Model model value -> Model model value) -> (msg -> Model model value -> ( Model model value, Cmd msg, Maybe Interaction )) -> Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg), Maybe Interaction )
+update : (Model model value -> Model model value) -> (msg -> Model model value -> ( Model model value, Cmd msg )) -> Msg msg -> Model model value -> ( Model model value, Cmd (Msg msg) )
 update validate updateField msg model =
     case msg of
         FieldChanged fieldMsg ->
             updateField fieldMsg model
-                |> (\( newModel, fieldCmd, maybeInteraction ) ->
-                        ( case maybeInteraction of
-                            Just _ ->
-                                newModel
-
-                            Nothing ->
-                                validate newModel
-                        , Cmd.map FieldChanged fieldCmd
-                        , maybeInteraction
-                        )
-                   )
+                |> Tuple.mapFirst validate
+                |> Tuple.mapSecond (Cmd.map FieldChanged)
 
 
-view : (Options msg options -> Model model value -> H.Html msg) -> Options msg options -> Model model value -> H.Html (Msg msg)
+view : (Options fieldMsg msg options -> Model model value -> H.Html msg) -> Options fieldMsg msg options -> Model model value -> H.Html msg
 view viewField options model =
     let
         viewWidget =
@@ -180,4 +178,3 @@ view viewField options model =
         , maybeToErrorIcon = options.maybeToErrorIcon
         }
         viewWidget
-        |> H.map FieldChanged

@@ -13,11 +13,11 @@ import Elemental.View.Form.Field.Select as Select
 import Html.Styled as Html exposing (Html)
 
 
-type alias Field value =
-    Field.Field {} {} (Msg_ value) (Options_ value) value
+type alias Field msg value =
+    Field.Field {} {} (Msg_ value) msg (Options_ msg value) value
 
 
-field : Field value
+field : Field msg value
 field =
     Field.build
         { init = init
@@ -58,39 +58,35 @@ type alias Msg value =
 
 type Msg_ value
     = ChangedInput (Maybe value)
-    | UserInteracted Interaction
 
 
-update : Msg_ value -> Model value -> ( Model value, Cmd (Msg_ value), Maybe Interaction )
+update : Msg_ value -> Model value -> ( Model value, Cmd (Msg_ value) )
 update msg model =
     case msg of
         ChangedInput Nothing ->
-            ( model, Cmd.none, Nothing )
+            ( model, Cmd.none )
 
         ChangedInput (Just newValue) ->
-            ( { model | value = newValue }, Cmd.none, Nothing )
-
-        UserInteracted interaction ->
-            ( model, Cmd.none, Just interaction )
+            ( { model | value = newValue }, Cmd.none )
 
 
 
 -- VIEW
 
 
-type alias Options value =
-    Field.Options (Msg_ value) (Options_ value)
+type alias Options msg value =
+    Field.Options (Msg_ value) msg (Options_ msg value)
 
 
-type alias Options_ value =
+type alias Options_ msg value =
     { widgetTheme : Select.Theme
     , autofocus : Bool
-    , viewCaret : Html (Msg_ value)
+    , viewCaret : Html msg
     , choices : List (Select.Choice value)
     }
 
 
-view : Options value -> Model value -> Html (Msg_ value)
+view : Options msg value -> Model value -> Html msg
 view options model =
     Select.view
         { theme = options.widgetTheme
@@ -98,9 +94,8 @@ view options model =
         , autofocus = options.autofocus
         , disabled = options.disabled
         , error = Field.hasError model
-        , onInput = ChangedInput
-        , maybeInteractionConfig =
-            Interaction.toConfig UserInteracted options.userInteractions
+        , onInput = ChangedInput >> Field.toFieldMsg >> options.onChange
+        , interaction = options.interaction
         , viewCaret = options.viewCaret
         , choices = options.choices
         , customAttrs = []
