@@ -1,8 +1,21 @@
 module Elemental.Form.Interaction exposing
-    ( Config
-    , Interaction(..)
+    ( Interaction
+    , and
+    , none
+    , onBlur
+    , onClick
+    , onDoubleClick
+    , onFocus
+    , onMouseDown
+    , onMouseEnter
+    , onMouseLeave
+    , onMouseOut
+    , onMouseOver
+    , onMouseUp
+    , onTouchEnd
+    , onTouchMove
+    , onTouchStart
     , toAttrs
-    , toConfig
     )
 
 import Html.Styled as H
@@ -10,92 +23,148 @@ import Html.Styled.Events as HE
 import Json.Decode as JD
 
 
-type Interaction
-    = Click
-    | DoubleClick
-    | MouseEnter
-    | MouseLeave
-    | MouseOver
-    | MouseOut
-    | MouseDown
-    | MouseUp
-    | TouchStart
-    | TouchEnd
-    | TouchMove
-    | Focus
-    | Blur
+type Interaction msg
+    = Interaction (List (Action msg) -> List (Action msg))
 
 
-type Config msg
-    = Config
-        { toMsg : Interaction -> msg
-        , interactions : List Interaction
-        }
+type Action msg
+    = Click msg
+    | DoubleClick msg
+    | MouseEnter msg
+    | MouseLeave msg
+    | MouseOver msg
+    | MouseOut msg
+    | MouseDown msg
+    | MouseUp msg
+    | TouchStart msg
+    | TouchEnd msg
+    | TouchMove msg
+    | Focus msg
+    | Blur msg
 
 
-toConfig : (Interaction -> msg) -> List Interaction -> Maybe (Config msg)
-toConfig toMsg interactions =
-    if List.isEmpty interactions then
-        Nothing
-
-    else
-        Just <|
-            Config
-                { toMsg = toMsg
-                , interactions = interactions
-                }
+none : Interaction msg
+none =
+    Interaction identity
 
 
-toAttrs : Config msg -> List (H.Attribute msg)
-toAttrs (Config { toMsg, interactions }) =
-    List.map (interactionToAttribute toMsg) interactions
+onClick : msg -> Interaction msg
+onClick =
+    Interaction << (::) << Click
 
 
-interactionToAttribute : (Interaction -> msg) -> Interaction -> H.Attribute msg
-interactionToAttribute toMsg interaction =
+onDoubleClick : msg -> Interaction msg
+onDoubleClick =
+    Interaction << (::) << DoubleClick
+
+
+onMouseEnter : msg -> Interaction msg
+onMouseEnter =
+    Interaction << (::) << MouseEnter
+
+
+onMouseLeave : msg -> Interaction msg
+onMouseLeave =
+    Interaction << (::) << MouseLeave
+
+
+onMouseOver : msg -> Interaction msg
+onMouseOver =
+    Interaction << (::) << MouseOver
+
+
+onMouseOut : msg -> Interaction msg
+onMouseOut =
+    Interaction << (::) << MouseOut
+
+
+onMouseDown : msg -> Interaction msg
+onMouseDown =
+    Interaction << (::) << MouseDown
+
+
+onMouseUp : msg -> Interaction msg
+onMouseUp =
+    Interaction << (::) << MouseUp
+
+
+onTouchStart : msg -> Interaction msg
+onTouchStart =
+    Interaction << (::) << TouchStart
+
+
+onTouchEnd : msg -> Interaction msg
+onTouchEnd =
+    Interaction << (::) << TouchEnd
+
+
+onTouchMove : msg -> Interaction msg
+onTouchMove =
+    Interaction << (::) << TouchMove
+
+
+onFocus : msg -> Interaction msg
+onFocus =
+    Interaction << (::) << Focus
+
+
+onBlur : msg -> Interaction msg
+onBlur =
+    Interaction << (::) << Blur
+
+
+and : Interaction msg -> Interaction msg -> Interaction msg
+and (Interaction b) (Interaction a) =
+    Interaction (a >> b)
+
+
+toAttrs : Interaction msg -> List (H.Attribute msg)
+toAttrs (Interaction toActions) =
+    List.reverse <| List.map toEvent (toActions [])
+
+
+toEvent : Action msg -> H.Attribute msg
+toEvent action =
     let
         on name =
             JD.succeed >> HE.on name
-
-        msg =
-            toMsg interaction
     in
-    case interaction of
-        Click ->
+    case action of
+        Click msg ->
             HE.onClick msg
 
-        DoubleClick ->
+        DoubleClick msg ->
             HE.onDoubleClick msg
 
-        MouseEnter ->
+        MouseEnter msg ->
             HE.onMouseEnter msg
 
-        MouseLeave ->
+        MouseLeave msg ->
             HE.onMouseLeave msg
 
-        MouseOver ->
+        MouseOver msg ->
             HE.onMouseOver msg
 
-        MouseOut ->
+        MouseOut msg ->
             HE.onMouseOut msg
 
-        MouseDown ->
+        MouseDown msg ->
             HE.onMouseDown msg
 
-        MouseUp ->
+        MouseUp msg ->
             HE.onMouseUp msg
 
-        TouchStart ->
+        TouchStart msg ->
             on "touchstart" msg
 
-        TouchEnd ->
+        TouchEnd msg ->
             on "touchend" msg
 
-        TouchMove ->
+        TouchMove msg ->
             on "touchmove" msg
 
-        Focus ->
+        Focus msg ->
             HE.onFocus msg
 
-        Blur ->
+        Blur msg ->
             HE.onBlur msg

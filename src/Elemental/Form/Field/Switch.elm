@@ -13,11 +13,11 @@ import Elemental.View.Form.Field.Switch as Switch
 import Html.Styled as H
 
 
-type alias Field =
-    Field.Field {} {} Msg_ Options_ Bool
+type alias Field msg =
+    Field.Field {} {} Msg_ msg Options_ Bool
 
 
-field : Field
+field : Field msg
 field =
     Field.build
         { init = init
@@ -58,25 +58,21 @@ type alias Msg =
 
 type Msg_
     = ToggledSwitch Bool
-    | UserInteracted Interaction
 
 
-update : Msg_ -> Model -> ( Model, Cmd Msg_, Maybe Interaction )
+update : Msg_ -> Model -> ( Model, Cmd Msg_ )
 update msg model =
     case msg of
         ToggledSwitch newValue ->
-            ( { model | value = newValue }, Cmd.none, Nothing )
-
-        UserInteracted interaction ->
-            ( model, Cmd.none, Just interaction )
+            ( { model | value = newValue }, Cmd.none )
 
 
 
 -- VIEW
 
 
-type alias Options =
-    Field.Options Msg_ Options_
+type alias Options msg =
+    Field.Options Msg_ msg Options_
 
 
 type alias Options_ =
@@ -86,7 +82,7 @@ type alias Options_ =
     }
 
 
-view : Options -> Model -> H.Html Msg_
+view : Options msg -> Model -> H.Html msg
 view options model =
     Switch.view
         { theme = options.widgetTheme
@@ -94,8 +90,7 @@ view options model =
         , text = options.switchText
         , disabled = options.disabled
         , size = options.size
-        , onToggle = ToggledSwitch
-        , maybeInteractionConfig =
-            Interaction.toConfig UserInteracted options.userInteractions
+        , onToggle = ToggledSwitch >> Field.toFieldMsg >> options.onChange
+        , interaction = options.interaction
         }
         model.value

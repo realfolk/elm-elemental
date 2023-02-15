@@ -14,11 +14,11 @@ import Elemental.View.Form.Field.Input as Input
 import Html.Styled as H
 
 
-type alias Field =
-    Field.Field {} {} Msg_ Options_ String
+type alias Field msg =
+    Field.Field {} {} Msg_ msg (Options_ msg) String
 
 
-field : Field
+field : Field msg
 field =
     Field.build
         { init = init
@@ -59,43 +59,39 @@ type alias Msg =
 
 type Msg_
     = ChangedInput String
-    | UserInteracted Interaction
 
 
-update : Msg_ -> Model -> ( Model, Cmd Msg_, Maybe Interaction )
+update : Msg_ -> Model -> ( Model, Cmd Msg_ )
 update msg model =
     case msg of
         ChangedInput newValue ->
-            ( { model | value = newValue }, Cmd.none, Nothing )
-
-        UserInteracted interaction ->
-            ( model, Cmd.none, Just interaction )
+            ( { model | value = newValue }, Cmd.none )
 
 
 
 -- VIEW
 
 
-type alias Options =
-    Field.Options Msg_ Options_
+type alias Options msg =
+    Field.Options Msg_ msg (Options_ msg)
 
 
-type alias Icon =
-    Input.Icon Msg_
+type alias Icon msg =
+    Input.Icon msg
 
 
-type alias Options_ =
+type alias Options_ msg =
     { widgetTheme : Input.Theme
     , type_ : Input.Type
     , size : Input.Size
-    , icon : Maybe Icon
+    , icon : Maybe (Icon msg)
     , placeholder : String
     , autofocus : Bool
-    , customAttrs : List (H.Attribute Msg_)
+    , customAttrs : List (H.Attribute msg)
     }
 
 
-view : Options -> Model -> H.Html Msg_
+view : Options msg -> Model -> H.Html msg
 view options model =
     let
         fieldColors =
@@ -120,9 +116,8 @@ view options model =
         , disabled = options.disabled
         , error = Field.hasError model
         , placeholder = options.placeholder
-        , onInput = ChangedInput
-        , maybeInteractionConfig =
-            Interaction.toConfig UserInteracted options.userInteractions
+        , onInput = ChangedInput >> Field.toFieldMsg >> options.onChange
+        , interaction = options.interaction
         , customAttrs = options.customAttrs
         }
         model.value
