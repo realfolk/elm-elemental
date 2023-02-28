@@ -23,6 +23,19 @@ type Size
     | Large
 
 
+sizeToIdSuffix : Size -> String
+sizeToIdSuffix size =
+    case size of
+        Small ->
+            "-small"
+
+        Medium ->
+            "-medium"
+
+        Large ->
+            "-large"
+
+
 viewCustom : Options -> H.Html msg
 viewCustom options =
     let
@@ -79,6 +92,9 @@ viewCustom options =
         innerCursorRadius =
             innerStrokeWidth / 2
 
+        innerCursorOffset =
+            outerStrokeWidth / 2 + 1
+
         innerCursorRadius_ =
             String.fromFloat innerCursorRadius
 
@@ -89,10 +105,10 @@ viewCustom options =
             options.foreground.value
 
         gradientId =
-            "loading-spinner-gradient"
+            "loading-spinner-gradient" ++ sizeToIdSuffix options.size
 
         maskId =
-            "loading-spinner-mask"
+            "loading-spinner-mask" ++ sizeToIdSuffix options.size
     in
     Svg.svg
         [ SA.viewBox <| "0 0 " ++ w ++ " " ++ h
@@ -181,7 +197,7 @@ viewCustom options =
                 ]
             , Svg.circle
                 [ SA.cx half_
-                , SA.cy <| String.fromFloat <| dimension - 3
+                , SA.cy <| String.fromFloat <| dimension - innerCursorOffset
                 , SA.r innerCursorRadius_
                 , SA.fill foreground
                 ]
