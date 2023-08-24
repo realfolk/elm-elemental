@@ -5,16 +5,19 @@ import New.Elemental.Box as Box
 import New.Elemental.Box.Compatibility as Compatibility
 import New.Elemental.Box.Interaction as Interaction
 import New.Elemental.Box.Structure as Structure
+import New.Elemental.Box.Style as Style
 import New.Elemental.Browser as Browser
 import New.Elemental.Lib.Sides as Sides
 import New.Elemental.Lib.Size as Size
 
 
+main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = init
-        , update = update
+    Browser.document
+        { init = \_ -> ( init, Cmd.none )
+        , update = \msg model -> ( update msg model, Cmd.none )
         , view = view
+        , subscriptions = always Sub.none
         }
 
 
@@ -26,6 +29,7 @@ type alias Model =
     Counter
 
 
+init : Model
 init =
     Counter 0
 
@@ -35,6 +39,7 @@ type Msg
     | Decrement
 
 
+update : Msg -> Model -> Model
 update msg (Counter n) =
     case msg of
         Increment ->
@@ -44,8 +49,27 @@ update msg (Counter n) =
             Counter <| n - 1
 
 
-view : Model -> Element Msg
-view (Counter n) =
+view : Model -> Browser.Document Msg
+view model =
+    { title = "Counter"
+    , body = viewBody model
+    }
+
+
+viewBody : Model -> Browser.Body Msg
+viewBody model =
+    { direction = Structure.Column
+    , justification = Structure.Packed (Structure.Start (Size.px 48)) False
+    , alignment = Structure.Start (Size.px 0)
+    , padding = Sides.all (Size.px 32)
+    , style = Style.none
+    , extraStyles = []
+    , children = [ viewCounter model ]
+    }
+
+
+viewCounter : Model -> Element Msg
+viewCounter (Counter n) =
     Box.default
         |> Box.mapStructure Structure.row
         |> Box.setChildren [ viewButton Decrement, viewCount n, viewButton Increment ]
