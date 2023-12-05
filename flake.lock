@@ -30,11 +30,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1699458389,
-        "narHash": "sha256-mYrrHUJ/NAAUYVxphblQjPTGud7MZ03K45fhx3GAJWY=",
+        "lastModified": 1701720261,
+        "narHash": "sha256-laB7WOoF9Ty6k3gcbdoOJY0W1eQaSG7ka1OVH7EjNzQ=",
         "owner": "realfolk",
         "repo": "elm-lib",
-        "rev": "6b7905f78e113cebb0106e76ab6719ad7de36e85",
+        "rev": "5dabad4d3854302fc23d665b16004662529fe67f",
         "type": "github"
       },
       "original": {
