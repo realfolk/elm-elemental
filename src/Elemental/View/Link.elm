@@ -31,6 +31,7 @@ type alias Options msg =
     , icon : Icon msg
     , target : Target msg
     , forceHover : Bool -- Force the link to appear in the hover state.
+    , tabbable : Bool
     }
 
 
@@ -134,9 +135,16 @@ viewCustom options =
 
                 else
                     options.target
+
+        tabIndexAttr =
+            if not options.disabled && not options.tabbable then
+                [ HA.tabindex -1 ]
+
+            else
+                []
     in
     element
-        (css :: targetAttributes)
+        (css :: (tabIndexAttr ++ targetAttributes))
         [ leftIcon_
         , leftSpacer
         , H.text options.text
