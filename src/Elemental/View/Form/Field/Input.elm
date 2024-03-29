@@ -65,6 +65,7 @@ type alias Theme =
 type Type
     = Text
     | Email
+    | Password
 
 
 type Size
@@ -220,6 +221,9 @@ view options value =
 
                     Email ->
                         "email"
+
+                    Password ->
+                        "password"
             , HA.placeholder options.placeholder
             , HA.autofocus options.autofocus
             , HA.disabled options.disabled
