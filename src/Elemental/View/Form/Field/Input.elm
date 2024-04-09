@@ -66,6 +66,7 @@ type Type
     = Text
     | Email
     | Password
+    | Custom String
 
 
 type Size
@@ -224,6 +225,9 @@ view options value =
 
                     Password ->
                         "password"
+                    
+                    Custom type_ ->
+                        type_
             , HA.placeholder options.placeholder
             , HA.autofocus options.autofocus
             , HA.disabled options.disabled
