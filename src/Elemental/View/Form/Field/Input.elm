@@ -246,7 +246,9 @@ view options value =
                     ++ [ HE.onInput options.onInput ]
 
         attrs =
-            options.customAttrs ++ baseAttrs ++ additionalAttrs
+            options.customAttrs
+                ++ baseAttrs
+                ++ additionalAttrs
     in
     case options.icon of
         Just icon ->
