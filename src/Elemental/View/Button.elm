@@ -16,6 +16,7 @@ import Elemental.Typography as Typography exposing (Typography)
 import Html.Styled as H
 import Html.Styled.Attributes as HA
 import Html.Styled.Events as HE
+import Json.Decode as JD
 
 
 type alias Options msg =
@@ -234,7 +235,12 @@ targetToElementAndAttributes target =
             ( H.a, attrs )
 
         ClickTarget msg ->
-            ( H.button, [ HA.type_ "button", HE.onClick msg ] )
+            ( H.button, [ HA.type_ "button", HE.stopPropagationOn "click" (JD.map alwaysPreventDefault (JD.succeed msg)) ] )
 
         SubmitTarget ->
             ( H.button, [ HA.type_ "submit" ] )
+
+
+alwaysPreventDefault : msg -> ( msg, Bool )
+alwaysPreventDefault msg =
+    ( msg, True )
