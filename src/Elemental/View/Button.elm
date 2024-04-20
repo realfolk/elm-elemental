@@ -234,7 +234,7 @@ targetToElementAndAttributes target =
             ( H.a, attrs )
 
         ClickTarget msg ->
-            ( H.button, [ HE.onClick msg ] )
+            ( H.button, [ HA.type_ "button", HE.onClick msg ] )
 
         SubmitTarget ->
             ( H.button, [ HA.type_ "submit" ] )
